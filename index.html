@@ -1,40 +1,69 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>ForgePlayID</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    <meta charset="UTF-8">
+    <title>I Love You</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffb6c1, #ffe6f0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+        .container {
+            text-align: center;
+        }
 
-  body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding-top: 100px; /* agar tombol agak ke atas */
-    text-align: center;
-  }
+        h1 {
+            color: #ff0055;
+            font-size: 55px;
+            animation: pulse 2s infinite;
+        }
 
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-  }
+        p {
+            color: #cc0066;
+            font-size: 32px;
+            animation: fadeIn 3s infinite;
+        }
 
-  button {
-    padding: 15px 40px; /* ukuran sedang */
-    font-size: 20px;    /* ukuran teks sedang */
-    font-weight: bold;
-    color: #fff;
-    background: linear-gradient(45deg, #ff6a00, #ee0979);
+        .heart {
+            font-size: 80px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart">❤️</div>
+        <h1>I Love You</h1>
+        <p>Yoyo sayang adekk</p>
+    </div>
+</body>
+</html>    background: linear-gradient(45deg, #ff6a00, #ee0979);
     border: none;
     border-radius: 12px;
     cursor: pointer;
