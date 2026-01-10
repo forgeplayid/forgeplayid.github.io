@@ -22,11 +22,17 @@
     min-height: 100vh;
     padding-top: 100px; /* agar tombol agak ke atas */
     text-align: center;
+    gap: 30px; /* jarak antar elemen */
   }
 
   h1 {
     font-size: 2rem;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
   }
 
   button {
@@ -46,15 +52,31 @@
     transform: translateY(-3px) scale(1.03);
     box-shadow: 0 6px 15px rgba(0,0,0,0.4);
   }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
 </style>
 </head>
 <body>
 
 <h1>Selamat Datang di forgeplay.id</h1>
 
-<button onclick="window.open('https://heylink.me/forgeplayid/', '_blank')">
-  🎡 TopUp Game Disini
-</button>
+<div class="section">
+  <button onclick="window.open('https://heylink.me/forgeplayid/', '_blank')">
+    🎡 TopUp Game Disini
+  </button>
+</div>
+
+<div class="section">
+  <h2>TopUp</h2>
+  <button onclick="window.open('https://heylink.me/forgeplayid/', '_blank')">
+    🔗 Klik untuk TopUp
+  </button>
+</div>
 
 </body>
 </html>
