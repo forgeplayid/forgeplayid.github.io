@@ -3,64 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <title>ForgePlayID</title>
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding-top: 100px;
-    text-align: center;
-    gap: 30px;
-  }
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 100px;
+  text-align: center;
+  gap: 30px;
+}
 
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
+/* Judul */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
 
-  h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-  }
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
 
-  button {
-    padding: 15px 40px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #fff;
-    background: linear-gradient(45deg, #ff6a00, #ee0979);
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-  }
+/* Button */
+button {
+  padding: 15px 40px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(45deg, #ff6a00, #ee0979);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+}
 
-  button:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-  }
+button:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}
 
-  .section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* FOOTER */
+footer {
+  margin-top: auto;
+  padding: 40px 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.social-icons a {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2a2a2a;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: translateY(-4px) scale(1.1);
+  background: linear-gradient(45deg, #ff6a00, #ee0979);
+}
+
+.social-icons svg {
+  width: 22px;
+  height: 22px;
+  fill: white;
+}
+
+footer p {
+  font-size: 14px;
+  opacity: 0.7;
+}
 </style>
 </head>
+
 <body>
 
 <h1>Selamat Datang di forgeplay.id</h1>
@@ -77,6 +123,27 @@
     🔗 Baca Syarat dan Ketentuan Promo Menariknya
   </button>
 </div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="social-icons">
+    <!-- Instagram -->
+    <a href="https://instagram.com/forgeplay_id" target="_blank" aria-label="Instagram">
+      <svg viewBox="0 0 24 24">
+        <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 2c1.65 0 3 1.35 3 3v10c0 1.65-1.35 3-3 3H7c-1.65 0-3-1.35-3-3V7c0-1.65 1.35-3 3-3h10zm-5 3a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6zm4.5-.9a1.1 1.1 0 100 2.2 1.1 1.1 0 000-2.2z"/>
+      </svg>
+    </a>
+
+    <!-- TikTok -->
+    <a href="https://www.tiktok.com/@forgeplay.id" target="_blank" aria-label="TikTok">
+      <svg viewBox="0 0 24 24">
+        <path d="M21 8.5c-1.9 0-3.7-.6-5.2-1.8v7.8a5.5 5.5 0 11-4.7-5.4v2.9a2.6 2.6 0 102.1 2.5V2h2.6c.2 2.1 1.9 3.8 4 4v2.5z"/>
+      </svg>
+    </a>
+  </div>
+
+  <p>© 2026 forgeplay.id</p>
+</footer>
 
 </body>
 </html>
