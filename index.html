@@ -27,13 +27,8 @@ body {
 }
 
 /* TEXT */
-h1 {
-  font-size: 2.2rem;
-}
-
-h2 {
-  font-size: 1.6rem;
-}
+h1 { font-size: 2.2rem; }
+h2 { font-size: 1.6rem; }
 
 p {
   opacity: 0.8;
@@ -76,7 +71,13 @@ button:hover {
   width: 100%;
 }
 
-/* GAME ITEM + HOVER */
+/* LINK PEMBUNGKUS GAME */
+.game-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* GAME ITEM */
 .game-item {
   background: #2a2a2a;
   padding: 18px 15px;
@@ -194,7 +195,7 @@ footer p {
   </p>
 </div>
 
-<!-- CTA UTAMA -->
+<!-- CTA -->
 <div class="section">
   <button onclick="window.location.href='https://forgeplay.id'">
     🎮 Top Up Game Sekarang
@@ -209,25 +210,35 @@ footer p {
   <h2>Game Populer</h2>
 
   <div class="game-list">
-    <div class="game-item">
-      <img src="https://cdn-icons-png.flaticon.com/512/588/588284.png" alt="Mobile Legends">
-      Mobile Legends
-    </div>
 
-    <div class="game-item">
-      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png" alt="Free Fire">
-      Free Fire
-    </div>
+    <a href="https://forgeplay.id" class="game-link">
+      <div class="game-item">
+        <img src="https://cdn-icons-png.flaticon.com/512/588/588284.png">
+        Mobile Legends
+      </div>
+    </a>
 
-    <div class="game-item">
-      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968841.png" alt="PUBG Mobile">
-      PUBG Mobile
-    </div>
+    <a href="https://forgeplay.id" class="game-link">
+      <div class="game-item">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png">
+        Free Fire
+      </div>
+    </a>
 
-    <div class="game-item">
-      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968701.png" alt="Valorant">
-      Valorant
-    </div>
+    <a href="https://forgeplay.id" class="game-link">
+      <div class="game-item">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968841.png">
+        PUBG Mobile
+      </div>
+    </a>
+
+    <a href="https://forgeplay.id" class="game-link">
+      <div class="game-item">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968701.png">
+        Valorant
+      </div>
+    </a>
+
   </div>
 </div>
 
@@ -257,15 +268,11 @@ footer p {
 <footer>
   <div class="social-icons">
     <a href="https://instagram.com/forgeplay_id" target="_blank">
-      <svg viewBox="0 0 24 24">
-        <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7z"/>
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7z"/></svg>
     </a>
 
     <a href="https://www.tiktok.com/@forgeplay.id" target="_blank">
-      <svg viewBox="0 0 24 24">
-        <path d="M21 8.5c-1.9 0-3.7-.6-5.2-1.8v7.8a5.5 5.5 0 11-4.7-5.4v2.9a2.6 2.6 0 102.1 2.5V2h2.6c.2 2.1 1.9 3.8 4 4v2.5z"/>
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M21 8.5c-1.9 0-3.7-.6-5.2-1.8v7.8a5.5 5.5 0 11-4.7-5.4v2.9a2.6 2.6 0 102.1 2.5V2h2.6c.2 2.1 1.9 3.8 4 4v2.5z"/></svg>
     </a>
   </div>
 
