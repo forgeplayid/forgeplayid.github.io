@@ -181,6 +181,35 @@ footer p {
   font-size: 14px;
   opacity: 0.6;
 }
+
+/* ========================= */
+/* FLOATING PIKACHU CHAT */
+/* ========================= */
+.pikachu-chat {
+  position: fixed;
+  right: 20px;
+  bottom: 18px;
+  z-index: 999;
+}
+
+.pikachu-chat img {
+  width: 230px;
+  height: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 15px rgba(0,0,0,0.45));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.pikachu-chat img:hover {
+  transform: translateY(-6px) scale(1.08);
+  filter: drop-shadow(0 10px 25px rgba(255, 215, 0, 0.6));
+}
+
+@media (max-width: 600px) {
+  .pikachu-chat img {
+    width: 65px;
+  }
+}
 </style>
 </head>
 
@@ -210,35 +239,33 @@ footer p {
   <h2>Game Populer</h2>
 
   <div class="game-list">
-
-    <a href="https://forgeplay.id/game/mobile-legends" class="game-link">
+    <a href="https://forgeplay.id" class="game-link">
       <div class="game-item">
         <img src="https://cdn-icons-png.flaticon.com/512/588/588284.png">
         Mobile Legends
       </div>
     </a>
 
-    <a href="https://forgeplay.id/game/free-fire" class="game-link">
+    <a href="https://forgeplay.id" class="game-link">
       <div class="game-item">
         <img src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png">
         Free Fire
       </div>
     </a>
 
-    <a href="https://forgeplay.id/game/pubg-mobile-global" class="game-link">
+    <a href="https://forgeplay.id" class="game-link">
       <div class="game-item">
         <img src="https://cdn-icons-png.flaticon.com/512/5968/5968841.png">
         PUBG Mobile
       </div>
     </a>
 
-    <a href="https://forgeplay.id/game/valorant" class="game-link">
+    <a href="https://forgeplay.id" class="game-link">
       <div class="game-item">
         <img src="https://cdn-icons-png.flaticon.com/512/5968/5968701.png">
         Valorant
       </div>
     </a>
-
   </div>
 </div>
 
@@ -278,6 +305,13 @@ footer p {
 
   <p>© 2026 forgeplay.id — Landing Promo</p>
 </footer>
+
+<!-- FLOATING PIKACHU -->
+<div class="pikachu-chat">
+  <a href="https://wa.me/6285175215549" target="_blank">
+    <img src="https://i.postimg.cc/4djGYx3D/pikachu-chat-admin.png" alt="Chat Admin">
+  </a>
+</div>
 
 </body>
 </html>
