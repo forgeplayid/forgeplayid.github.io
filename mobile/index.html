@@ -4,9 +4,64 @@
 <meta charset="UTF-8">
 <title>ForgePlayID Mobile</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #111, #1b1b1b);
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  gap: 18px;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+p {
+  opacity: 0.75;
+  font-size: 15px;
+}
+
+/* BUTTON STYLE SAMA SEPERTI DESKTOP */
+button {
+  margin-top: 12px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(45deg, #ff6a00, #ee0979);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 8px 20px rgba(255,106,0,0.45);
+}
+</style>
 </head>
-<body style="background:#111;color:#fff;font-family:sans-serif;text-align:center;padding:40px">
+
+<body>
+
   <h2>Versi Mobile sedang disiapkan 🚧</h2>
   <p>Silakan gunakan versi desktop sementara.</p>
+
+  <button onclick="window.location.href='https://forgeplayid.github.io/desktop/'">
+    Gunakan versi desktop
+  </button>
+
 </body>
 </html>
