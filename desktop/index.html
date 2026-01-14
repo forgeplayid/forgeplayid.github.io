@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForgePlayID</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 80px 20px 0;
+  text-align: center;
+  gap: 60px;
+}
+
+/* TEXT */
+h1 { font-size: 2.2rem; }
+h2 { font-size: 1.6rem; }
+
+p {
+  opacity: 0.8;
+  max-width: 600px;
+}
+
+/* BUTTON */
+button {
+  padding: 15px 40px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(45deg, #ff6a00, #ee0979);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}
+
+/* SECTION */
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* GAME LIST */
+.game-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 18px;
+  max-width: 600px;
+  width: 100%;
+}
+
+/* GAME LINK */
+.game-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* GAME ITEM */
+.game-item {
+  background: #2a2a2a;
+  padding: 18px 15px;
+  border-radius: 16px;
+  font-weight: bold;
+  opacity: 0.9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+
+.game-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, #ff6a00, #ee0979);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.game-item:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(255, 106, 0, 0.35);
+}
+
+.game-item:hover::before {
+  opacity: 0.15;
+}
+
+.game-item * {
+  position: relative;
+  z-index: 1;
+}
+
+/* GAME ICON */
+.game-item img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  transition: transform 0.35s ease;
+}
+
+.game-item:hover img {
+  transform: scale(1.15) translateY(-2px);
+}
+
+/* SOFT LINK */
+.soft-link {
+  color: #ff6a00;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.soft-link:hover {
+  text-decoration: underline;
+}
+
+/* FOOTER */
+footer {
+  margin-top: auto;
+  padding: 40px 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.social-icons a {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2a2a2a;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: translateY(-4px) scale(1.1);
+  background: linear-gradient(45deg, #ff6a00, #ee0979);
+}
+
+.social-icons svg {
+  width: 22px;
+  height: 22px;
+  fill: white;
+}
+
+footer p {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+/* ========================= */
+/* FLOATING PIKACHU CHAT */
+/* ========================= */
+.pikachu-chat {
+  position: fixed;
+  right: 20px;
+  bottom: 18px;
+  z-index: 9999;
+}
+
+.pikachu-chat img {
+  width: 230px;
+  height: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 15px rgba(0,0,0,0.45));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.pikachu-chat img:hover {
+  transform: translateY(-6px) scale(1.08);
+  filter: drop-shadow(0 10px 25px rgba(255, 215, 0, 0.6));
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .pikachu-chat img {
+    width: 80px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<div class="section">
+  <h1>Top Up Game Cepat & Terpercaya</h1>
+  <p>
+    Halaman promo & informasi sebelum kamu lanjut ke website utama ForgePlayID
+    untuk top up dan pembayaran resmi.
+  </p>
+</div>
+
+<!-- CTA -->
+<div class="section">
+  <button onclick="window.location.href='https://forgeplay.id'">
+    🎮 Top Up Game Sekarang
+  </button>
+  <p style="font-size:14px; opacity:0.6;">
+    Pembayaran diproses di website resmi forgeplay.id
+  </p>
+</div>
+
+<!-- GAME POPULER -->
+<div class="section">
+  <h2>Game Populer</h2>
+
+  <div class="game-list">
+    <a href="https://forgeplay.id" class="game-link">
+      <div class="game-item">
+        <img src="https://cdn-icons-png.flaticon.com/512/588/588284.png">
+        Mobile Legends
+      </div>
+    </a>
+
+    <a href="https://forgeplay.id" class="game-link">
+      <div class="game-item">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png">
+        Free Fire
+      </div>
+    </a>
+
+    <a href="https://forgeplay.id" class="game-link">
+      <div class="game-item">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968841.png">
+        PUBG Mobile
+      </div>
+    </a>
+
+    <a href="https://forgeplay.id" class="game-link">
+      <div class="game-item">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968701.png">
+        Valorant
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- PROMO -->
+<div class="section" style="margin-top:40px;">
+  <h2>Promo & Event</h2>
+  <p>
+    Promo terbatas, diskon menarik, dan event game tertentu.
+    Detail lengkap tersedia di website utama.
+  </p>
+  <button onclick="window.location.href='https://forgeplay.id'">
+    🔥 Lihat Promo
+  </button>
+</div>
+
+<!-- PENUTUP -->
+<div class="section">
+  <p>
+    Mau langsung ke website utama?
+    <a href="https://forgeplay.id" class="soft-link">
+      Kunjungi ForgePlay.id
+    </a>
+  </p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="social-icons">
+    <a href="https://instagram.com/forgeplay_id" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7z"/></svg>
+    </a>
+
+    <a href="https://www.tiktok.com/@forgeplay.id" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M21 8.5c-1.9 0-3.7-.6-5.2-1.8v7.8a5.5 5.5 0 11-4.7-5.4v2.9a2.6 2.6 0 102.1 2.5V2h2.6c.2 2.1 1.9 3.8 4 4v2.5z"/></svg>
+    </a>
+  </div>
+
+  <p>© 2026 forgeplay.id — Landing Promo</p>
+</footer>
+
+<!-- FLOATING PIKACHU -->
+<div class="pikachu-chat">
+  <a href="https://wa.me/6285175215549" target="_blank">
+    <img src="https://i.postimg.cc/nzT0St0b/pikachu-chat-mimin.png" alt="Chat Admin">
+  </a>
+</div>
+
+</body>
+</html>
