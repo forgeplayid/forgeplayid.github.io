@@ -27,7 +27,7 @@
     }
 
     .logo img {
-        height: 35px; /* ukuran header */
+        height: 35px;
     }
 
     .header-right {
@@ -71,7 +71,7 @@
     }
 
     .logo-dl img {
-        height: 100px; /* agak besar */
+        height: 100px;
     }
 
     /* PAYMENT FRAME */
@@ -199,12 +199,12 @@
     <div id="rekening-info">Klik salah satu metode pembayaran untuk melihat nomor rekening / QRIS</div>
 
     <!-- WHATSAPP BUTTON -->
-<a id="whatsapp-link" 
-   href="https://wa.me/6285175215549?text=Halo%20Admin,%20saya%20ingin%20membeli%20DL" 
-   target="_blank" 
-   class="whatsapp-button">
-   Kirim Bukti transaksi + World ID + Grow ID di WhatsApp
-</a>
+    <a id="whatsapp-link" 
+       href="https://wa.me/6285175215549?text=Halo%20Admin,%20saya%20ingin%20membeli%20DL" 
+       target="_blank" 
+       class="whatsapp-button">
+       Kirim Bukti transaksi + World ID + Grow ID di WhatsApp
+    </a>
 
 </div>
 
@@ -212,11 +212,25 @@
     const rekeningData = {
         BCA: "BCA 1234567890 a.n. Nama Pemilik",
         BRI: "BRI 0987654321 a.n. Nama Pemilik",
-        QRIS: "Scan QRIS di atas / link QRIS: https://example.com/qris"
+        QRIS: `
+            <div style="text-align:center;">
+                <img src="https://forgeplayid.github.io/assets/forgeplayid-qris.png" 
+                     alt="QRIS" 
+                     style="max-width:200px; display:block; margin: 0 auto 10px auto;">
+                <p>Silahkan Scan QRIS diatas</p>
+            </div>
+        `
     };
 
     function showRekening(bank) {
-        document.getElementById('rekening-info').textContent = rekeningData[bank];
+        const info = document.getElementById('rekening-info');
+
+        // gunakan innerHTML untuk QRIS agar gambar muncul
+        if(bank === 'QRIS') {
+            info.innerHTML = rekeningData[bank];
+        } else {
+            info.textContent = rekeningData[bank];
+        }
 
         // Update WhatsApp link otomatis
         const waNumber = "6281234567890"; // ganti nomor admin
