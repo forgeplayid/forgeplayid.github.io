@@ -179,7 +179,7 @@
     <!-- JUDUL PEMBAYARAN -->
     <h1>Pembayaran Blue Gem Lock ( BGL )</h1>
 
-    <!-- PAYMENT FRAME -->
+     <!-- PAYMENT FRAME -->
     <div class="payment-frame">
         <div class="payment-card" onclick="showRekening('BCA')">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/BCA_logo.svg/2560px-BCA_logo.svg.png" alt="BCA">
@@ -212,7 +212,14 @@
     const rekeningData = {
         BCA: "BCA 1234567890 a.n. Nama Pemilik",
         BRI: "BRI 0987654321 a.n. Nama Pemilik",
-        QRIS: "Scan QRIS di atas / link QRIS: https://example.com/qris"
+        QRIS: `
+            <div style="text-align:center;">
+                <img src="https://forgeplayid.github.io/assets/forgeplayid-qris.png" 
+                     alt="QRIS" 
+                     style="max-width:200px; display:block; margin: 0 auto 10px auto;">
+                <p>Silahkan Scan QRIS diatas</p>
+            </div>
+        `
     };
 
     function showRekening(bank) {
