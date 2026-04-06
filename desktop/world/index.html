@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World List</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        background-color: #020617;
+        color: white;
+    }
+
+    /* HEADER */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        background-color: #0f172a;
+        border-bottom: 1px solid #1e293b;
+    }
+
+    .logo img {
+        height: 35px;
+    }
+
+    .logo a {
+        text-decoration: none;
+    }
+
+    .header-right a {
+        padding: 8px 18px;
+        background-color: #38bdf8;
+        color: #020617;
+        font-weight: 600;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    /* CONTAINER */
+    .container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #38bdf8;
+        margin-bottom: 25px;
+    }
+
+    /* GRID */
+    .world-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .world-card {
+        width: calc(33.333% - 20px);
+        background-color: #1e293b;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        transition: transform 0.2s;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .world-card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* IMAGE */
+    .world-image {
+        width: 100%;
+        aspect-ratio: 1280 / 798;
+        background-color: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    /* DESC */
+    .world-desc {
+        padding: 15px;
+        font-size: 14px;
+        color: #cbd5f5;
+        flex-grow: 1;
+    }
+
+    .world-desc ul {
+        padding-left: 18px;
+        margin: 8px 0 0 0;
+    }
+
+    .world-desc li {
+        margin-bottom: 4px;
+    }
+
+    /* BUTTON */
+    .buy-button {
+        display: block;
+        margin: 15px auto 20px auto;
+        padding: 10px 20px;
+        background-color: #22c55e;
+        color: #020617;
+        font-weight: 600;
+        border-radius: 8px;
+        text-decoration: none;
+        text-align: center;
+        width: 70%;
+        transition: background-color 0.2s;
+    }
+
+    .buy-button:hover {
+        background-color: #16a34a;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+        .world-card {
+            width: calc(50% - 20px);
+        }
+    }
+
+    @media (max-width: 500px) {
+        .world-card {
+            width: 100%;
+        }
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .header-right {
+            margin-top: 10px;
+        }
+    }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="logo">
+        <a href="https://forgeplayid.github.io/">
+            <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
+        </a>
+    </div>
+    <div class="header-right">
+        <a href="https://forgeplayid.github.io/desktop/">← BACK</a>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Daftar World</h1>
+
+    <div class="world-grid">
+
+        <!-- CARD 1 -->
+        <div class="world-card">
+            <div class="world-image">COMING SOON</div>
+            <div class="world-desc">
+                <strong>Deskripsi :</strong>
+                <ul>
+                    <li>Farmable item lengkap</li>
+                    <li>Lokasi strategis</li>
+                    <li>Cocok untuk trading</li>
+                </ul>
+            </div>
+            <a href="https://wa.me/6281234567890?text=Saya%20ingin%20membeli%20world%201" class="buy-button" target="_blank">BUY WORLD</a>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="world-card">
+            <div class="world-image">COMING SOON</div>
+            <div class="world-desc">World 2 - Deskripsi singkat</div>
+            <a href="https://wa.me/6281234567890?text=Saya%20ingin%20membeli%20world%202" class="buy-button" target="_blank">BUY WORLD</a>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="world-card">
+            <div class="world-image">COMING SOON</div>
+            <div class="world-desc">World 3 - Deskripsi singkat</div>
+            <a href="https://wa.me/6281234567890?text=Saya%20ingin%20membeli%20world%203" class="buy-button" target="_blank">BUY WORLD</a>
+        </div>
+
+        <!-- CARD 4 -->
+        <div class="world-card">
+            <div class="world-image">COMING SOON</div>
+            <div class="world-desc">World 4 - Deskripsi tambahan</div>
+            <a href="https://wa.me/6281234567890?text=Saya%20ingin%20membeli%20world%204" class="buy-button" target="_blank">BUY WORLD</a>
+        </div>
+
+        <!-- CARD 5 -->
+        <div class="world-card">
+            <div class="world-image">COMING SOON</div>
+            <div class="world-desc">World 5 - Deskripsi tambahan</div>
+            <a href="https://wa.me/6281234567890?text=Saya%20ingin%20membeli%20world%205" class="buy-button" target="_blank">BUY WORLD</a>
+        </div>
+
+        <!-- CARD 6 -->
+        <div class="world-card">
+            <div class="world-image">COMING SOON</div>
+            <div class="world-desc">World 6 - Deskripsi tambahan</div>
+            <a href="https://wa.me/6281234567890?text=Saya%20ingin%20membeli%20world%206" class="buy-button" target="_blank">BUY WORLD</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
