@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pembayaran Diamond Lock</title>
+<title>Pembayaran Blue Gem Lock</title>
 
 <!-- Google Font Montserrat -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
     }
 
     .logo img {
-        height: 35px; /* ukuran header */
+        height: 35px;
     }
 
     .header-right {
@@ -65,13 +65,13 @@
         font-weight: 700;
     }
 
-    /* LOGO DIAMOND LOCK BESAR */
+    /* LOGO BLUE GEM LOCK */
     .logo-dl {
         margin-bottom: 15px;
     }
 
     .logo-dl img {
-        height: 100px; /* agak besar */
+        height: 100px;
     }
 
     /* PAYMENT FRAME */
@@ -105,7 +105,6 @@
     .payment-card p {
         margin: 5px 0;
         font-size: 16px;
-        font-family: 'Montserrat', sans-serif;
         font-weight: 600;
     }
 
@@ -117,7 +116,28 @@
         font-size: 16px;
         box-shadow: 0 6px 15px rgba(0,0,0,0.3);
         min-height: 50px;
-        font-family: 'Montserrat', sans-serif;
+    }
+
+    /* QRIS IMAGE */
+    .qris-container img {
+        max-width: 300px;
+        width: 80%;
+        height: auto;
+        display: block;
+        margin: 0 auto 10px auto;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .qris-container img:hover {
+        transform: scale(1.05);
+    }
+
+    .qris-container p {
+        margin: 0;
+        font-size: 16px;
+        color: #cbd5f5;
+        font-weight: 600;
     }
 
     .whatsapp-button {
@@ -130,7 +150,6 @@
         border-radius: 8px;
         text-decoration: none;
         transition: background-color 0.2s;
-        font-family: 'Montserrat', sans-serif;
     }
 
     .whatsapp-button:hover {
@@ -179,7 +198,7 @@
     <!-- JUDUL PEMBAYARAN -->
     <h1>Pembayaran Blue Gem Lock ( BGL )</h1>
 
-     <!-- PAYMENT FRAME -->
+    <!-- PAYMENT FRAME -->
     <div class="payment-frame">
         <div class="payment-card" onclick="showRekening('BCA')">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/BCA_logo.svg/2560px-BCA_logo.svg.png" alt="BCA">
@@ -199,12 +218,12 @@
     <div id="rekening-info">Klik salah satu metode pembayaran untuk melihat nomor rekening / QRIS</div>
 
     <!-- WHATSAPP BUTTON -->
-<a id="whatsapp-link" 
-   href="https://wa.me/6285175215549?text=Halo%20Admin,%20saya%20ingin%20membeli%20BGL" 
-   target="_blank" 
-   class="whatsapp-button">
-   Kirim Bukti transaksi + World ID + Grow ID di WhatsApp
-</a>
+    <a id="whatsapp-link" 
+       href="https://wa.me/6285175215549?text=Halo%20Admin,%20saya%20ingin%20membeli%20BGL" 
+       target="_blank" 
+       class="whatsapp-button">
+       Kirim Bukti transaksi + World ID + Grow ID di WhatsApp
+    </a>
 
 </div>
 
@@ -213,21 +232,27 @@
         BCA: "BCA 1234567890 a.n. Nama Pemilik",
         BRI: "BRI 0987654321 a.n. Nama Pemilik",
         QRIS: `
-            <div style="text-align:center;">
+            <div class="qris-container">
                 <img src="https://forgeplayid.github.io/assets/forgeplayid-qris.png" 
                      alt="QRIS" 
-                     style="max-width:200px; display:block; margin: 0 auto 10px auto;">
+                     onclick="this.style.transform = (this.style.transform === 'scale(1.5)') ? 'scale(1)' : 'scale(1.5)';">
                 <p>Silahkan Scan QRIS diatas</p>
             </div>
         `
     };
 
     function showRekening(bank) {
-        document.getElementById('rekening-info').textContent = rekeningData[bank];
+        const info = document.getElementById('rekening-info');
+
+        if(bank === 'QRIS') {
+            info.innerHTML = rekeningData[bank];
+        } else {
+            info.textContent = rekeningData[bank];
+        }
 
         // Update WhatsApp link otomatis
         const waNumber = "6281234567890"; // ganti nomor admin
-        const message = encodeURIComponent(`Halo Admin, saya sudah melakukan pembayaran Diamond Lock via ${bank}. Bukti transaksi + World ID + Grow ID`);
+        const message = encodeURIComponent(`Halo Admin, saya sudah melakukan pembayaran Blue Gem Lock via ${bank}. Bukti transaksi + World ID + Grow ID`);
         document.getElementById('whatsapp-link').href = `https://wa.me/${waNumber}?text=${message}`;
     }
 </script>
