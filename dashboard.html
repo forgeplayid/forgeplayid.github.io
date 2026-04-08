@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Admin</title>
 
 <style>
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background: #020617;
     color: white;
 }
@@ -45,9 +45,9 @@ h2, h3 {
     <h2>Dashboard Admin</h2>
 
     <h3>List Harga</h3>
-    <input type="number" id="sell-dl" placeholder="Sell DL (Rp)" />
-    <input type="number" id="sell-bgl" placeholder="Sell BGL (Rp)" />
-    <input type="number" id="buy-dl" placeholder="Buy DL (Rp)" />
+    <input type="number" id="sell-dl" placeholder="Sell DL (Rp)">
+    <input type="number" id="sell-bgl" placeholder="Sell BGL (Rp)">
+    <input type="number" id="buy-dl" placeholder="Buy DL (Rp)">
 
     <button onclick="updateData()">~~~~~ UPDATE ~~~~~</button>
 </div>
@@ -58,7 +58,7 @@ h2, h3 {
 const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
 
 // ===== Fungsi update harga ke SheetDB =====
-function updateData() {
+function updateData(){
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
     const buyDL = document.getElementById("buy-dl").value;
@@ -68,45 +68,41 @@ function updateData() {
         return;
     }
 
-    // Ambil data sekarang dari SheetDB untuk dapatkan ID baris
+    // Ambil data sekarang dari SheetDB
     fetch(SHEETDB_ENDPOINT)
-      .then(res => {
-          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-          return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
-          // Pastikan data ada dan ambil id baris pertama
-          const rowId = data[0]?.id;
-          if(!rowId) throw new Error("ID baris tidak ditemukan di SheetDB");
+          // Ambil id baris pertama
+          const rowId = data[0].id;
 
-          // Siapkan data payload update
           const payload = {};
           if(sellDL) payload.sell_dl = Number(sellDL);
           if(sellBGL) payload.sell_bgl = Number(sellBGL);
           if(buyDL) payload.buy_dl = Number(buyDL);
 
-          // Kirim PUT request update harga ke SheetDB
-          return fetch(`${SHEETDB_ENDPOINT}/${rowId}`, {
+          // PUT update ke SheetDB
+          fetch(`${SHEETDB_ENDPOINT}/${rowId}`, {
               method: "PUT",
               headers: {"Content-Type": "application/json"},
               body: JSON.stringify({ data: [payload] })
+          })
+          .then(res => res.json())
+          .then(resp => {
+              console.log("Update sukses:", resp);
+              alert("Harga berhasil diupdate!");
+              // Reset input
+              document.getElementById("sell-dl").value = "";
+              document.getElementById("sell-bgl").value = "";
+              document.getElementById("buy-dl").value = "";
+          })
+          .catch(err => {
+              console.error("Gagal update:", err);
+              alert("Gagal update harga!");
           });
       })
-      .then(res => {
-          if (!res.ok) throw new Error(`Update gagal, status: ${res.status}`);
-          return res.json();
-      })
-      .then(resp => {
-          console.log("Update sukses:", resp);
-          alert("Harga berhasil diupdate!");
-          // Reset input hanya jika update sukses
-          document.getElementById("sell-dl").value = "";
-          document.getElementById("sell-bgl").value = "";
-          document.getElementById("buy-dl").value = "";
-      })
       .catch(err => {
-          console.error("Error:", err);
-          alert("Gagal update harga! " + err.message);
+          console.error("Gagal fetch data SheetDB:", err);
+          alert("Gagal ambil data SheetDB!");
       });
 }
 </script>
