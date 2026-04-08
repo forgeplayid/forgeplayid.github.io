@@ -6,148 +6,33 @@
 <title>Desktop Layout</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background-color: #020617;
-        color: white;
-    }
-
-    /* HEADER */
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 40px;
-        background-color: #0f172a;
-        border-bottom: 1px solid #1e293b;
-    }
-
-    .logo img {
-        height: 40px;
-    }
-
-    .header-right {
-        display: flex;
-        align-items: center;
-    }
-
-    .header-right a.button {
-        display: inline-block;
-        padding: 8px 18px;
-        background-color: #38bdf8;
-        color: #020617;
-        font-weight: bold;
-        border-radius: 6px;
-        text-decoration: none;
-        transition: background-color 0.2s;
-    }
-
-    .header-right a.button:hover {
-        background-color: #0ea5e9;
-    }
-
-    /* CONTAINER */
-    .container {
-        max-width: 1100px;
-        margin: 30px auto;
-        padding: 0 15px;
-    }
-
-    /* SLIDER */
-    .slider {
-        width: 100%;
-        max-width: 860px;
-        margin: auto;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    }
-
-    .slider img {
-        width: 100%;
-        height: auto;
-        display: block;
-        border-radius: 12px;
-    }
-
-    /* MENU FRAME DL & BGL */
-    .menu-frame {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;                 
-        max-width: 860px;            
-        margin: 25px auto 0 auto;
-        padding: 0 10px;
-        background-color: #0f172a;
-        border-radius: 12px;
-        box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    }
-
-    .menu-card {
-        flex: 1;                       
-        margin: 0 10px;
-        background-color: #1e293b;
-        border-radius: 10px;
-        padding: 15px;
-        text-align: center;
-        color: white;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        transition: transform 0.2s;
-        cursor: pointer;
-        text-decoration: none;
-    }
-
-    .menu-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .menu-card img.menu-img {
-        width: 50px;  
-        height: auto;
-        margin-bottom: 10px;
-    }
-
-    .menu-card p {
-        margin: 5px 0;
-        font-size: 16px;
-    }
-
-    /* CONTENT AREA */
-    .content {
-        margin-top: 25px;
-        height: 350px;
-        background-color: #020617;
-        border-radius: 12px;
-        border: 1px dashed #1e293b;
-    }
-
-    /* RESPONSIVE */
+    body { margin: 0; font-family: Arial, sans-serif; background-color: #020617; color: white; }
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background-color: #0f172a; border-bottom: 1px solid #1e293b; }
+    .logo img { height: 40px; }
+    .header-right { display: flex; align-items: center; }
+    .header-right a.button { display: inline-block; padding: 8px 18px; background-color: #38bdf8; color: #020617; font-weight: bold; border-radius: 6px; text-decoration: none; transition: background-color 0.2s; }
+    .header-right a.button:hover { background-color: #0ea5e9; }
+    .container { max-width: 1100px; margin: 30px auto; padding: 0 15px; }
+    .slider { width: 100%; max-width: 860px; margin: auto; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+    .slider img { width: 100%; height: auto; display: block; border-radius: 12px; }
+    .menu-frame { display: flex; justify-content: space-between; width: 100%; max-width: 860px; margin: 25px auto 0 auto; padding: 0 10px; background-color: #0f172a; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
+    .menu-card { flex: 1; margin: 0 10px; background-color: #1e293b; border-radius: 10px; padding: 15px; text-align: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: transform 0.2s; cursor: pointer; text-decoration: none; }
+    .menu-card:hover { transform: translateY(-5px); }
+    .menu-card img.menu-img { width: 50px; height: auto; margin-bottom: 10px; }
+    .menu-card p { margin: 5px 0; font-size: 16px; }
+    .content { margin-top: 25px; height: 350px; background-color: #020617; border-radius: 12px; border: 1px dashed #1e293b; }
     @media (max-width: 500px) {
-        .menu-card {
-            padding: 10px;
-        }
-        .menu-card img.menu-img {
-            width: 40px;
-        }
-        .menu-card p {
-            font-size: 14px;
-        }
-        .header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .header-right {
-            margin-top: 10px;
-        }
+        .menu-card { padding: 10px; }
+        .menu-card img.menu-img { width: 40px; }
+        .menu-card p { font-size: 14px; }
+        .header { flex-direction: column; align-items: flex-start; }
+        .header-right { margin-top: 10px; }
     }
-
 </style>
 </head>
 
 <body>
 
-    <!-- HEADER UTAMA -->
 <div class="header">
     <div class="logo">
         <a href="https://forgeplayid.github.io/">
@@ -159,33 +44,59 @@
     </div>
 </div>
 
-    <!-- MAIN -->
-    <div class="container">
-
-        <!-- SLIDER -->
-        <div class="slider">
-            <img src="https://forgeplayid.github.io/assets/gt-slider1.png" alt="Slider">
-        </div>
-
-        <!-- MENU DL & BGL -->
-        <div class="menu-frame">
-            <!-- DL -->
-            <a href="https://forgeplayid.github.io/desktop/diamond-lock/" class="menu-card">
-                <img src="https://forgeplayid.github.io/assets/diamond-lock.png" alt="DL" class="menu-img">
-                <p>Sell Rp. 190</p>
-                <p>Buy Rp. 180</p>
-            </a>
-            <!-- BGL -->
-            <a href="https://forgeplayid.github.io/desktop/blue-gem-lock/" class="menu-card">
-                <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" alt="BGL" class="menu-img">
-                <p>Sell Rp. 19.000</p>
-            </a>
-        </div>
-
-        <!-- CONTENT AREA -->
-        <div class="content"></div>
-
+<div class="container">
+    <div class="slider">
+        <img src="https://forgeplayid.github.io/assets/gt-slider1.png" alt="Slider">
     </div>
+
+    <div class="menu-frame">
+        <!-- DL -->
+        <a href="https://forgeplayid.github.io/desktop/diamond-lock/" class="menu-card">
+            <img src="https://forgeplayid.github.io/assets/diamond-lock.png" alt="DL" class="menu-img">
+            <p id="sell-dl">Sell Rp. -</p>
+            <p id="buy-dl">Buy Rp. -</p>
+        </a>
+        <!-- BGL -->
+        <a href="https://forgeplayid.github.io/desktop/blue-gem-lock/" class="menu-card">
+            <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" alt="BGL" class="menu-img">
+            <p id="sell-bgl">Sell Rp. -</p>
+        </a>
+    </div>
+
+    <div class="content"></div>
+</div>
+
+<script>
+// SheetDB endpoint
+const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
+
+// Format angka ke Rupiah
+function formatRupiah(angka){
+    return "Rp. " + Number(angka).toLocaleString("id-ID");
+}
+
+// Fetch harga dari SheetDB dan update menu
+function updateHarga(){
+    fetch(SHEETDB_ENDPOINT)
+      .then(res => res.json())
+      .then(data => {
+          const obj = {};
+          data.forEach(item => obj[item.key] = item.value);
+
+          // Update harga di DL & BGL
+          document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(obj.sell_dl);
+          document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(obj.buy_dl);
+          document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(obj.sell_bgl);
+      })
+      .catch(err => console.error("Gagal ambil harga:", err));
+}
+
+// Jalankan saat halaman load
+updateHarga();
+
+// Optional: update tiap 1 menit
+setInterval(updateHarga, 60000);
+</script>
 
 </body>
 </html>
