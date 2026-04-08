@@ -74,23 +74,21 @@ button:hover { background-color: #0ea5e9; }
         <button onclick="loginAdmin()">Login</button>
     </div>
 
-    <!-- ADMIN CONTROL (tersembunyi awalnya) -->
+    <!-- ADMIN CONTROL (tetap ada tapi tersembunyi) -->
     <div id="admin-controls" class="admin-panel" style="display:none;">
         <h2>Kontrol Admin</h2>
         <p>Selamat datang, admin! Panel ini akan muncul setelah login berhasil.</p>
-        <!-- Nanti bisa ditambahkan form update harga, tambah world, dsb -->
     </div>
 </div>
 
 <script>
-// ==== ADMIN LOGIN ====
-const adminPass = "admin123"; // ganti password sesuai kebutuhan
+// ==== ADMIN LOGIN DENGAN REDIRECT ====
+const adminPass = "admin123"; // ganti sesuai kebutuhan
 function loginAdmin(){
     const input = document.getElementById('admin-password').value;
     if(input === adminPass){
-        document.getElementById('login-panel').style.display = 'none';
-        document.getElementById('admin-controls').style.display = 'block';
-        alert("Login berhasil!");
+        // langsung redirect ke dashboard
+        window.location.href = "https://forgeplayid.github.io/dashboard.html";
     } else {
         alert("Password salah!");
     }
