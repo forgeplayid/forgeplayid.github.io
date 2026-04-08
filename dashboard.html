@@ -57,7 +57,7 @@ h2, h3 {
 <script>
 const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
 
-// ===== UPDATE FUNCTION =====
+// ===== Fungsi update harga ke SheetDB =====
 function updateData(){
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
@@ -68,31 +68,41 @@ function updateData(){
         return;
     }
 
-    const data = [
-        { key: "sell_dl", value: sellDL },
-        { key: "sell_bgl", value: sellBGL },
-        { key: "buy_dl", value: buyDL }
-    ];
+    // Ambil data sekarang dari SheetDB
+    fetch(SHEETDB_ENDPOINT)
+      .then(res => res.json())
+      .then(data => {
+          const rowId = data.data ? data.data[0].id : data[0].id;
 
-    data.forEach(item => {
-        if(item.value){ // hanya update jika ada input
-            fetch(`${SHEETDB_ENDPOINT}/key/${item.key}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ data: [{ value: Number(item.value) }] })
-            })
-            .then(res => res.json())
-            .then(resp => console.log(resp))
-            .catch(err => console.error(err));
-        }
-    });
+          const payload = {};
+          if(sellDL) payload.sell_dl = Number(sellDL);
+          if(sellBGL) payload.sell_bgl = Number(sellBGL);
+          if(buyDL) payload.buy_dl = Number(buyDL);
 
-    alert("Harga berhasil diupdate!");
-
-    // Reset input
-    document.getElementById("sell-dl").value = "";
-    document.getElementById("sell-bgl").value = "";
-    document.getElementById("buy-dl").value = "";
+          // PUT update ke SheetDB
+          fetch(`${SHEETDB_ENDPOINT}/${rowId}`, {
+              method: "PUT",
+              headers: {"Content-Type": "application/json"},
+              body: JSON.stringify({ data: [payload] })
+          })
+          .then(res => res.json())
+          .then(resp => {
+              console.log("Update sukses:", resp);
+              alert("Harga berhasil diupdate!");
+              // Reset input
+              document.getElementById("sell-dl").value = "";
+              document.getElementById("sell-bgl").value = "";
+              document.getElementById("buy-dl").value = "";
+          })
+          .catch(err => {
+              console.error("Gagal update:", err);
+              alert("Gagal update harga!");
+          });
+      })
+      .catch(err => {
+          console.error("Gagal fetch data SheetDB:", err);
+          alert("Gagal ambil data SheetDB!");
+      });
 }
 </script>
 
