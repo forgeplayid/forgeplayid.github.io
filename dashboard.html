@@ -24,6 +24,7 @@ button {
     background: #38bdf8;
     border: none;
     cursor: pointer;
+    font-weight: 600;
 }
 .card {
     background: #1e293b;
@@ -58,7 +59,6 @@ h2, h3 {
 </div>
 
 <script>
-
 // ===== CEK LOGIN =====
 if(localStorage.getItem("admin_login") !== "true"){
     window.location.href = "login.html";
@@ -86,9 +86,9 @@ function updateData(){
     const worldDesc = document.getElementById("world-desc").value;
 
     // ===== UPDATE RATE =====
-    if(sellDL) db.rate.sell_dl = sellDL;
-    if(sellBGL) db.rate.sell_bgl = sellBGL;
-    if(buyDL) db.rate.buy_dl = buyDL;
+    if(sellDL) db.rate.sell_dl = Number(sellDL);
+    if(sellBGL) db.rate.sell_bgl = Number(sellBGL);
+    if(buyDL) db.rate.buy_dl = Number(buyDL);
 
     // ===== TAMBAH WORLD =====
     if(worldName || worldImage || worldDesc){
@@ -100,8 +100,15 @@ function updateData(){
     }
 
     console.log("DATA SEKARANG:", db);
-
     alert("Update berhasil (sementara, belum tersimpan online)");
+
+    // ===== RESET INPUT =====
+    document.getElementById("sell-dl").value = "";
+    document.getElementById("sell-bgl").value = "";
+    document.getElementById("buy-dl").value = "";
+    document.getElementById("world-name").value = "";
+    document.getElementById("world-image").value = "";
+    document.getElementById("world-desc").value = "";
 }
 </script>
 
