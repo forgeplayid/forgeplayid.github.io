@@ -75,26 +75,27 @@ function formatRupiah(angka){
     return "Rp. " + Number(angka).toLocaleString("id-ID");
 }
 
-// Fetch harga dari SheetDB dan update menu
-function updateHarga(){
-    fetch(SHEETDB_ENDPOINT)
-      .then(res => res.json())
-      .then(data => {
-          const obj = {};
-          data.forEach(item => obj[item.key] = item.value);
+// Ambil harga dari SheetDB dan update DOM
+async function updateHarga(){
+    try {
+        const res = await fetch(SHEETDB_ENDPOINT);
+        const data = await res.json();
 
-          // Update harga di DL & BGL
-          document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(obj.sell_dl);
-          document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(obj.buy_dl);
-          document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(obj.sell_bgl);
-      })
-      .catch(err => console.error("Gagal ambil harga:", err));
+        // Ambil row pertama
+        const row = data.data ? data.data[0] : data[0];
+
+        document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(row.sell_dl);
+        document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(row.buy_dl);
+        document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(row.sell_bgl);
+    } catch (err) {
+        console.error("Gagal ambil harga:", err);
+    }
 }
 
-// Jalankan saat halaman load
+// Jalankan saat load halaman
 updateHarga();
 
-// Optional: update tiap 1 menit
+// Update setiap 1 menit
 setInterval(updateHarga, 60000);
 </script>
 
