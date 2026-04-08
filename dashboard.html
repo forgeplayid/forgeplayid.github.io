@@ -19,6 +19,7 @@ input, button {
     width: 100%;
     padding: 10px;
     margin: 8px 0;
+    font-size: 16px;
 }
 button {
     background: #38bdf8;
@@ -44,9 +45,9 @@ h2, h3 {
     <h2>Dashboard Admin</h2>
 
     <h3>List Harga</h3>
-    <input type="number" id="sell-dl" placeholder="Sell DL">
-    <input type="number" id="sell-bgl" placeholder="Sell BGL">
-    <input type="number" id="buy-dl" placeholder="Buy DL">
+    <input type="number" id="sell-dl" placeholder="Sell DL (Rp)">
+    <input type="number" id="sell-bgl" placeholder="Sell BGL (Rp)">
+    <input type="number" id="buy-dl" placeholder="Buy DL (Rp)">
 
     <button onclick="updateData()">~~~~~ UPDATE ~~~~~</button>
 </div>
@@ -54,36 +55,41 @@ h2, h3 {
 </div>
 
 <script>
-// ===== CEK LOGIN =====
-if(localStorage.getItem("admin_login") !== "true"){
-    window.location.href = "login.html";
-}
-
-// ===== SIMULASI DATABASE (sementara) =====
-let db = {
-    rate: {
-        sell_dl: 0,
-        sell_bgl: 0,
-        buy_dl: 0
-    }
-};
+const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
 
 // ===== UPDATE FUNCTION =====
 function updateData(){
-
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
     const buyDL = document.getElementById("buy-dl").value;
 
-    // ===== UPDATE RATE =====
-    if(sellDL) db.rate.sell_dl = Number(sellDL);
-    if(sellBGL) db.rate.sell_bgl = Number(sellBGL);
-    if(buyDL) db.rate.buy_dl = Number(buyDL);
+    if(!sellDL && !sellBGL && !buyDL){
+        alert("Isi minimal satu harga untuk update!");
+        return;
+    }
 
-    console.log("DATA SEKARANG:", db);
-    alert("Update berhasil (sementara, belum tersimpan online)");
+    const data = [
+        { key: "sell_dl", value: sellDL },
+        { key: "sell_bgl", value: sellBGL },
+        { key: "buy_dl", value: buyDL }
+    ];
 
-    // ===== RESET INPUT =====
+    data.forEach(item => {
+        if(item.value){ // hanya update jika ada input
+            fetch(`${SHEETDB_ENDPOINT}/key/${item.key}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data: [{ value: Number(item.value) }] })
+            })
+            .then(res => res.json())
+            .then(resp => console.log(resp))
+            .catch(err => console.error(err));
+        }
+    });
+
+    alert("Harga berhasil diupdate!");
+
+    // Reset input
     document.getElementById("sell-dl").value = "";
     document.getElementById("sell-bgl").value = "";
     document.getElementById("buy-dl").value = "";
