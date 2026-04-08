@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #020617;
+    color: white;
+}
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+}
+input, button {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+}
+button {
+    background: #38bdf8;
+    border: none;
+    cursor: pointer;
+}
+.card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+}
+h2, h3 {
+    color: #38bdf8;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="card">
+    <h2>Dashboard Admin</h2>
+
+    <h3>List Harga</h3>
+    <input type="number" id="sell-dl" placeholder="Sell DL">
+    <input type="number" id="sell-bgl" placeholder="Sell BGL">
+    <input type="number" id="buy-dl" placeholder="Buy DL">
+
+    <h3>List World</h3>
+    <input type="text" id="world-name" placeholder="Nama World">
+    <input type="text" id="world-image" placeholder="Link Gambar">
+    <input type="text" id="world-desc" placeholder="Deskripsi">
+
+    <button onclick="updateData()">~~~~~ UPDATE ~~~~~</button>
+</div>
+
+</div>
+
+<script>
+
+// ===== CEK LOGIN =====
+if(localStorage.getItem("admin_login") !== "true"){
+    window.location.href = "login.html";
+}
+
+// ===== SIMULASI DATABASE (sementara) =====
+let db = {
+    rate: {
+        sell_dl: 0,
+        sell_bgl: 0,
+        buy_dl: 0
+    },
+    worlds: []
+};
+
+// ===== UPDATE FUNCTION =====
+function updateData(){
+
+    const sellDL = document.getElementById("sell-dl").value;
+    const sellBGL = document.getElementById("sell-bgl").value;
+    const buyDL = document.getElementById("buy-dl").value;
+
+    const worldName = document.getElementById("world-name").value;
+    const worldImage = document.getElementById("world-image").value;
+    const worldDesc = document.getElementById("world-desc").value;
+
+    // ===== UPDATE RATE =====
+    if(sellDL) db.rate.sell_dl = sellDL;
+    if(sellBGL) db.rate.sell_bgl = sellBGL;
+    if(buyDL) db.rate.buy_dl = buyDL;
+
+    // ===== TAMBAH WORLD =====
+    if(worldName || worldImage || worldDesc){
+        db.worlds.push({
+            name: worldName || "-",
+            image: worldImage || "-",
+            desc: worldDesc || "-"
+        });
+    }
+
+    console.log("DATA SEKARANG:", db);
+
+    alert("Update berhasil (sementara, belum tersimpan online)");
+}
+</script>
+
+</body>
+</html>
