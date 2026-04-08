@@ -90,13 +90,14 @@ button:hover {
 </div>
 
 <script>
-// ==== ADMIN LOGIN DENGAN REDIRECT DAN DEBUG LOG ====
+// ==== ADMIN LOGIN DENGAN REDIRECT DAN PENYIMPANAN STATUS LOGIN ====
 const adminPass = "admin123"; // ganti sesuai kebutuhan
 function loginAdmin() {
     const input = document.getElementById("admin-password").value;
     console.log("Password input:", input);
     if (input === adminPass) {
-        console.log("Password benar, redirect ke dashboard...");
+        console.log("Password benar, simpan status login dan redirect ke dashboard...");
+        localStorage.setItem("admin_login", "true"); // simpan flag login
         window.location.assign("https://forgeplayid.github.io/dashboard.html");
     } else {
         alert("Password salah!");
