@@ -1,87 +1,20 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Admin</title>
-<style>
-body { font-family: Arial; background: #020617; color: white; margin:0; }
-.header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background:#0f172a; border-bottom:1px solid #1e293b; }
-.header .logo img { height:40px; }
-.header .header-right a { display:inline-block; padding:8px 18px; font-weight:bold; border-radius:6px; text-decoration:none; color:white; background:#ef4444; }
-.header .header-right a:hover { background:#dc2626; }
-.container { max-width:600px; margin:30px auto; padding:0 15px; }
-.card { background: #1e293b; padding:20px; border-radius:10px; margin-bottom:20px; }
-input, textarea, button, select { width:100%; padding:10px; margin:8px 0; font-size:16px; }
-textarea { min-height:80px; } /* lebih panjang untuk deskripsi */
-button { background: #38bdf8; border:none; cursor:pointer; font-weight:600; }
-h2,h3 { color:#38bdf8; }
-small { color:#94a3b8; }
-ul { list-style:none; padding:0; margin:0; }
-li { padding:8px 0; border-bottom:1px solid #333; display:flex; justify-content:space-between; align-items:center; }
-.status-ready { color:#22c55e; font-weight:bold; }
-.status-sold { color:#ef4444; font-weight:bold; }
-.action-btn { margin-left:8px; padding:4px 8px; font-size:14px; border:none; border-radius:4px; cursor:pointer; }
-.action-edit { background:#38bdf8; color:#020617; }
-.action-delete { background:#ef4444; color:white; }
-</style>
-</head>
-<body>
-
-<div class="header">
-  <div class="logo">
-    <a href="https://forgeplayid.github.io/dashboard.html">
-      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="Logo">
-    </a>
-  </div>
-  <div class="header-right">
-    <a href="#" id="logoutBtn">Log Out</a>
-  </div>
 </div>
-
-<div class="container">
-
-<!-- ===== HARGA ===== -->
-<div class="card">
-<h2>Dashboard Admin</h2>
-
-<h3>List Harga</h3>
-<input type="number" id="sell-dl" placeholder="Sell DL (Rp)">
-<input type="number" id="sell-bgl" placeholder="Sell BGL (Rp)">
-<input type="number" id="buy-dl" placeholder="Buy DL (Rp)">
-<button onclick="updateData()">~~~~~ UPDATE ~~~~~</button>
-</div>
-
-<!-- ===== LIST WORLD BARU ===== -->
-<div class="card">
-<h3>Tambah World</h3>
-<input type="text" id="world-image" placeholder="Link Gambar">
-<small>Ukuran disarankan 1280 x 798</small>
-<input type="text" id="world-name" placeholder="Name">
-<textarea id="world-desc" placeholder="Deskripsi"></textarea>
-<button onclick="tambahWorld()">~~~~~ TAMBAH WORLD ~~~~~</button>
-</div>
-
-<!-- ===== DAFTAR WORLD ===== -->
-<div class="card">
-<h3>Daftar World</h3>
-<ul id="world-list">
-  <!-- List world otomatis dari SheetDB -->
-</ul>
-</div>
-
 </div>
 
 <script>
 const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
-const ROW_ID = 1; // untuk harga
+const ROW_ID = 1;
 
 // ===== UPDATE HARGA =====
 function updateData(){
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
     const buyDL = document.getElementById("buy-dl").value;
-    if(!sellDL && !sellBGL && !buyDL){ alert("Isi minimal satu harga!"); return; }
+
+    if(!sellDL && !sellBGL && !buyDL){
+        alert("Isi minimal satu harga untuk update!");
+        return;
+    }
 
     const payload = {};
     if(sellDL) payload.sell_dl = Number(sellDL);
@@ -89,96 +22,38 @@ function updateData(){
     if(buyDL) payload.buy_dl = Number(buyDL);
 
     fetch(`${SHEETDB_ENDPOINT}/id/${ROW_ID}`, {
-        method:"PUT",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({data:[payload]})
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ data: [payload] })
     })
-    .then(res => res.json())
-    .then(()=>{ 
+    .then(res => {
+        if(!res.ok) throw new Error(`Update gagal, status: ${res.status}`);
+        return res.json();
+    })
+    .then(resp => {
+        console.log("Update sukses:", resp);
         alert("Harga berhasil diupdate!");
-        document.getElementById("sell-dl").value="";
-        document.getElementById("sell-bgl").value="";
-        document.getElementById("buy-dl").value="";
+        document.getElementById("sell-dl").value = "";
+        document.getElementById("sell-bgl").value = "";
+        document.getElementById("buy-dl").value = "";
     })
-    .catch(err => alert("Gagal update harga! "+err.message));
-}
-
-// ===== TAMBAH WORLD =====
-function tambahWorld(){
-    const image = document.getElementById("world-image").value;
-    const name = document.getElementById("world-name").value;
-    const desc = document.getElementById("world-desc").value;
-    if(!image||!name||!desc){ alert("Semua field wajib diisi!"); return; }
-
-    const data = { data:[{image_url:image,name:name,description:desc,status:"READY"}] };
-
-    fetch(SHEETDB_ENDPOINT, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data) })
-    .then(res=>res.json())
-    .then(()=>{ 
-        alert("World berhasil ditambahkan!");
-        document.getElementById("world-image").value="";
-        document.getElementById("world-name").value="";
-        document.getElementById("world-desc").value="";
-        loadWorldList(); // refresh list
-    })
-    .catch(err=>{ alert("Gagal tambah world!"); console.error(err); });
-}
-
-// ===== LOAD DAFTAR WORLD =====
-function loadWorldList(){
-    fetch(SHEETDB_ENDPOINT)
-    .then(res=>res.json())
-    .then(data=>{
-        const ul = document.getElementById("world-list");
-        ul.innerHTML="";
-        data.forEach(item=>{
-            if(!item.name) return; // skip empty
-            const li = document.createElement("li");
-            li.innerHTML = `
-                ${item.name} (<span class="${item.status.toLowerCase()==='sold'?'status-sold':'status-ready'}">${item.status}</span>)
-                <span>
-                    <button class="action-btn action-edit" onclick="editWorld('${item._id}','${item.status}')">EDIT</button>
-                    <button class="action-btn action-delete" onclick="deleteWorld('${item._id}')">DELETE</button>
-                </span>
-            `;
-            ul.appendChild(li);
-        });
-    })
-    .catch(err=>console.error("Gagal load list world:",err));
-}
-
-// ===== EDIT WORLD =====
-function editWorld(id,currentStatus){
-    const newStatus = prompt("Ganti status READY/SOLD:", currentStatus);
-    if(!newStatus) return;
-    fetch(`${SHEETDB_ENDPOINT}/id/${id}`, {
-        method:"PUT",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({data:[{status:newStatus.toUpperCase()}]})
-    })
-    .then(()=>loadWorldList())
-    .catch(err=>alert("Gagal update status! "+err.message));
-}
-
-// ===== DELETE WORLD =====
-function deleteWorld(id){
-    if(!confirm("Apakah ingin menghapus World ini?")) return;
-    fetch(`${SHEETDB_ENDPOINT}/id/${id}`, { method:"DELETE" })
-    .then(()=>loadWorldList())
-    .catch(err=>alert("Gagal hapus world! "+err.message));
+    .catch(err => {
+        console.error("Gagal update:", err);
+        alert("Gagal update harga! " + err.message);
+    });
 }
 
 // ===== LOGOUT =====
 document.getElementById("logoutBtn").addEventListener("click", function(e){
-    e.preventDefault();
+    e.preventDefault(); // cegah link reload default
+    // hapus token/session lokal
     localStorage.removeItem("admin_login");
+    // bisa tambah hapus cookie atau session lainnya di sini jika perlu
     alert("Log Out berhasil!");
-    window.location.href = "login.html";
+    // reload halaman atau redirect ke login page
+    window.location.href = "login.html"; // ganti sesuai halaman loginmu
 });
-
-// ===== INIT =====
-loadWorldList();
-
 </script>
+
 </body>
 </html>
