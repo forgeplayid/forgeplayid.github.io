@@ -47,13 +47,10 @@ small { color:#94a3b8; display:block; margin-top:10px; min-height:20px; }
 </div>
 
 <script>
-// =====================
-// CONFIG GOOGLE APPS SCRIPT
-// =====================
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyFx8X-lCZ9BRUpweXwIIIMRBcN0UBg7YrRSCWNBsBB/dev";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycby1UJWtPzAo5xITt5k38agkaWE0y6MHnNyrdFYjSv9lJ32bxBVHZzkgayqnqd8X3IYvKA/exec";
 
 // =====================
-// Load Harga dari GAS
+// Load harga
 // =====================
 async function loadHarga(){
     try {
@@ -68,7 +65,7 @@ async function loadHarga(){
 }
 
 // =====================
-// Update Harga ke GAS
+// Update harga
 // =====================
 async function updateHarga(){
     const sellDL = document.getElementById("sell-dl").value;
@@ -81,23 +78,15 @@ async function updateHarga(){
     }
 
     try {
-        const formData = new URLSearchParams();
-        if(sellDL) formData.append("sell_dl", sellDL);
-        if(sellBGL) formData.append("sell_bgl", sellBGL);
-        if(buyDL) formData.append("buy_dl", buyDL);
-
         const res = await fetch(WEBAPP_URL, {
             method: "POST",
-            body: formData
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sell_dl: sellDL, sell_bgl: sellBGL, buy_dl: buyDL })
         });
-        const data = await res.json();
-        if(data.status === "success"){
-            document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
-            setTimeout(()=>document.getElementById("harga-status").textContent="", 3000);
-            loadHarga();
-        } else {
-            throw new Error(data.error || "Update gagal");
-        }
+        if(!res.ok) throw new Error(`Status: ${res.status}`);
+        document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
+        setTimeout(()=>document.getElementById("harga-status").textContent="", 3000);
+        loadHarga();
     } catch(err){
         console.error(err);
         alert("❌ Gagal update harga! " + err.message);
@@ -115,7 +104,7 @@ document.getElementById("logoutBtn").addEventListener("click", function(e){
 });
 
 // =====================
-// Load Awal
+// Load awal
 // =====================
 loadHarga();
 </script>
