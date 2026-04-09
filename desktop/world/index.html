@@ -8,38 +8,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
 
 <style>
-    body { margin:0; font-family:'Montserrat',sans-serif; background-color:#020617; color:white; }
+body { margin:0; font-family:'Montserrat',sans-serif; background-color:#020617; color:white; }
 
-    .header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background-color:#0f172a; border-bottom:1px solid #1e293b; }
-    .logo img { height:35px; }
-    .logo a { text-decoration:none; }
-    .header-right a { padding:8px 18px; background-color:#38bdf8; color:#020617; font-weight:600; border-radius:6px; text-decoration:none; }
+.header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background-color:#0f172a; border-bottom:1px solid #1e293b; }
+.logo img { height:35px; }
+.logo a { text-decoration:none; }
+.header-right a { padding:8px 18px; background-color:#38bdf8; color:#020617; font-weight:600; border-radius:6px; text-decoration:none; }
 
-    .container { max-width:1200px; margin:30px auto 50px auto; padding:0 15px; }
-    h1 { text-align:center; color:#38bdf8; margin-bottom:25px; }
+.container { max-width:1200px; margin:30px auto 50px auto; padding:0 15px; }
+h1 { text-align:center; color:#38bdf8; margin-bottom:25px; }
 
-    .world-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; justify-items:center; }
-    .world-card { width:100%; max-width:280px; background-color:#1e293b; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.3); transition:transform 0.2s; display:flex; flex-direction:column; cursor:default; }
-    .world-card:hover { transform:translateY(-5px); }
+.world-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; justify-items:center; }
+.world-card { width:100%; max-width:280px; background-color:#1e293b; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.3); transition:transform 0.2s; display:flex; flex-direction:column; cursor:default; }
+.world-card:hover { transform:translateY(-5px); }
 
-    .world-image { width:100%; position:relative; padding-top:calc(798/1280*100%); background-color:#0f172a; overflow:hidden; }
-    .world-image img { position:absolute; top:0; left:0; right:0; bottom:0; width:100%; height:100%; object-fit:contain; cursor:zoom-in; transition:transform 0.3s ease; display:block; border-bottom:1px solid #1e293b; user-select:none; }
+.world-image { width:100%; position:relative; padding-top:calc(798/1280*100%); background-color:#0f172a; overflow:hidden; }
+.world-image img { position:absolute; top:0; left:0; right:0; bottom:0; width:100%; height:100%; object-fit:contain; cursor:zoom-in; transition:transform 0.3s ease; display:block; border-bottom:1px solid #1e293b; user-select:none; }
 
-    .world-desc { padding:15px; font-size:14px; color:#cbd5f5; flex-grow:1; }
-    .world-desc ul { padding-left:18px; margin:8px 0 0 0; }
-    .world-desc li { margin-bottom:4px; }
+.world-desc { padding:15px; font-size:14px; color:#cbd5f5; flex-grow:1; }
+.world-desc ul { padding-left:18px; margin:8px 0 0 0; }
+.world-desc li { margin-bottom:4px; }
 
-    .buy-button { display:block; margin:15px auto 20px auto; padding:10px 20px; color:#020617; font-weight:600; border-radius:8px; text-decoration:none; text-align:center; width:70%; transition:background-color 0.2s; cursor:pointer; }
+.buy-button { display:block; margin:15px auto 20px auto; padding:10px 20px; color:#020617; font-weight:600; border-radius:8px; text-decoration:none; text-align:center; width:70%; transition:background-color 0.2s; cursor:pointer; }
 
-    .zoom-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background-color:rgba(0,0,0,0.85); display:none; justify-content:center; align-items:center; cursor:zoom-out; z-index:9999; padding:15px; }
-    .zoom-overlay.active { display:flex; }
-    .zoom-overlay img { max-width:90%; max-height:90%; border-radius:12px; box-shadow:0 0 30px rgba(255,255,255,0.6); cursor:zoom-out; transform:scale(1); transition:transform 0.3s ease; user-select:none; }
-    .zoom-overlay img.zoom-animate { transform:scale(1.2); }
+.zoom-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background-color:rgba(0,0,0,0.85); display:none; justify-content:center; align-items:center; cursor:zoom-out; z-index:9999; padding:15px; }
+.zoom-overlay.active { display:flex; }
+.zoom-overlay img { max-width:90%; max-height:90%; border-radius:12px; box-shadow:0 0 30px rgba(255,255,255,0.6); cursor:zoom-out; transform:scale(1); transition:transform 0.3s ease; user-select:none; }
+.zoom-overlay img.zoom-animate { transform:scale(1.2); }
 
-    @media (max-width:1024px) { .world-grid { grid-template-columns:repeat(3,1fr); } }
-    @media (max-width:700px) { .world-grid { grid-template-columns:repeat(2,1fr); } }
-    @media (max-width:400px) { .world-grid { grid-template-columns:1fr; } }
-    @media (max-width:500px) { .header { flex-direction:column; align-items:flex-start; } .header-right { margin-top:10px; } }
+@media (max-width:1024px) { .world-grid { grid-template-columns:repeat(3,1fr); } }
+@media (max-width:700px) { .world-grid { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:400px) { .world-grid { grid-template-columns:1fr; } }
+@media (max-width:500px) { .header { flex-direction:column; align-items:flex-start; } .header-right { margin-top:10px; } }
 </style>
 </head>
 <body>
@@ -59,7 +59,7 @@
 <div class="container">
     <h1>Daftar World</h1>
     <div class="world-grid">
-        <!-- Card akan otomatis dimasukkan oleh script -->
+        <!-- Card otomatis dimasukkan -->
     </div>
 </div>
 
@@ -74,49 +74,48 @@ const worldGrid = document.querySelector('.world-grid');
 const zoomOverlay = document.getElementById('zoomOverlay');
 const zoomedImage = document.getElementById('zoomedImage');
 
-fetch(API)
-.then(res => res.json())
-.then(data => {
-    worldGrid.innerHTML = '';
+function loadWorlds() {
+    fetch(API)
+    .then(res => res.json())
+    .then(data => {
+        worldGrid.innerHTML = '';
+        data.forEach(item => {
+            const isSold = item.status.toLowerCase() === 'sold';
+            const buttonColor = isSold ? '#ef4444' : '#22c55e';
+            const buttonText = isSold ? 'SOLD' : 'BUY WORLD';
 
-    data.forEach(item => {
-        const isSold = item.status.toLowerCase() === 'sold';
-        const buttonColor = isSold ? '#ef4444' : '#22c55e';
-        const buttonText = isSold ? 'SOLD' : 'BUY WORLD';
-
-        const card = document.createElement('div');
-        card.className = 'world-card';
-        card.innerHTML = `
-            <div class="world-image">
-                <img src="${item.image_url}" alt="${item.name}" class="zoomable-image" />
-            </div>
-            <div class="world-desc">
-                <strong>Deskripsi: ${item.name}</strong>
-                <ul>
-                    <li>${item.description}</li>
-                </ul>
-            </div>
-            <a href="https://wa.me/6285175215549?text=Saya%20ingin%20membeli%20world%20${item.name}" class="buy-button" target="_blank" style="background-color:${buttonColor}">${buttonText}</a>
-        `;
-        worldGrid.appendChild(card);
-    });
-
-    // Tambahkan listener zoom
-    document.querySelectorAll('.zoomable-image').forEach(img => {
-        img.addEventListener('click', () => {
-            zoomedImage.src = img.src;
-            zoomOverlay.classList.add('active');
-            zoomOverlay.setAttribute('aria-hidden','false');
-            zoomedImage.classList.add('zoom-animate');
-            setTimeout(() => zoomedImage.classList.remove('zoom-animate'), 300);
+            const card = document.createElement('div');
+            card.className = 'world-card';
+            card.innerHTML = `
+                <div class="world-image">
+                    <img src="${item.image_url}" alt="${item.name}" class="zoomable-image" />
+                </div>
+                <div class="world-desc">
+                    <strong>${item.name}</strong>
+                    <ul><li>${item.description}</li></ul>
+                    <p>Status: <span style="font-weight:600; color:${isSold?'#ef4444':'#22c55e'}">${item.status}</span></p>
+                </div>
+                <a href="${isSold?'#':'https://wa.me/6285175215549?text=Saya%20ingin%20membeli%20world%20'+encodeURIComponent(item.name)}" class="buy-button" target="_blank" style="background-color:${buttonColor}">${buttonText}</a>
+            `;
+            worldGrid.appendChild(card);
         });
-    });
 
-})
-.catch(err => console.error('Gagal load World:', err));
+        // Zoom listener
+        document.querySelectorAll('.zoomable-image').forEach(img => {
+            img.addEventListener('click', () => {
+                zoomedImage.src = img.src;
+                zoomOverlay.classList.add('active');
+                zoomOverlay.setAttribute('aria-hidden','false');
+                zoomedImage.classList.add('zoom-animate');
+                setTimeout(() => zoomedImage.classList.remove('zoom-animate'), 300);
+            });
+        });
+    })
+    .catch(err => console.error('Gagal load World:', err));
+}
 
 // Zoom overlay close
-zoomOverlay.addEventListener('click', (e) => {
+zoomOverlay.addEventListener('click', e => {
     if(e.target === zoomOverlay){
         zoomOverlay.classList.remove('active');
         zoomedImage.src='';
@@ -135,6 +134,9 @@ document.addEventListener('keydown',(e)=>{
         zoomOverlay.setAttribute('aria-hidden','true');
     }
 });
+
+// Load saat pertama kali
+loadWorlds();
 </script>
 
 </body>
