@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Admin</title>
 <style>
-body { font-family: Arial, sans-serif; background: #020617; color: white; margin:0; }
+body { font-family: Arial; background: #020617; color: white; margin:0; }
 .header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background:#0f172a; border-bottom:1px solid #1e293b; }
 .header .logo img { height:40px; }
 .header .header-right a { display:inline-block; padding:8px 18px; font-weight:bold; border-radius:6px; text-decoration:none; color:white; background:#ef4444; }
@@ -48,18 +48,19 @@ small { color:#94a3b8; display:block; margin-bottom:5px; }
 </div>
 
 <script>
+// SheetDB endpoint baru untuk RATE
 const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/na3o3j795wzee";
-const ROW_ID = 1; // ID baris harga di Sheet RATE
 
 // ===== AMBIL DATA AWAL =====
 function loadHarga(){
-    fetch(`${SHEETDB_ENDPOINT}/id/${ROW_ID}`)
+    fetch(SHEETDB_ENDPOINT)
     .then(res => res.json())
     .then(data => {
-        if(data && data[0]){
-            document.getElementById("sell-dl").value = data[0].sell_dl || "";
-            document.getElementById("sell-bgl").value = data[0].sell_bgl || "";
-            document.getElementById("buy-dl").value = data[0].buy_dl || "";
+        if(data && data.length > 0){
+            const row = data[0]; // ambil baris pertama
+            document.getElementById("sell-dl").value = row.sell_dl || "";
+            document.getElementById("sell-bgl").value = row.sell_bgl || "";
+            document.getElementById("buy-dl").value = row.buy_dl || "";
         }
     })
     .catch(err => console.error("Gagal load harga:", err));
@@ -81,10 +82,10 @@ function updateHarga(){
     if(sellBGL) payload.sell_bgl = Number(sellBGL);
     if(buyDL) payload.buy_dl = Number(buyDL);
 
-    fetch(`${SHEETDB_ENDPOINT}/id/${ROW_ID}`, {
+    fetch(SHEETDB_ENDPOINT, {
         method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ data: [payload] })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: [payload] }) // langsung pakai array
     })
     .then(res => {
         if(!res.ok) throw new Error(`Status: ${res.status}`);
