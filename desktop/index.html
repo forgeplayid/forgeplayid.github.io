@@ -58,22 +58,13 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 </div>
 
 <script>
-// =====================
-// CONFIG GOOGLE APPS SCRIPT
-// =====================
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyFx8X-lCZ9BRUpweXwIIIMRBcN0UBg7YrRSCWNBsBB/dev";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycby1UJWtPzAo5xITt5k38agkaWE0y6MHnNyrdFYjSv9lJ32bxBVHZzkgayqnqd8X3IYvKA/exec";
 
-// =====================
-// Format angka ke Rupiah
-// =====================
 function formatRupiah(angka){
   if(!angka) return "Rp. -";
   return "Rp. " + Number(angka).toLocaleString("id-ID");
 }
 
-// =====================
-// Load harga dari GAS
-// =====================
 async function loadHarga(){
     try {
         const res = await fetch(WEBAPP_URL);
@@ -86,14 +77,7 @@ async function loadHarga(){
     }
 }
 
-// =====================
-// Jalankan saat load halaman
-// =====================
 loadHarga();
-
-// =====================
-// Refresh setiap 1 menit
-// =====================
 setInterval(loadHarga, 60000);
 </script>
 
