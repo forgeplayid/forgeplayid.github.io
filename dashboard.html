@@ -48,80 +48,77 @@ small { color:#94a3b8; display:block; margin-top:10px; min-height:20px; }
 
 <script>
 // =====================
-// Web App URL terbaru
+// CONFIG
 // =====================
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
 
 // =====================
-// Load harga awal
+// Load Harga Awal
 // =====================
-async function loadHarga() {
-  try {
-    const res = await fetch(WEBAPP_URL + "?action=get");
-    const data = await res.json();
-    document.getElementById("sell-dl").value = data.sell_dl || "";
-    document.getElementById("sell-bgl").value = data.sell_bgl || "";
-    document.getElementById("buy-dl").value = data.buy_dl || "";
-  } catch(err) {
-    console.error("Gagal load harga:", err);
-  }
+async function loadHarga(){
+    try {
+        const res = await fetch(WEBAPP_URL);
+        const data = await res.json();
+        document.getElementById("sell-dl").value = data.sell_dl || "";
+        document.getElementById("sell-bgl").value = data.sell_bgl || "";
+        document.getElementById("buy-dl").value = data.buy_dl || "";
+    } catch(err){
+        console.error("Gagal load harga:", err);
+    }
 }
 
 // =====================
-// Update harga ke Web App
+// Update Harga
 // =====================
-async function updateHarga() {
-  const sellDL = document.getElementById("sell-dl").value;
-  const sellBGL = document.getElementById("sell-bgl").value;
-  const buyDL = document.getElementById("buy-dl").value;
+async function updateHarga(){
+    const sellDL = document.getElementById("sell-dl").value;
+    const sellBGL = document.getElementById("sell-bgl").value;
+    const buyDL = document.getElementById("buy-dl").value;
 
-  if(!sellDL && !sellBGL && !buyDL){
-    alert("Isi minimal satu harga!");
-    return;
-  }
-
-  try {
-    const payload = {
-      action: "update",
-      sell_dl: sellDL ? Number(sellDL) : null,
-      sell_bgl: sellBGL ? Number(sellBGL) : null,
-      buy_dl: buyDL ? Number(buyDL) : null
-    };
-
-    const res = await fetch(WEBAPP_URL, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { "Content-Type": "application/json" }
-    });
-
-    if(!res.ok) throw new Error(`Status: ${res.status}`);
-
-    const data = await res.json();
-    if(data.status === "ok"){
-      document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
-      setTimeout(()=>document.getElementById("harga-status").textContent = "",3000);
-      loadHarga();
-    } else {
-      throw new Error(data.message || "Update gagal");
+    if(!sellDL && !sellBGL && !buyDL){
+        alert("Isi minimal satu harga!");
+        return;
     }
-  } catch(err){
-    console.error(err);
-    alert("❌ Gagal update harga! " + err.message);
-  }
+
+    try {
+        const payload = {
+            sell_dl: Number(sellDL),
+            sell_bgl: Number(sellBGL),
+            buy_dl: Number(buyDL)
+        };
+
+        const res = await fetch(WEBAPP_URL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if(data.status === "ok"){
+            document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
+            setTimeout(()=>document.getElementById("harga-status").textContent="",3000);
+            loadHarga();
+        } else {
+            document.getElementById("harga-status").textContent = "❌ Gagal update harga! " + data.message;
+        }
+    } catch(err){
+        console.error(err);
+        document.getElementById("harga-status").textContent = "❌ Gagal update harga! " + err.message;
+    }
 }
 
 // =====================
 // Logout
 // =====================
 document.getElementById("logoutBtn").addEventListener("click", function(e){
-  e.preventDefault();
-  localStorage.removeItem("admin_login");
-  alert("Log Out berhasil!");
-  window.location.href = "login.html";
+    e.preventDefault();
+    localStorage.removeItem("admin_login");
+    alert("Log Out berhasil!");
+    window.location.href = "login.html";
 });
 
 // =====================
-// Load harga saat halaman dibuka
+// Load awal
 // =====================
 loadHarga();
 </script>
