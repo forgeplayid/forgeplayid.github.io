@@ -58,23 +58,26 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 </div>
 
 <script>
+// ==== CONFIG WEBAPP ====
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
 
+// ==== FORMAT RUPIAH ====
 function formatRupiah(angka){
   if(!angka) return "Rp. -";
   return "Rp. " + Number(angka).toLocaleString("id-ID");
 }
 
+// ==== LOAD HARGA ====
 async function loadHarga(){
-    try {
-        const res = await fetch(WEBAPP_URL);
-        const data = await res.json();
-        document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(data.sell_dl);
-        document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(data.buy_dl);
-        document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(data.sell_bgl);
-    } catch(err){
-        console.error("Gagal ambil harga:", err);
-    }
+  try{
+    const res = await fetch(WEBAPP_URL);
+    const data = await res.json();
+    document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(data.sell_dl);
+    document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(data.buy_dl);
+    document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(data.sell_bgl);
+  } catch(err){
+    console.error("Gagal ambil harga:", err);
+  }
 }
 
 loadHarga();
