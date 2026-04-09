@@ -58,7 +58,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 </div>
 
 <script>
-// Endpoint baru SheetDB
+// Endpoint RATE terbaru
 const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/na3o3j795wzee";
 
 // Format angka ke Rupiah
@@ -67,25 +67,24 @@ function formatRupiah(angka){
   return "Rp. " + Number(angka).toLocaleString("id-ID");
 }
 
-// Fetch harga dari SheetDB dan update menu
+// Ambil harga dan update menu
 function updateHarga(){
-  fetch(SHEETDB_ENDPOINT + "/id/1") // pakai id=1 agar tetap update baris yang ada
+  fetch(SHEETDB_ENDPOINT)
     .then(res => res.json())
     .then(data => {
       if(!data || data.length === 0) return;
-
-      const obj = data[0];
-      document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(obj.sell_dl);
-      document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(obj.buy_dl);
-      document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(obj.sell_bgl);
+      const row = data[0]; // ambil baris pertama
+      document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(row.sell_dl);
+      document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(row.buy_dl);
+      document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(row.sell_bgl);
     })
     .catch(err => console.error("Gagal ambil harga:", err));
 }
 
-// Jalankan saat halaman load
+// Jalankan saat load halaman
 updateHarga();
 
-// Optional: update tiap 1 menit
+// Update otomatis tiap 1 menit
 setInterval(updateHarga, 60000);
 </script>
 
