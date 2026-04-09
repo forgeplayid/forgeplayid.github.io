@@ -12,10 +12,13 @@ body { font-family: Arial; background: #020617; color: white; margin:0; }
 .header .header-right a:hover { background:#dc2626; }
 .container { max-width:500px; margin:30px auto; padding:0 15px; }
 .card { background: #1e293b; padding:20px; border-radius:10px; margin-bottom:20px; }
-input, textarea, button { width:100%; padding:10px; margin:8px 0; font-size:16px; }
+input, textarea, button, select { width:100%; padding:10px; margin:8px 0; font-size:16px; }
 button { background: #38bdf8; border:none; cursor:pointer; font-weight:600; }
 h2,h3 { color:#38bdf8; }
 small { color:#94a3b8; }
+.world-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:10px; background:#0f172a; border-radius:6px; }
+.world-item button { width:auto; padding:6px 12px; font-size:14px; }
+.world-item span { flex:1; margin-left:10px; word-break:break-word; }
 </style>
 </head>
 <body>
@@ -56,14 +59,24 @@ small { color:#94a3b8; }
 
 <textarea id="world-desc" placeholder="Deskripsi"></textarea>
 
+<select id="world-status">
+  <option value="buy">BUY</option>
+  <option value="sold">SOLD</option>
+</select>
+
 <button onclick="tambahWorld()">~~~~~ UPDATE ~~~~~</button>
+
+<h4>Daftar World</h4>
+<div id="world-list"></div>
 </div>
 
 </div>
 
 <script>
-const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
-const ROW_ID = 1;
+// ===== ENDPOINT =====
+const SHEETDB_HARGA = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
+const ROW_ID_HARGA = 1;
+const SHEETDB_WORLD = "https://sheetdb.io/api/v1/lcgaa49k16h8g";
 
 // ===== UPDATE HARGA =====
 function updateData(){
@@ -81,24 +94,19 @@ function updateData(){
     if(sellBGL) payload.sell_bgl = Number(sellBGL);
     if(buyDL) payload.buy_dl = Number(buyDL);
 
-    fetch(`${SHEETDB_ENDPOINT}/id/${ROW_ID}`, {
+    fetch(`${SHEETDB_HARGA}/id/${ROW_ID_HARGA}`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ data: [payload] })
     })
-    .then(res => {
-        if(!res.ok) throw new Error(`Update gagal, status: ${res.status}`);
-        return res.json();
-    })
+    .then(res => res.json())
     .then(resp => {
         alert("Harga berhasil diupdate!");
         document.getElementById("sell-dl").value = "";
         document.getElementById("sell-bgl").value = "";
         document.getElementById("buy-dl").value = "";
     })
-    .catch(err => {
-        alert("Gagal update harga! " + err.message);
-    });
+    .catch(err => alert("Gagal update harga! " + err.message));
 }
 
 // ===== TAMBAH WORLD =====
@@ -106,6 +114,7 @@ function tambahWorld(){
     const image = document.getElementById("world-image").value;
     const name = document.getElementById("world-name").value;
     const desc = document.getElementById("world-desc").value;
+    const status = document.getElementById("world-status").value;
 
     if(!image || !name || !desc){
         alert("Semua field wajib diisi!");
@@ -113,29 +122,70 @@ function tambahWorld(){
     }
 
     const data = {
-        data: [{
-            image_url: image,
-            name: name,
-            description: desc
-        }]
+        data: [{ image_url:image, name:name, description:desc, status:status }]
     };
 
-    fetch(SHEETDB_ENDPOINT, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
+    fetch(SHEETDB_WORLD, {
+        method:"POST",
+        headers: {"Content-Type":"application/json"},
         body: JSON.stringify(data)
     })
-    .then(res => res.json())
-    .then(res => {
+    .then(res=>res.json())
+    .then(res=>{
         alert("World berhasil ditambahkan!");
-        document.getElementById("world-image").value = "";
-        document.getElementById("world-name").value = "";
-        document.getElementById("world-desc").value = "";
+        document.getElementById("world-image").value="";
+        document.getElementById("world-name").value="";
+        document.getElementById("world-desc").value="";
+        document.getElementById("world-status").value="buy";
+        loadWorlds();
     })
-    .catch(err => {
-        alert("Gagal tambah world!");
+    .catch(err=>{
         console.error(err);
+        alert("Gagal tambah world!");
     });
+}
+
+// ===== LOAD WORLD =====
+function loadWorlds(){
+    fetch(SHEETDB_WORLD)
+    .then(res=>res.json())
+    .then(data=>{
+        const container = document.getElementById("world-list");
+        container.innerHTML="";
+        data.forEach(item=>{
+            const div = document.createElement("div");
+            div.className="world-item";
+            div.innerHTML = `
+                <span><strong>${item.name}</strong> - ${item.description} [${item.status.toUpperCase()}]</span>
+                <button onclick="toggleStatus('${item.id}', '${item.status}')">${item.status==='buy'?'SOLD':'BUY'}</button>
+                <button onclick="hapusWorld('${item.id}')">Hapus</button>
+            `;
+            container.appendChild(div);
+        });
+    })
+    .catch(err=>console.error('Gagal load world:', err));
+}
+
+// ===== TOGGLE STATUS =====
+function toggleStatus(id, currentStatus){
+    const newStatus = currentStatus==='buy'?'sold':'buy';
+    fetch(`${SHEETDB_WORLD}/id/${id}`, {
+        method:"PUT",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ data:[{ status:newStatus }] })
+    })
+    .then(res=>res.json())
+    .then(resp=>loadWorlds())
+    .catch(err=>console.error(err));
+}
+
+// ===== HAPUS WORLD =====
+function hapusWorld(id){
+    if(!confirm("Yakin mau hapus world ini?")) return;
+    fetch(`${SHEETDB_WORLD}/id/${id}`, { method:"DELETE" })
+    .then(res=>res.json())
+    .then(resp=>loadWorlds())
+    .catch(err=>console.error(err));
 }
 
 // ===== LOGOUT =====
@@ -143,8 +193,11 @@ document.getElementById("logoutBtn").addEventListener("click", function(e){
     e.preventDefault();
     localStorage.removeItem("admin_login");
     alert("Log Out berhasil!");
-    window.location.href = "login.html";
+    window.location.href="login.html";
 });
+
+// LOAD WORLD LIST SAAT HALAMAN DIBUKA
+loadWorlds();
 </script>
 
 </body>
