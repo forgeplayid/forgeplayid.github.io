@@ -13,7 +13,7 @@ body { font-family: Arial; background: #020617; color: white; margin:0; }
 .container { max-width:500px; margin:30px auto; padding:0 15px; }
 .card { background: #1e293b; padding:20px; border-radius:10px; margin-bottom:20px; }
 input, button { width:100%; padding:10px; margin:8px 0; font-size:16px; border-radius:6px; border:none; }
-button { background: #38bdf8; color:#020617; font-weight:600; cursor:pointer; transition: 0.2s; }
+button { background: #38bdf8; color:#020617; font-weight:600; cursor:pointer; transition:0.2s; }
 button:hover { background:#0ea5e9; }
 h2,h3 { color:#38bdf8; margin:0 0 10px 0; }
 small { color:#94a3b8; display:block; margin-bottom:5px; }
@@ -47,17 +47,17 @@ small { color:#94a3b8; display:block; margin-bottom:5px; }
 </div>
 
 <script>
-// Endpoint RATE terbaru
+// Endpoint SheetDB RATE
 const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/na3o3j795wzee";
-const ROW_ID = 1; // baris pertama di SheetDB
+const ROW_ID = 1; // Row pertama yang selalu diupdate
 
-// ===== AMBIL DATA AWAL =====
+// Ambil data awal
 function loadHarga(){
-    fetch(`${SHEETDB_ENDPOINT}`)
+    fetch(`${SHEETDB_ENDPOINT}/id/${ROW_ID}`)
     .then(res => res.json())
     .then(data => {
-        if(data && data.length > 0){
-            const row = data[0]; 
+        if(data && data[0]){
+            const row = data[0];
             document.getElementById("sell-dl").value = row.sell_dl || "";
             document.getElementById("sell-bgl").value = row.sell_bgl || "";
             document.getElementById("buy-dl").value = row.buy_dl || "";
@@ -66,14 +66,14 @@ function loadHarga(){
     .catch(err => console.error("Gagal load harga:", err));
 }
 
-// ===== UPDATE HARGA =====
+// Update harga ke SheetDB
 function updateHarga(){
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
     const buyDL = document.getElementById("buy-dl").value;
 
     if(!sellDL && !sellBGL && !buyDL){
-        alert("Isi minimal satu harga untuk update!");
+        alert("Isi minimal satu harga!");
         return;
     }
 
@@ -84,13 +84,18 @@ function updateHarga(){
 
     fetch(`${SHEETDB_ENDPOINT}/id/${ROW_ID}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ data: [payload] })
     })
-    .then(res => res.json())
+    .then(res => {
+        if(!res.ok) throw new Error(`Status: ${res.status}`);
+        return res.json();
+    })
     .then(resp => {
         document.getElementById("harga-status").textContent = "Harga berhasil diupdate!";
         setTimeout(()=> document.getElementById("harga-status").textContent="", 3000);
+        // Refresh nilai input setelah update
+        loadHarga();
     })
     .catch(err => {
         console.error(err);
@@ -98,15 +103,15 @@ function updateHarga(){
     });
 }
 
-// ===== LOGOUT =====
-document.getElementById("logoutBtn").addEventListener("click", function(e){
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", e=>{
     e.preventDefault();
     localStorage.removeItem("admin_login");
     alert("Log Out berhasil!");
     window.location.href = "login.html";
 });
 
-// ===== LOAD DATA AWAL =====
+// Load harga saat halaman dibuka
 loadHarga();
 </script>
 
