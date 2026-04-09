@@ -47,14 +47,17 @@ small { color:#94a3b8; display:block; margin-top:10px; min-height:20px; }
 </div>
 
 <script>
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
+// =====================
+// URL Web App Google Apps Script
+// =====================
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
 
 // =====================
-// Load Harga
+// Load Harga Awal
 // =====================
 async function loadHarga(){
     try {
-        const res = await fetch(WEBAPP_URL);
+        const res = await fetch(WEB_APP_URL + "?action=get");
         const data = await res.json();
         document.getElementById("sell-dl").value = data.sell_dl || "";
         document.getElementById("sell-bgl").value = data.sell_bgl || "";
@@ -78,21 +81,22 @@ async function updateHarga(){
     }
 
     try {
-        const res = await fetch(WEBAPP_URL, {
+        const res = await fetch(WEB_APP_URL, {
             method: "POST",
-            body: JSON.stringify({ sell_dl: sellDL, sell_bgl: sellBGL, buy_dl: buyDL }),
+            body: JSON.stringify({sell_dl: sellDL, sell_bgl: sellBGL, buy_dl: buyDL}),
+            headers: { "Content-Type": "application/json" }
         });
-        const result = await res.json();
-        if(result.status === "ok"){
+        const data = await res.json();
+        if(data.status === "ok"){
             document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
-            setTimeout(()=>document.getElementById("harga-status").textContent="",3000);
+            setTimeout(()=>document.getElementById("harga-status").textContent="", 3000);
             loadHarga();
         } else {
-            throw new Error("Gagal update harga");
+            throw new Error(data.message || "Update gagal");
         }
     } catch(err){
-        alert("❌ Gagal update harga! " + err.message);
         console.error(err);
+        alert("❌ Gagal update harga! " + err.message);
     }
 }
 
@@ -107,7 +111,7 @@ document.getElementById("logoutBtn").addEventListener("click", function(e){
 });
 
 // =====================
-// Load Awal
+// Load saat halaman dibuka
 // =====================
 loadHarga();
 </script>
