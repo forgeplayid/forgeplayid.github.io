@@ -11,15 +11,15 @@ body { font-family: Arial; background: #020617; color: white; margin:0; }
 .header .header-right a { display:inline-block; padding:8px 18px; font-weight:bold; border-radius:6px; text-decoration:none; color:white; background:#ef4444; }
 .header .header-right a:hover { background:#dc2626; }
 .container { max-width:500px; margin:30px auto; padding:0 15px; }
-.card { background: #1e293b; padding:20px; border-radius:10px; }
-input, button { width:100%; padding:10px; margin:8px 0; font-size:16px; }
+.card { background: #1e293b; padding:20px; border-radius:10px; margin-bottom:20px; }
+input, textarea, button { width:100%; padding:10px; margin:8px 0; font-size:16px; }
 button { background: #38bdf8; border:none; cursor:pointer; font-weight:600; }
 h2,h3 { color:#38bdf8; }
+small { color:#94a3b8; }
 </style>
 </head>
 <body>
 
-<!-- HEADER MIRIP DESKTOP -->
 <div class="header">
   <div class="logo">
     <a href="https://forgeplayid.github.io/dashboard.html">
@@ -32,6 +32,8 @@ h2,h3 { color:#38bdf8; }
 </div>
 
 <div class="container">
+
+<!-- ===== HARGA ===== -->
 <div class="card">
 <h2>Dashboard Admin</h2>
 
@@ -42,6 +44,21 @@ h2,h3 { color:#38bdf8; }
 
 <button onclick="updateData()">~~~~~ UPDATE ~~~~~</button>
 </div>
+
+<!-- ===== LIST WORLD BARU ===== -->
+<div class="card">
+<h3>LIST WORLD</h3>
+
+<input type="text" id="world-image" placeholder="Link Gambar">
+<small>Ukuran disarankan 1280 x 798</small>
+
+<input type="text" id="world-name" placeholder="Name">
+
+<textarea id="world-desc" placeholder="Deskripsi"></textarea>
+
+<button onclick="tambahWorld()">~~~~~ UPDATE ~~~~~</button>
+</div>
+
 </div>
 
 <script>
@@ -74,27 +91,59 @@ function updateData(){
         return res.json();
     })
     .then(resp => {
-        console.log("Update sukses:", resp);
         alert("Harga berhasil diupdate!");
         document.getElementById("sell-dl").value = "";
         document.getElementById("sell-bgl").value = "";
         document.getElementById("buy-dl").value = "";
     })
     .catch(err => {
-        console.error("Gagal update:", err);
         alert("Gagal update harga! " + err.message);
+    });
+}
+
+// ===== TAMBAH WORLD =====
+function tambahWorld(){
+    const image = document.getElementById("world-image").value;
+    const name = document.getElementById("world-name").value;
+    const desc = document.getElementById("world-desc").value;
+
+    if(!image || !name || !desc){
+        alert("Semua field wajib diisi!");
+        return;
+    }
+
+    const data = {
+        data: [{
+            image_url: image,
+            name: name,
+            description: desc
+        }]
+    };
+
+    fetch(SHEETDB_ENDPOINT, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+        alert("World berhasil ditambahkan!");
+        document.getElementById("world-image").value = "";
+        document.getElementById("world-name").value = "";
+        document.getElementById("world-desc").value = "";
+    })
+    .catch(err => {
+        alert("Gagal tambah world!");
+        console.error(err);
     });
 }
 
 // ===== LOGOUT =====
 document.getElementById("logoutBtn").addEventListener("click", function(e){
-    e.preventDefault(); // cegah link reload default
-    // hapus token/session lokal
+    e.preventDefault();
     localStorage.removeItem("admin_login");
-    // bisa tambah hapus cookie atau session lainnya di sini jika perlu
     alert("Log Out berhasil!");
-    // reload halaman atau redirect ke login page
-    window.location.href = "login.html"; // ganti sesuai halaman loginmu
+    window.location.href = "login.html";
 });
 </script>
 
