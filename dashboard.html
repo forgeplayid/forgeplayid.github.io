@@ -48,37 +48,27 @@ small { color:#94a3b8; display:block; margin-top:10px; min-height:20px; }
 
 <script>
 // =====================
-// Airtable Config
+// CONFIG GOOGLE APPS SCRIPT
 // =====================
-const AIRTABLE_BASE_ID = "YOUR_BASE_ID";
-const AIRTABLE_TABLE_NAME = "RATE"; // nama table di Airtable
-const AIRTABLE_API_KEY = "YOUR_API_KEY";
-const AIRTABLE_ENDPOINT = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
-const HEADERS = { 
-    "Authorization": `Bearer ${AIRTABLE_API_KEY}`, 
-    "Content-Type": "application/json" 
-};
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyFx8X-lCZ9BRUpweXwIIIMRBcN0UBg7YrRSCWNBsBB/dev";
 
 // =====================
-// Load Harga
+// Load Harga dari GAS
 // =====================
 async function loadHarga(){
     try {
-        const res = await fetch(`${AIRTABLE_ENDPOINT}?maxRecords=1&view=Grid view`, { headers: HEADERS });
+        const res = await fetch(WEBAPP_URL);
         const data = await res.json();
-        if(data.records && data.records.length > 0){
-            const row = data.records[0].fields;
-            document.getElementById("sell-dl").value = row.sell_dl || "";
-            document.getElementById("sell-bgl").value = row.sell_bgl || "";
-            document.getElementById("buy-dl").value = row.buy_dl || "";
-        }
+        document.getElementById("sell-dl").value = data.sell_dl || "";
+        document.getElementById("sell-bgl").value = data.sell_bgl || "";
+        document.getElementById("buy-dl").value = data.buy_dl || "";
     } catch(err){
         console.error("Gagal load harga:", err);
     }
 }
 
 // =====================
-// Update Harga
+// Update Harga ke GAS
 // =====================
 async function updateHarga(){
     const sellDL = document.getElementById("sell-dl").value;
@@ -91,30 +81,23 @@ async function updateHarga(){
     }
 
     try {
-        // Ambil record pertama
-        const res = await fetch(`${AIRTABLE_ENDPOINT}?maxRecords=1&view=Grid view`, { headers: HEADERS });
-        const data = await res.json();
-        if(!data.records || data.records.length === 0) throw new Error("Record RATE tidak ditemukan");
-        const recordId = data.records[0].id;
+        const formData = new URLSearchParams();
+        if(sellDL) formData.append("sell_dl", sellDL);
+        if(sellBGL) formData.append("sell_bgl", sellBGL);
+        if(buyDL) formData.append("buy_dl", buyDL);
 
-        // Payload update
-        const payload = { fields:{} };
-        if(sellDL) payload.fields.sell_dl = Number(sellDL);
-        if(sellBGL) payload.fields.sell_bgl = Number(sellBGL);
-        if(buyDL) payload.fields.buy_dl = Number(buyDL);
-
-        // PATCH ke Airtable
-        const updateRes = await fetch(`${AIRTABLE_ENDPOINT}/${recordId}`, {
-            method: "PATCH",
-            headers: HEADERS,
-            body: JSON.stringify(payload)
+        const res = await fetch(WEBAPP_URL, {
+            method: "POST",
+            body: formData
         });
-        if(!updateRes.ok) throw new Error(`Status: ${updateRes.status}`);
-
-        document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
-        setTimeout(()=>document.getElementById("harga-status").textContent="", 3000);
-        loadHarga();
-
+        const data = await res.json();
+        if(data.status === "success"){
+            document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
+            setTimeout(()=>document.getElementById("harga-status").textContent="", 3000);
+            loadHarga();
+        } else {
+            throw new Error(data.error || "Update gagal");
+        }
     } catch(err){
         console.error(err);
         alert("❌ Gagal update harga! " + err.message);
