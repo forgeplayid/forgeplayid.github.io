@@ -20,13 +20,18 @@ body { font-family: Arial; background:#020617; color:white; margin:0; }
   margin-bottom:20px;
 }
 
-input, button {
+input, textarea, button {
   width:100%;
   padding:10px;
   margin:8px 0;
   border:none;
   border-radius:6px;
   font-size:16px;
+}
+
+textarea {
+  height:110px;
+  resize:vertical;
 }
 
 button {
@@ -36,7 +41,7 @@ button {
   cursor:pointer;
 }
 
-h2,h3 { color:#38bdf8; margin-bottom:10px; }
+h2,h3 { color:#38bdf8; }
 
 #world-list div {
   background:#0f172a;
@@ -48,11 +53,11 @@ h2,h3 { color:#38bdf8; margin-bottom:10px; }
 
 .action-btn {
   margin-left:5px;
-  padding:3px 8px;
+  padding:4px 8px;
   font-size:12px;
-  cursor:pointer;
-  border-radius:4px;
   border:none;
+  border-radius:4px;
+  cursor:pointer;
 }
 
 .edit { background:#22c55e; color:#020617; }
@@ -75,7 +80,7 @@ h2,h3 { color:#38bdf8; margin-bottom:10px; }
 
 <div class="container">
 
-<!-- ================= HARGA (TIDAK DIUBAH) ================= -->
+<!-- ================= HARGA ================= -->
 <div class="card">
 <h2>Dashboard Admin</h2>
 <h3>List Harga</h3>
@@ -94,7 +99,7 @@ h2,h3 { color:#38bdf8; margin-bottom:10px; }
 
 <input type="text" id="world-name" placeholder="Nama World">
 <input type="text" id="world-img" placeholder="Link Gambar">
-<input type="text" id="world-desc" placeholder="Deskripsi">
+<textarea id="world-desc" placeholder="Deskripsi"></textarea>
 
 <button onclick="tambahWorld()">+ TAMBAH WORLD</button>
 
@@ -105,7 +110,7 @@ h2,h3 { color:#38bdf8; margin-bottom:10px; }
 </div>
 
 <script>
-// ================= HARGA (JANGAN DIUBAH) =================
+// ================= HARGA (AMAN - JANGAN UBAH) =================
 const RATE_API = "https://sheetdb.io/api/v1/4rjuhig0n2xsl";
 
 function loadHarga(){
@@ -140,7 +145,8 @@ function updateHarga(){
         document.getElementById("harga-status").textContent = "Harga berhasil diupdate!";
         setTimeout(()=>document.getElementById("harga-status").textContent="",3000);
         loadHarga();
-    });
+    })
+    .catch(err => alert("Gagal update harga"));
 }
 
 // ================= WORLD =================
@@ -200,7 +206,7 @@ function tambahWorld(){
     });
 }
 
-// DELETE WORLD
+// DELETE WORLD (FIX)
 function deleteWorld(id){
     if(!confirm("Yakin ingin hapus world?")) return;
 
@@ -210,10 +216,11 @@ function deleteWorld(id){
     .then(() => {
         alert("Berhasil dihapus");
         loadWorld();
-    });
+    })
+    .catch(() => alert("Gagal delete"));
 }
 
-// EDIT STATUS
+// EDIT STATUS (FIX)
 function editWorld(id){
     const status = prompt("Masukkan status: READY / SOLD");
 
@@ -223,13 +230,14 @@ function editWorld(id){
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            data: { status: status }
+            data: { status: status.toUpperCase() }
         })
     })
     .then(() => {
         alert("Status diupdate!");
         loadWorld();
-    });
+    })
+    .catch(() => alert("Gagal update"));
 }
 
 // ================= INIT =================
