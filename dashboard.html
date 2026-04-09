@@ -1,3 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin</title>
+<style>
+body { font-family: Arial; background: #020617; color: white; margin:0; }
+.header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background:#0f172a; border-bottom:1px solid #1e293b; }
+.header .logo img { height:40px; }
+.header .header-right a { display:inline-block; padding:8px 18px; font-weight:bold; border-radius:6px; text-decoration:none; color:white; background:#ef4444; }
+.header .header-right a:hover { background:#dc2626; }
+.container { max-width:500px; margin:30px auto; padding:0 15px; }
+.card { background: #1e293b; padding:20px; border-radius:10px; }
+input, button { width:100%; padding:10px; margin:8px 0; font-size:16px; }
+button { background: #38bdf8; border:none; cursor:pointer; font-weight:600; }
+h2,h3 { color:#38bdf8; }
+</style>
+</head>
+<body>
+
+<!-- HEADER MIRIP DESKTOP -->
+<div class="header">
+  <div class="logo">
+    <a href="https://forgeplayid.github.io/dashboard.html">
+      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="Logo">
+    </a>
+  </div>
+  <div class="header-right">
+    <a href="#" id="logoutBtn">Log Out</a>
+  </div>
+</div>
+
+<div class="container">
+<div class="card">
+<h2>Dashboard Admin</h2>
+
+<h3>List Harga</h3>
+<input type="number" id="sell-dl" placeholder="Sell DL (Rp)">
+<input type="number" id="sell-bgl" placeholder="Sell BGL (Rp)">
+<input type="number" id="buy-dl" placeholder="Buy DL (Rp)">
+
+<button onclick="updateData()">~~~~~ UPDATE ~~~~~</button>
 </div>
 </div>
 
