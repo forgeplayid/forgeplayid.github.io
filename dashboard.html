@@ -50,7 +50,7 @@ small { color:#94a3b8; display:block; margin-top:10px; min-height:20px; }
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycby1UJWtPzAo5xITt5k38agkaWE0y6MHnNyrdFYjSv9lJ32bxBVHZzkgayqnqd8X3IYvKA/exec";
 
 // =====================
-// Load harga
+// Load harga awal dari Web App
 // =====================
 async function loadHarga(){
     try {
@@ -65,7 +65,7 @@ async function loadHarga(){
 }
 
 // =====================
-// Update harga
+// Update harga ke Web App
 // =====================
 async function updateHarga(){
     const sellDL = document.getElementById("sell-dl").value;
@@ -84,11 +84,12 @@ async function updateHarga(){
             body: JSON.stringify({ sell_dl: sellDL, sell_bgl: sellBGL, buy_dl: buyDL })
         });
         if(!res.ok) throw new Error(`Status: ${res.status}`);
+        const result = await res.json();
         document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
         setTimeout(()=>document.getElementById("harga-status").textContent="", 3000);
         loadHarga();
     } catch(err){
-        console.error(err);
+        console.error("Gagal update harga:", err);
         alert("❌ Gagal update harga! " + err.message);
     }
 }
