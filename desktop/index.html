@@ -58,8 +58,8 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 </div>
 
 <script>
-// SheetDB endpoint
-const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
+// Endpoint baru SheetDB
+const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/6yhqr0dzc9c68";
 
 // Format angka ke Rupiah
 function formatRupiah(angka){
@@ -69,13 +69,12 @@ function formatRupiah(angka){
 
 // Fetch harga dari SheetDB dan update menu
 function updateHarga(){
-  fetch(SHEETDB_ENDPOINT)
+  fetch(SHEETDB_ENDPOINT + "/id/1") // pakai id=1 agar tetap update baris yang ada
     .then(res => res.json())
     .then(data => {
       if(!data || data.length === 0) return;
 
-      const obj = data[0]; // ambil baris pertama
-
+      const obj = data[0];
       document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(obj.sell_dl);
       document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(obj.buy_dl);
       document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(obj.sell_bgl);
