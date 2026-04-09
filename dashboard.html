@@ -12,16 +12,14 @@ body { font-family: Arial; background: #020617; color: white; margin:0; }
 .header .header-right a:hover { background:#dc2626; }
 .container { max-width:600px; margin:30px auto; padding:0 15px; }
 .card { background: #1e293b; padding:20px; border-radius:10px; margin-bottom:20px; }
-input, textarea, select, button { width:100%; padding:10px; margin:8px 0; font-size:16px; }
+input, textarea, button { width:100%; padding:10px; margin:8px 0; font-size:16px; }
+textarea { min-height:80px; }
 button { background: #38bdf8; border:none; cursor:pointer; font-weight:600; }
-h2,h3 { color:#38bdf8; }
-small { color:#94a3b8; display:block; margin-top:-6px; margin-bottom:6px; }
-.list-world { margin-top:15px; }
-.list-world-item { display:flex; justify-content:space-between; align-items:center; padding:6px 10px; border-bottom:1px solid #334155; border-radius:6px; margin-bottom:6px; }
-.list-world-item span.status { font-weight:600; padding:2px 8px; border-radius:6px; }
-.status-ready { background-color:#22c55e; color:#020617; }
-.status-sold { background-color:#ef4444; color:white; }
-.action-buttons button { margin-left:6px; padding:4px 10px; font-size:14px; }
+h2,h3 { color:#38bdf8; margin-bottom:10px; }
+small { color:#94a3b8; }
+ul { list-style:none; padding:0; }
+li { margin-bottom:6px; }
+li button { margin-left:10px; padding:2px 6px; font-size:14px; }
 </style>
 </head>
 <body>
@@ -42,84 +40,87 @@ small { color:#94a3b8; display:block; margin-top:-6px; margin-bottom:6px; }
 <!-- ===== HARGA ===== -->
 <div class="card">
 <h2>Dashboard Admin</h2>
+
 <h3>List Harga</h3>
 <input type="number" id="sell-dl" placeholder="Sell DL (Rp)">
 <input type="number" id="sell-bgl" placeholder="Sell BGL (Rp)">
 <input type="number" id="buy-dl" placeholder="Buy DL (Rp)">
-<button onclick="updateData()">~~~~~ UPDATE ~~~~~</button>
+<button onclick="updateData()">~~~~~ UPDATE HARGA ~~~~~</button>
 </div>
 
-<!-- ===== LIST WORLD BARU ===== -->
+<!-- ===== TAMBAH WORLD ===== -->
 <div class="card">
-<h3>LIST WORLD</h3>
+<h3>Tambah World Baru</h3>
 <input type="text" id="world-image" placeholder="Link Gambar">
 <small>Ukuran disarankan 1280 x 798</small>
 <input type="text" id="world-name" placeholder="Name">
 <textarea id="world-desc" placeholder="Deskripsi"></textarea>
-<button onclick="tambahWorld()">~~~~~ UPDATE ~~~~~</button>
+<button onclick="tambahWorld()">~~~~~ TAMBAH WORLD ~~~~~</button>
+</div>
 
-<div id="world-list" class="list-world"></div>
+<!-- ===== LIST WORLD ===== -->
+<div class="card">
+<h3>Daftar World</h3>
+<ul id="world-list">
+<!-- List world otomatis dimasukkan -->
+</ul>
 </div>
 
 </div>
 
 <script>
-const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/lcgaa49k16h8g"; // Endpoint WORLD
-const SHEETDB_HARGA = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
-const ROW_HARGA = 1;
+// ===== KONFIG =====
+const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
+const ROW_ID = 1;
 
 // ===== UPDATE HARGA =====
 function updateData(){
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
     const buyDL = document.getElementById("buy-dl").value;
-
     if(!sellDL && !sellBGL && !buyDL){
         alert("Isi minimal satu harga untuk update!");
         return;
     }
-
     const payload = {};
     if(sellDL) payload.sell_dl = Number(sellDL);
     if(sellBGL) payload.sell_bgl = Number(sellBGL);
     if(buyDL) payload.buy_dl = Number(buyDL);
 
-    fetch(`${SHEETDB_HARGA}/id/${ROW_HARGA}`, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ data: [payload] })
+    fetch(`${SHEETDB_ENDPOINT}/id/${ROW_ID}`, {
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ data:[payload] })
     })
-    .then(res => res.json())
-    .then(resp => {
+    .then(res=>{
+        if(!res.ok) throw new Error(`Update gagal, status: ${res.status}`);
+        return res.json();
+    })
+    .then(()=>{
         alert("Harga berhasil diupdate!");
-        document.getElementById("sell-dl").value = "";
-        document.getElementById("sell-bgl").value = "";
-        document.getElementById("buy-dl").value = "";
+        document.getElementById("sell-dl").value="";
+        document.getElementById("sell-bgl").value="";
+        document.getElementById("buy-dl").value="";
     })
-    .catch(err => { alert("Gagal update harga! "+err.message); });
+    .catch(err=>alert("Gagal update harga! " + err.message));
 }
 
-// ===== LOAD LIST WORLD =====
+// ===== LOAD WORLD LIST =====
 function loadWorldList(){
     fetch(SHEETDB_ENDPOINT)
     .then(res=>res.json())
     .then(data=>{
         const list = document.getElementById("world-list");
-        list.innerHTML = "";
-        data.forEach(item=>{
-            const div = document.createElement("div");
-            div.className = "list-world-item";
-            div.innerHTML = `
-                <span>${item.name} </span>
-                <span class="status status-${item.status.toLowerCase()}">${item.status}</span>
-                <span class="action-buttons">
-                    <button onclick="editStatus('${item._id}','${item.name}')">EDIT</button>
-                    <button onclick="deleteWorld('${item._id}','${item.name}')">DELETE</button>
-                </span>
-            `;
-            list.appendChild(div);
+        list.innerHTML = '';
+        data.forEach((item,index)=>{
+            const li = document.createElement('li');
+            li.innerHTML = `${index+1}. ${item.name} ( ${item.status || 'READY'} )
+                <button onclick="editWorld('${item.id}','${item.name}','${item.status || 'READY'}')">EDIT</button>
+                <button onclick="deleteWorld('${item.id}','${item.name}')">DELETE</button>`;
+            list.appendChild(li);
         });
-    });
+    })
+    .catch(err=>console.error("Gagal load list world:", err));
 }
 
 // ===== TAMBAH WORLD =====
@@ -127,56 +128,57 @@ function tambahWorld(){
     const image = document.getElementById("world-image").value;
     const name = document.getElementById("world-name").value;
     const desc = document.getElementById("world-desc").value;
-
     if(!image || !name || !desc){
         alert("Semua field wajib diisi!");
         return;
     }
-
-    const data = { data: [{ image_url:image, name:name, description:desc, status:"READY" }] };
-
+    const data = { data:[{ image_url:image, name:name, description:desc, status:"READY" }] };
     fetch(SHEETDB_ENDPOINT,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body: JSON.stringify(data)
+        body:JSON.stringify(data)
     })
     .then(res=>res.json())
-    .then(res=>{
+    .then(()=>{
         alert("World berhasil ditambahkan!");
         document.getElementById("world-image").value="";
         document.getElementById("world-name").value="";
         document.getElementById("world-desc").value="";
         loadWorldList();
     })
-    .catch(err=>{
-        console.error(err);
-        alert("Gagal tambah world!");
-    });
+    .catch(err=>alert("Gagal tambah world! " + err.message));
 }
 
-// ===== EDIT STATUS =====
-function editStatus(id,name){
-    const newStatus = prompt(`Ubah status "${name}" menjadi READY atau SOLD:`,"READY");
-    if(!newStatus) return;
-    if(newStatus.toUpperCase() !== "READY" && newStatus.toUpperCase() !== "SOLD"){ alert("Status hanya READY atau SOLD"); return; }
-
-    fetch(`${SHEETDB_ENDPOINT}/id/${id}`,{
-        method:"PUT",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({ data:[{ status:newStatus.toUpperCase() }] })
-    })
-    .then(res=>res.json())
-    .then(()=>{ loadWorldList(); })
-    .catch(err=>{ console.error(err); alert("Gagal update status"); });
+// ===== EDIT WORLD =====
+function editWorld(id,name,currentStatus){
+    const newStatus = prompt(`Edit status World "${name}" (READY/SOLD)`,currentStatus);
+    if(newStatus && (newStatus.toUpperCase() === 'READY' || newStatus.toUpperCase() === 'SOLD')){
+        fetch(`${SHEETDB_ENDPOINT}/id/${id}`,{
+            method:"PUT",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({ data:[{status:newStatus.toUpperCase()}] })
+        })
+        .then(res=>res.json())
+        .then(()=>{
+            alert(`Status ${name} berhasil diubah ke ${newStatus.toUpperCase()}`);
+            loadWorldList();
+        })
+        .catch(err=>alert("Gagal update status: " + err.message));
+    } else if(newStatus!==null){
+        alert("Status harus READY atau SOLD!");
+    }
 }
 
 // ===== DELETE WORLD =====
 function deleteWorld(id,name){
-    if(confirm(`Apakah yakin ingin menghapus "${name}"?`)){
+    if(confirm(`Apakah yakin ingin menghapus World "${name}"?`)){
         fetch(`${SHEETDB_ENDPOINT}/id/${id}`,{ method:"DELETE" })
         .then(res=>res.json())
-        .then(()=>{ loadWorldList(); })
-        .catch(err=>{ console.error(err); alert("Gagal hapus world"); });
+        .then(()=>{
+            alert(`${name} berhasil dihapus!`);
+            loadWorldList();
+        })
+        .catch(err=>alert("Gagal hapus world: " + err.message));
     }
 }
 
@@ -185,10 +187,10 @@ document.getElementById("logoutBtn").addEventListener("click", function(e){
     e.preventDefault();
     localStorage.removeItem("admin_login");
     alert("Log Out berhasil!");
-    window.location.href = "login.html";
+    window.location.href="login.html";
 });
 
-// ===== INITIAL LOAD =====
+// ===== LOAD AWAL =====
 loadWorldList();
 </script>
 
