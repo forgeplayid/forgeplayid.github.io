@@ -80,7 +80,7 @@ const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/4rjuhig0n2xsl";
 
 // ===== LOAD DATA =====
 function loadHarga(){
-    fetch(`${SHEETDB_ENDPOINT}/search?id=1`)
+    fetch(`${SHEETDB_ENDPOINT}/id/1`)
     .then(res => res.json())
     .then(data => {
         if(data && data.length > 0){
@@ -129,7 +129,7 @@ function updateHarga(){
             document.getElementById("harga-status").textContent = "";
         }, 3000);
 
-        loadHarga();
+        loadHarga(); // refresh input
     })
     .catch(err => {
         console.error(err);
