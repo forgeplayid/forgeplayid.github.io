@@ -58,31 +58,52 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 </div>
 
 <script>
-// Endpoint RATE terbaru (PATCH di dashboard saja)
-const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/4rjuhig0n2xsl";
+// =====================
+// Airtable Config
+// =====================
+const AIRTABLE_BASE_ID = "YOUR_BASE_ID"; // ganti dengan Base ID
+const AIRTABLE_TABLE_NAME = "RATE";      // nama table
+const AIRTABLE_API_KEY = "YOUR_API_KEY"; // ganti dengan API Key
+const AIRTABLE_ENDPOINT = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
+const HEADERS = {
+    "Authorization": `Bearer ${AIRTABLE_API_KEY}`
+};
 
+// =====================
 // Format angka ke Rupiah
+// =====================
 function formatRupiah(angka){
   if(!angka) return "Rp. -";
   return "Rp. " + Number(angka).toLocaleString("id-ID");
 }
 
-// Fetch harga sekali saat load halaman
-function loadHarga(){
-  fetch(`${SHEETDB_ENDPOINT}/search?id=1`)
-    .then(res => res.json())
-    .then(data => {
-      if(!data || data.length === 0) return;
-      const row = data[0];
-      document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(row.sell_dl);
-      document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(row.buy_dl);
-      document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(row.sell_bgl);
-    })
-    .catch(err => console.error("Gagal ambil harga:", err));
+// =====================
+// Load harga dari Airtable
+// =====================
+async function loadHarga(){
+    try {
+        const res = await fetch(`${AIRTABLE_ENDPOINT}?maxRecords=1&view=Grid view`, { headers: HEADERS });
+        const data = await res.json();
+        if(data.records && data.records.length > 0){
+            const row = data.records[0].fields;
+            document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(row.sell_dl);
+            document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(row.buy_dl);
+            document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(row.sell_bgl);
+        }
+    } catch(err){
+        console.error("Gagal ambil harga:", err);
+    }
 }
 
-// Jalankan saat load
+// =====================
+// Jalankan saat load halaman
+// =====================
 loadHarga();
+
+// =====================
+// Refresh setiap 1 menit
+// =====================
+setInterval(loadHarga, 60000);
 </script>
 
 </body>
