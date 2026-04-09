@@ -75,12 +75,12 @@ small {
 </div>
 
 <script>
-// ✅ ENDPOINT FINAL (PAKAI YANG INI)
+// ✅ ENDPOINT FIX
 const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/4rjuhig0n2xsl";
 
 // ===== LOAD DATA =====
 function loadHarga(){
-    fetch(SHEETDB_ENDPOINT)
+    fetch(`${SHEETDB_ENDPOINT}/search?id=1`)
     .then(res => res.json())
     .then(data => {
         if(data && data.length > 0){
@@ -94,7 +94,7 @@ function loadHarga(){
     .catch(err => console.error("Gagal load:", err));
 }
 
-// ===== UPDATE DATA (FIX NO 404) =====
+// ===== UPDATE DATA (FINAL FIX) =====
 function updateHarga(){
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
@@ -105,19 +105,18 @@ function updateHarga(){
         return;
     }
 
-    const payload = {
-        sell_dl: sellDL || "",
-        sell_bgl: sellBGL || "",
-        buy_dl: buyDL || ""
-    };
+    const payload = {};
+    if(sellDL) payload.sell_dl = sellDL;
+    if(sellBGL) payload.sell_bgl = sellBGL;
+    if(buyDL) payload.buy_dl = buyDL;
 
-    fetch(SHEETDB_ENDPOINT, {
-        method: "PUT",
+    fetch(`${SHEETDB_ENDPOINT}/id/1`, {
+        method: "PATCH", // ✅ WAJIB PATCH
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            data: [payload] // ✅ replace row pertama
+            data: payload
         })
     })
     .then(res => {
@@ -130,7 +129,7 @@ function updateHarga(){
             document.getElementById("harga-status").textContent = "";
         }, 3000);
 
-        loadHarga(); // refresh input
+        loadHarga();
     })
     .catch(err => {
         console.error(err);
