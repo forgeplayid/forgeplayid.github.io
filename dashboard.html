@@ -47,10 +47,10 @@ small { color:#94a3b8; display:block; margin-top:10px; min-height:20px; }
 </div>
 
 <script>
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycby1UJWtPzAo5xITt5k38agkaWE0y6MHnNyrdFYjSv9lJ32bxBVHZzkgayqnqd8X3IYvKA/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
 
 // =====================
-// Load harga awal dari Web App
+// Load Harga
 // =====================
 async function loadHarga(){
     try {
@@ -65,7 +65,7 @@ async function loadHarga(){
 }
 
 // =====================
-// Update harga ke Web App
+// Update Harga
 // =====================
 async function updateHarga(){
     const sellDL = document.getElementById("sell-dl").value;
@@ -80,17 +80,19 @@ async function updateHarga(){
     try {
         const res = await fetch(WEBAPP_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ sell_dl: sellDL, sell_bgl: sellBGL, buy_dl: buyDL })
+            body: JSON.stringify({ sell_dl: sellDL, sell_bgl: sellBGL, buy_dl: buyDL }),
         });
-        if(!res.ok) throw new Error(`Status: ${res.status}`);
         const result = await res.json();
-        document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
-        setTimeout(()=>document.getElementById("harga-status").textContent="", 3000);
-        loadHarga();
+        if(result.status === "ok"){
+            document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
+            setTimeout(()=>document.getElementById("harga-status").textContent="",3000);
+            loadHarga();
+        } else {
+            throw new Error("Gagal update harga");
+        }
     } catch(err){
-        console.error("Gagal update harga:", err);
         alert("❌ Gagal update harga! " + err.message);
+        console.error(err);
     }
 }
 
@@ -105,7 +107,7 @@ document.getElementById("logoutBtn").addEventListener("click", function(e){
 });
 
 // =====================
-// Load awal
+// Load Awal
 // =====================
 loadHarga();
 </script>
