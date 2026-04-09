@@ -4,46 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Admin</title>
-
 <style>
 body { font-family: Arial; background: #020617; color: white; margin:0; }
 .header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background:#0f172a; border-bottom:1px solid #1e293b; }
 .header .logo img { height:40px; }
 .header .header-right a { display:inline-block; padding:8px 18px; font-weight:bold; border-radius:6px; text-decoration:none; color:white; background:#ef4444; }
 .header .header-right a:hover { background:#dc2626; }
-
 .container { max-width:500px; margin:30px auto; padding:0 15px; }
 .card { background: #1e293b; padding:20px; border-radius:10px; margin-bottom:20px; }
-
-input, button {
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  font-size:16px;
-  border-radius:6px;
-  border:none;
-}
-
-button {
-  background:#38bdf8;
-  color:#020617;
-  font-weight:600;
-  cursor:pointer;
-  transition:0.2s;
-}
+input, button { width:100%; padding:10px; margin:8px 0; font-size:16px; border-radius:6px; border:none; }
+button { background:#38bdf8; color:#020617; font-weight:600; cursor:pointer; transition:0.2s; }
 button:hover { background:#0ea5e9; }
-
 h2,h3 { color:#38bdf8; margin:0 0 10px 0; }
-
-small {
-  color:#94a3b8;
-  display:block;
-  margin-top:10px;
-  min-height:20px;
-}
+small { color:#94a3b8; display:block; margin-top:10px; min-height:20px; }
 </style>
 </head>
-
 <body>
 
 <div class="header">
@@ -58,7 +33,6 @@ small {
 </div>
 
 <div class="container">
-
 <div class="card">
 <h2>Dashboard Admin</h2>
 <h3>List Harga</h3>
@@ -68,34 +42,45 @@ small {
 <input type="number" id="buy-dl" placeholder="Buy DL (Rp)">
 
 <button onclick="updateHarga()">~~~~~ UPDATE HARGA ~~~~~</button>
-
 <small id="harga-status"></small>
 </div>
-
 </div>
 
 <script>
-// ✅ ENDPOINT FIX
-const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/4rjuhig0n2xsl";
+// =====================
+// Airtable Config
+// =====================
+const AIRTABLE_BASE_ID = "YOUR_BASE_ID";
+const AIRTABLE_TABLE_NAME = "RATE"; // nama table di Airtable
+const AIRTABLE_API_KEY = "YOUR_API_KEY";
+const AIRTABLE_ENDPOINT = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
+const HEADERS = { 
+    "Authorization": `Bearer ${AIRTABLE_API_KEY}`, 
+    "Content-Type": "application/json" 
+};
 
-// ===== LOAD DATA =====
-function loadHarga(){
-    fetch(`${SHEETDB_ENDPOINT}/id/1`)
-    .then(res => res.json())
-    .then(data => {
-        if(data && data.length > 0){
-            const row = data[0];
-
+// =====================
+// Load Harga
+// =====================
+async function loadHarga(){
+    try {
+        const res = await fetch(`${AIRTABLE_ENDPOINT}?maxRecords=1&view=Grid view`, { headers: HEADERS });
+        const data = await res.json();
+        if(data.records && data.records.length > 0){
+            const row = data.records[0].fields;
             document.getElementById("sell-dl").value = row.sell_dl || "";
             document.getElementById("sell-bgl").value = row.sell_bgl || "";
             document.getElementById("buy-dl").value = row.buy_dl || "";
         }
-    })
-    .catch(err => console.error("Gagal load:", err));
+    } catch(err){
+        console.error("Gagal load harga:", err);
+    }
 }
 
-// ===== UPDATE DATA (FINAL FIX) =====
-function updateHarga(){
+// =====================
+// Update Harga
+// =====================
+async function updateHarga(){
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
     const buyDL = document.getElementById("buy-dl").value;
@@ -105,39 +90,40 @@ function updateHarga(){
         return;
     }
 
-    const payload = {};
-    if(sellDL) payload.sell_dl = sellDL;
-    if(sellBGL) payload.sell_bgl = sellBGL;
-    if(buyDL) payload.buy_dl = buyDL;
+    try {
+        // Ambil record pertama
+        const res = await fetch(`${AIRTABLE_ENDPOINT}?maxRecords=1&view=Grid view`, { headers: HEADERS });
+        const data = await res.json();
+        if(!data.records || data.records.length === 0) throw new Error("Record RATE tidak ditemukan");
+        const recordId = data.records[0].id;
 
-    fetch(`${SHEETDB_ENDPOINT}/id/1`, {
-        method: "PATCH", // ✅ WAJIB PATCH
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            data: payload
-        })
-    })
-    .then(res => {
-        if(!res.ok) throw new Error(`Status: ${res.status}`);
-        return res.json();
-    })
-    .then(() => {
+        // Payload update
+        const payload = { fields:{} };
+        if(sellDL) payload.fields.sell_dl = Number(sellDL);
+        if(sellBGL) payload.fields.sell_bgl = Number(sellBGL);
+        if(buyDL) payload.fields.buy_dl = Number(buyDL);
+
+        // PATCH ke Airtable
+        const updateRes = await fetch(`${AIRTABLE_ENDPOINT}/${recordId}`, {
+            method: "PATCH",
+            headers: HEADERS,
+            body: JSON.stringify(payload)
+        });
+        if(!updateRes.ok) throw new Error(`Status: ${updateRes.status}`);
+
         document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
-        setTimeout(() => {
-            document.getElementById("harga-status").textContent = "";
-        }, 3000);
+        setTimeout(()=>document.getElementById("harga-status").textContent="", 3000);
+        loadHarga();
 
-        loadHarga(); // refresh input
-    })
-    .catch(err => {
+    } catch(err){
         console.error(err);
         alert("❌ Gagal update harga! " + err.message);
-    });
+    }
 }
 
-// ===== LOGOUT =====
+// =====================
+// Logout
+// =====================
 document.getElementById("logoutBtn").addEventListener("click", function(e){
     e.preventDefault();
     localStorage.removeItem("admin_login");
@@ -145,7 +131,9 @@ document.getElementById("logoutBtn").addEventListener("click", function(e){
     window.location.href = "login.html";
 });
 
-// LOAD AWAL
+// =====================
+// Load Awal
+// =====================
 loadHarga();
 </script>
 
