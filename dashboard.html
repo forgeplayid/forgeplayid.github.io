@@ -19,7 +19,6 @@ h2,h3 { color:#38bdf8; }
 </head>
 <body>
 
-<!-- HEADER MIRIP DESKTOP -->
 <div class="header">
   <div class="logo">
     <a href="https://forgeplayid.github.io/dashboard.html">
@@ -45,10 +44,9 @@ h2,h3 { color:#38bdf8; }
 </div>
 
 <script>
-const SHEETDB_ENDPOINT = "https://sheetdb.io/api/v1/1ri315wnzcjy2";
-const ROW_ID = 1;
+const SHEETDB_ENDPOINT_HARGA = "https://sheetdb.io/api/v1/1ri315wnzcjy2"; // endpoint harga
+const ROW_ID = 1; // pastikan row pertama memang data harga
 
-// ===== UPDATE HARGA =====
 function updateData(){
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
@@ -64,7 +62,7 @@ function updateData(){
     if(sellBGL) payload.sell_bgl = Number(sellBGL);
     if(buyDL) payload.buy_dl = Number(buyDL);
 
-    fetch(`${SHEETDB_ENDPOINT}/id/${ROW_ID}`, {
+    fetch(`${SHEETDB_ENDPOINT_HARGA}/row/${ROW_ID}`, {  // gunakan /row/ bukan /id/
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ data: [payload] })
@@ -86,15 +84,11 @@ function updateData(){
     });
 }
 
-// ===== LOGOUT =====
 document.getElementById("logoutBtn").addEventListener("click", function(e){
-    e.preventDefault(); // cegah link reload default
-    // hapus token/session lokal
+    e.preventDefault();
     localStorage.removeItem("admin_login");
-    // bisa tambah hapus cookie atau session lainnya di sini jika perlu
     alert("Log Out berhasil!");
-    // reload halaman atau redirect ke login page
-    window.location.href = "login.html"; // ganti sesuai halaman loginmu
+    window.location.href = "login.html";
 });
 </script>
 
