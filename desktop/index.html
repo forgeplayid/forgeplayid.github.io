@@ -59,15 +59,9 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 <script>
 // =====================
-// Airtable Config
+// CONFIG GOOGLE APPS SCRIPT
 // =====================
-const AIRTABLE_BASE_ID = "YOUR_BASE_ID"; // ganti dengan Base ID
-const AIRTABLE_TABLE_NAME = "RATE";      // nama table
-const AIRTABLE_API_KEY = "YOUR_API_KEY"; // ganti dengan API Key
-const AIRTABLE_ENDPOINT = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
-const HEADERS = {
-    "Authorization": `Bearer ${AIRTABLE_API_KEY}`
-};
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyFx8X-lCZ9BRUpweXwIIIMRBcN0UBg7YrRSCWNBsBB/dev";
 
 // =====================
 // Format angka ke Rupiah
@@ -78,18 +72,15 @@ function formatRupiah(angka){
 }
 
 // =====================
-// Load harga dari Airtable
+// Load harga dari GAS
 // =====================
 async function loadHarga(){
     try {
-        const res = await fetch(`${AIRTABLE_ENDPOINT}?maxRecords=1&view=Grid view`, { headers: HEADERS });
+        const res = await fetch(WEBAPP_URL);
         const data = await res.json();
-        if(data.records && data.records.length > 0){
-            const row = data.records[0].fields;
-            document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(row.sell_dl);
-            document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(row.buy_dl);
-            document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(row.sell_bgl);
-        }
+        document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(data.sell_dl);
+        document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(data.buy_dl);
+        document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(data.sell_bgl);
     } catch(err){
         console.error("Gagal ambil harga:", err);
     }
