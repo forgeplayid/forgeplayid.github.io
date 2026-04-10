@@ -63,6 +63,7 @@ function loadWorlds(){
             const isSold = item.status && item.status.toUpperCase() === 'SOLD';
             const buttonText = isSold ? 'SOLD' : 'BUY WORLD';
             const buttonColor = isSold ? '#ef4444' : '#22c55e';
+            const descHtml = item.desc ? item.desc.replace(/\r?\n/g,'<br>') : '';
             const card = document.createElement('div');
             card.className = 'world-card';
             card.innerHTML = `
@@ -71,7 +72,7 @@ function loadWorlds(){
                 </div>
                 <div class="world-desc">
                     <strong>WORLD: ${item.name}</strong>
-                    <p>${item.desc}</p>
+                    <p>${descHtml}</p>
                 </div>
                 <a href="${isSold ? '#' : 'https://wa.me/6285175215549?text=Saya%20ingin%20membeli%20world%20'+encodeURIComponent(item.name)}"
                    class="buy-button"
