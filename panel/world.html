@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>List World Admin</title>
+<title>List World</title>
 
 <style>
 body {
@@ -36,35 +36,62 @@ body {
   font-size:13px;
 }
 
-.header-right a:hover { background:#dc2626; }
-
 /* LAYOUT */
-.container {
-  max-width:700px;
-  margin:30px auto;
-  padding:0 15px;
+.layout {
+  display:flex;
+  min-height: calc(100vh - 70px);
+}
+
+/* SIDEBAR */
+.sidebar {
+  width:180px;
+  background:#0f172a;
+  border-right:1px solid #1e293b;
+  padding:15px 10px;
+}
+
+.menu {
+  display:block;
+  padding:10px;
+  margin-bottom:8px;
+  background:#1e293b;
+  color:white;
+  text-decoration:none;
+  border-radius:6px;
+  font-size:13px;
+}
+
+.menu:hover {
+  background:#38bdf8;
+  color:#020617;
+}
+
+/* CONTENT */
+.content {
+  flex:1;
+  padding:30px;
 }
 
 .card {
   background:#1e293b;
   padding:20px;
   border-radius:10px;
+  max-width:600px;
   margin-bottom:20px;
 }
 
+/* FORM */
 label {
   color:#38bdf8;
   font-size:13px;
 }
 
-/* INPUT */
 input, textarea, select {
   width:100%;
   padding:10px;
   margin:6px 0 12px 0;
-  border-radius:6px;
   border:none;
-  font-size:14px;
+  border-radius:6px;
 }
 
 textarea {
@@ -95,7 +122,7 @@ small {
   min-height:20px;
 }
 
-/* LIST WORLD */
+/* LIST */
 .world-item {
   display:flex;
   justify-content:space-between;
@@ -104,10 +131,6 @@ small {
   padding:10px;
   margin-top:8px;
   border-radius:6px;
-}
-
-.world-item span {
-  font-size:14px;
 }
 
 .actions button {
@@ -134,38 +157,49 @@ small {
   </div>
 </div>
 
-<!-- CONTENT -->
-<div class="container">
+<!-- LAYOUT -->
+<div class="layout">
 
-  <!-- FORM -->
-  <div class="card">
-    <h3 style="color:#38bdf8;">List World</h3>
-
-    <label>Name</label>
-    <input type="text" id="name">
-
-    <label>Link Gambar (1280x798)</label>
-    <input type="text" id="image">
-
-    <label>Deskripsi</label>
-    <textarea id="desc"></textarea>
-
-    <label>Status</label>
-    <select id="status">
-      <option value="READY">READY</option>
-      <option value="SOLD">SOLD</option>
-    </select>
-
-    <button id="addBtn">~~~~~ TAMBAH WORLD ~~~~~</button>
-    <small id="statusMsg"></small>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <a class="menu" href="dashboard.html">Dashboard</a>
+    <a class="menu" href="price.html">List Harga</a>
+    <a class="menu" href="world.html">List World</a>
   </div>
 
-  <!-- LIST -->
-  <div class="card">
-    <h3 style="color:#38bdf8;">Daftar World</h3>
-    <div id="listWorld"></div>
-  </div>
+  <!-- CONTENT -->
+  <div class="content">
 
+    <!-- FORM -->
+    <div class="card">
+      <h3 style="color:#38bdf8;">List World</h3>
+
+      <label>Name</label>
+      <input type="text" id="name">
+
+      <label>Link Gambar (1280x798)</label>
+      <input type="text" id="image">
+
+      <label>Deskripsi</label>
+      <textarea id="desc"></textarea>
+
+      <label>Status</label>
+      <select id="status">
+        <option value="READY">READY</option>
+        <option value="SOLD">SOLD</option>
+      </select>
+
+      <button id="addBtn">~~~~~ TAMBAH WORLD ~~~~~</button>
+      <small id="msg"></small>
+    </div>
+
+    <!-- LIST -->
+    <div class="card">
+      <h3 style="color:#38bdf8;">Daftar World</h3>
+      <div id="list"></div>
+    </div>
+
+  </div>
 </div>
 
 <script>
@@ -175,22 +209,22 @@ let worlds = [];
 
 /* STATUS */
 function showMsg(msg, ok=true){
-  const el = document.getElementById("statusMsg");
+  const el = document.getElementById("msg");
   el.textContent = msg;
   el.style.color = ok ? "#38bdf8" : "#ef4444";
   setTimeout(()=>el.textContent="",3000);
 }
 
-/* LOAD WORLD */
+/* LOAD */
 async function loadWorld(){
   const res = await fetch(SCRIPT_URL + "?action=world");
   worlds = await res.json();
-  renderWorld();
+  render();
 }
 
 /* RENDER */
-function renderWorld(){
-  const el = document.getElementById("listWorld");
+function render(){
+  const el = document.getElementById("list");
   el.innerHTML = "";
 
   if(worlds.length === 0){
@@ -200,30 +234,30 @@ function renderWorld(){
 
   worlds.forEach((w,i)=>{
     el.innerHTML += `
-    <div class="world-item">
-      <span>${i+1}. ${w.name} (${w.status})</span>
-      <div class="actions">
-        <button onclick="editStatus(${i})">EDIT</button>
-        <button onclick="deleteWorld(${i})">DEL</button>
+      <div class="world-item">
+        <span>${i+1}. ${w.name} (${w.status})</span>
+        <div class="actions">
+          <button onclick="edit(${i})">EDIT</button>
+          <button onclick="del(${i})">DEL</button>
+        </div>
       </div>
-    </div>
     `;
   });
 }
 
-/* ADD WORLD */
+/* ADD */
 document.getElementById("addBtn").addEventListener("click", async ()=>{
 
   const data = {
     action:"add_world",
-    name: document.getElementById("name").value,
-    image: document.getElementById("image").value,
-    desc: document.getElementById("desc").value,
-    status: document.getElementById("status").value
+    name:document.getElementById("name").value,
+    image:document.getElementById("image").value,
+    desc:document.getElementById("desc").value,
+    status:document.getElementById("status").value
   };
 
   if(!data.name || !data.image || !data.desc){
-    showMsg("❌ Semua field harus diisi!", false);
+    showMsg("❌ Lengkapi data!", false);
     return;
   }
 
@@ -232,20 +266,16 @@ document.getElementById("addBtn").addEventListener("click", async ()=>{
     body: JSON.stringify(data)
   });
 
-  showMsg("✅ World berhasil ditambahkan!");
+  showMsg("✅ World ditambahkan!");
   loadWorld();
-
-  document.getElementById("name").value="";
-  document.getElementById("image").value="";
-  document.getElementById("desc").value="";
 });
 
-/* EDIT STATUS */
-function editStatus(i){
-  let newStatus = prompt("Ubah status: READY / SOLD", worlds[i].status);
+/* EDIT */
+function edit(i){
+  let st = prompt("READY / SOLD", worlds[i].status);
 
-  if(newStatus !== "READY" && newStatus !== "SOLD"){
-    showMsg("❌ Hanya READY / SOLD", false);
+  if(st !== "READY" && st !== "SOLD"){
+    showMsg("❌ Hanya READY/SOLD", false);
     return;
   }
 
@@ -253,37 +283,37 @@ function editStatus(i){
     method:"POST",
     body: JSON.stringify({
       action:"edit_world",
-      id: worlds[i].id,
-      status: newStatus
+      id:worlds[i].id,
+      status:st
     })
   });
 
-  showMsg("✅ Status diupdate!");
+  showMsg("✅ Updated!");
   setTimeout(loadWorld,500);
 }
 
 /* DELETE */
-function deleteWorld(i){
-  if(!confirm("Yakin hapus world ini?")) return;
+function del(i){
+  if(!confirm("Hapus world ini?")) return;
 
   fetch(SCRIPT_URL,{
     method:"POST",
     body: JSON.stringify({
       action:"delete_world",
-      id: worlds[i].id
+      id:worlds[i].id
     })
   });
 
-  showMsg("🗑 World dihapus!");
+  showMsg("🗑 Deleted!");
   setTimeout(loadWorld,500);
 }
 
 /* LOGOUT */
-document.getElementById("logoutBtn").addEventListener("click",(e)=>{
+document.getElementById("logoutBtn").onclick = (e)=>{
   e.preventDefault();
   localStorage.removeItem("admin_login");
   window.location.href="login.html";
-});
+};
 
 loadWorld();
 </script>
