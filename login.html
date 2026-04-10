@@ -98,7 +98,7 @@ function loginAdmin() {
     if (input === adminPass) {
         console.log("Password benar, simpan status login dan redirect ke dashboard...");
         localStorage.setItem("admin_login", "true"); // simpan flag login
-        window.location.assign("https://forgeplayid.github.io/dashboard.html");
+        window.location.assign("https://forgeplayid.github.io/panel/dashboard.html");
     } else {
         alert("Password salah!");
     }
