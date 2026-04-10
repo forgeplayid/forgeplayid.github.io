@@ -42,15 +42,13 @@ body {
   background:#dc2626;
 }
 
-/* ========================= */
-/* LAYOUT BAWAH HEADER */
-/* ========================= */
+/* LAYOUT */
 .layout {
   display: flex;
   min-height: calc(100vh - 70px);
 }
 
-/* SIDEBAR KIRI */
+/* SIDEBAR */
 .sidebar {
   width: 180px;
   background: #0f172a;
@@ -58,7 +56,7 @@ body {
   padding: 15px 10px;
 }
 
-/* MENU VERTIKAL */
+/* MENU */
 .menu {
   display: block;
   padding: 10px;
@@ -75,12 +73,19 @@ body {
   color: #020617;
 }
 
-/* CONTENT KANAN */
+/* ACTIVE MENU */
+.menu.active {
+  background: #38bdf8;
+  color: #020617;
+}
+
+/* CONTENT */
 .content {
   flex: 1;
   padding: 30px;
 }
 
+/* CARD */
 .card {
   background: #1e293b;
   padding: 20px;
@@ -134,14 +139,14 @@ small {
   </div>
 </div>
 
-<!-- LAYOUT BAWAH -->
+<!-- LAYOUT -->
 <div class="layout">
 
-  <!-- SIDEBAR VERTIKAL -->
+  <!-- SIDEBAR (SUDAH LINK FIX) -->
   <div class="sidebar">
-    <a href="#" class="menu">Dashboard</a>
-    <a href="#" class="menu">List Harga</a>
-    <a href="#" class="menu">List World</a>
+    <a href="dashboard.html" class="menu">Dashboard</a>
+    <a href="price.html" class="menu active">List Harga</a>
+    <a href="world.html" class="menu">List World</a>
   </div>
 
   <!-- CONTENT -->
