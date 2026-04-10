@@ -113,7 +113,7 @@ async function loadWorld(){
   const data = await res.json();
   const list = document.getElementById("list");
   list.innerHTML = "";
-  data.forEach(item=>{
+  data.forEach((item,i)=>{
     const html = document.createElement("div");
     html.className = "world-item";
     html.innerHTML = `
@@ -122,8 +122,8 @@ async function loadWorld(){
         <small class="${item.status==='READY'?'status-ready':'status-sold'}">${item.status}</small>
       </div>
       <div>
-        <button class="action-btn edit" onclick="openEdit(${item.id})">EDIT</button>
-        <button class="action-btn del" onclick="openDelete(${item.id})">DEL</button>
+        <button class="action-btn edit" onclick="openEdit(${i})">EDIT</button>
+        <button class="action-btn del" onclick="openDelete(${i})">DEL</button>
       </div>
     `;
     list.appendChild(html);
@@ -132,6 +132,10 @@ async function loadWorld(){
 
 // Add World
 async function addWorld(){
+  name.value = name.value.trim();
+  image.value = image.value.trim();
+  desc.value = desc.value.trim();
+  status.value = status.value.trim();
   const body = {
     action:"add_world",
     name:name.value,
@@ -147,10 +151,11 @@ async function addWorld(){
     });
     const result = await res.json();
     msg.style.color = result.status==="success"?"#22c55e":"#ef4444";
-    msg.innerText = result.status==="success"?"✅ World berhasil ditambahkan":"❌ Gagal!";
+    msg.innerText = result.status==="success"?"✅ World berhasil ditambahkan":"❌ Gagal: "+(result.message||"");
     loadWorld();
   }catch(e){
-    msg.style.color="#ef4444"; msg.innerText="❌ Error koneksi";
+    msg.style.color="#ef4444"; 
+    msg.innerText="❌ Error koneksi";
   }
   setTimeout(()=>{msg.innerText="";},5000);
 }
