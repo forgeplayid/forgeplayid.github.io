@@ -39,12 +39,8 @@ small { display:block; margin-top:10px; color:#94a3b8; min-height:18px; }
 <body>
 
 <div class="header">
-  <div class="logo">
-    <a href="dashboard.html"><img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png"></a>
-  </div>
-  <div class="header-right">
-    <a href="#" id="logoutBtn">Log Out</a>
-  </div>
+  <div class="logo"><a href="dashboard.html"><img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png"></a></div>
+  <div class="header-right"><a href="#" id="logoutBtn">Log Out</a></div>
 </div>
 
 <div class="layout">
@@ -58,22 +54,13 @@ small { display:block; margin-top:10px; color:#94a3b8; min-height:18px; }
     <div class="card">
       <h2 style="color:#38bdf8;">LIST WORLD</h2>
 
-      <label class="label">Name</label>
-      <input id="name">
-
-      <label class="label">Link Gambar (1280x798)</label>
-      <input id="image">
-
-      <label class="label">Deskripsi</label>
-      <textarea id="desc" rows="4"></textarea>
-
+      <label class="label">Name</label><input id="name">
+      <label class="label">Link Gambar (1280x798)</label><input id="image">
+      <label class="label">Deskripsi</label><textarea id="desc" rows="4"></textarea>
       <label class="label">Status</label>
-      <select id="status">
-        <option value="READY">READY</option>
-        <option value="SOLD">SOLD</option>
-      </select>
+      <select id="status"><option value="READY">READY</option><option value="SOLD">SOLD</option></select>
 
-      <button onclick="addWorld()">~~~~~ TAMBAH WORLD ~~~~~</button>
+      <button id="addBtn" onclick="addWorld()">~~~~~ TAMBAH WORLD ~~~~~</button>
       <small id="msg"></small>
 
       <hr style="margin:20px 0; border:1px solid #0f293b">
@@ -102,85 +89,83 @@ small { display:block; margin-top:10px; color:#94a3b8; min-height:18px; }
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXyWO4KLRnks-3GFZ78aQxOqtZN6-B7n4P0CuPp0hZ8PrOB4y7jVAoBzIbnOLzv6P/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeNnRvtTbuacVFi1vX3fy1HvpKeEZgfJXKBGoh_13njwmY2y4hbR7E-WgsLhgBDr5YBA/exec";
 let currentEditId = null;
 let currentDeleteId = null;
 const msg = document.getElementById("msg");
+const addBtn = document.getElementById("addBtn");
 
 // Load list world
 async function loadWorld(){
-  const res = await fetch(SCRIPT_URL);
-  const data = await res.json();
-  const list = document.getElementById("list");
-  list.innerHTML = "";
-  data.forEach((item,i)=>{
-    const html = document.createElement("div");
-    html.className = "world-item";
-    html.innerHTML = `
-      <div>
-        <b>${item.name}</b><br>
-        <small class="${item.status==='READY'?'status-ready':'status-sold'}">${item.status}</small>
-      </div>
+  try{
+    const res = await fetch(SCRIPT_URL);
+    if(!res.ok) throw new Error("Network error "+res.status);
+    const data = await res.json();
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+    data.forEach((item,i)=>{
+      const html = document.createElement("div");
+      html.className = "world-item";
+      html.innerHTML = `<div><b>${item.name}</b><br><small class="${item.status==='READY'?'status-ready':'status-sold'}">${item.status}</small></div>
       <div>
         <button class="action-btn edit" onclick="openEdit(${i})">EDIT</button>
         <button class="action-btn del" onclick="openDelete(${i})">DEL</button>
-      </div>
-    `;
-    list.appendChild(html);
-  });
+      </div>`;
+      list.appendChild(html);
+    });
+  }catch(e){
+    console.error("LoadWorld error:", e);
+    msg.style.color="#ef4444";
+    msg.innerText="❌ Gagal load daftar: "+e.message;
+  }
 }
 
 // Add World
 async function addWorld(){
-  name.value = name.value.trim();
-  image.value = image.value.trim();
-  desc.value = desc.value.trim();
-  status.value = status.value.trim();
+  addBtn.disabled=true;
+  const originalText = addBtn.innerText;
+  addBtn.innerText="Loading...";
+
   const body = {
     action:"add_world",
-    name:name.value,
-    image:image.value,
-    desc:desc.value,
-    status:status.value
+    name:name.value.trim(),
+    image:image.value.trim(),
+    desc:desc.value.trim(),
+    status:status.value.trim()
   };
+
+  console.log("Payload:", JSON.stringify(body));
+
   try{
     const res = await fetch(SCRIPT_URL,{
       method:"POST",
       headers:{"Content-Type":"text/plain"},
       body:JSON.stringify(body)
     });
+    if(!res.ok) throw new Error("Network error "+res.status);
     const result = await res.json();
     msg.style.color = result.status==="success"?"#22c55e":"#ef4444";
     msg.innerText = result.status==="success"?"✅ World berhasil ditambahkan":"❌ Gagal: "+(result.message||"");
     loadWorld();
   }catch(e){
-    msg.style.color="#ef4444"; 
-    msg.innerText="❌ Error koneksi";
+    console.error("Fetch error:", e);
+    msg.style.color="#ef4444";
+    msg.innerText="❌ Error koneksi: "+e.message;
   }
+
+  addBtn.disabled=false;
+  addBtn.innerText=originalText;
   setTimeout(()=>{msg.innerText="";},5000);
 }
 
-// Modal Edit
+// Modal Edit / Delete
 function openEdit(id){ currentEditId=id; modalEdit.style.display="flex"; }
 function closeEdit(){ modalEdit.style.display="none"; currentEditId=null; }
-function setStatus(status){
-  fetch(SCRIPT_URL,{
-    method:"POST",
-    headers:{"Content-Type":"text/plain"},
-    body:JSON.stringify({action:"edit_world",id:currentEditId,status})
-  }).then(()=>{closeEdit(); loadWorld();});
-}
+function setStatus(status){ fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({action:"edit_world",id:currentEditId,status})}).then(()=>{closeEdit();loadWorld();}); }
 
-// Modal Delete
 function openDelete(id){ currentDeleteId=id; modalDelete.style.display="flex"; }
 function closeDelete(){ modalDelete.style.display="none"; currentDeleteId=null; }
-function confirmDelete(){
-  fetch(SCRIPT_URL,{
-    method:"POST",
-    headers:{"Content-Type":"text/plain"},
-    body:JSON.stringify({action:"delete_world",id:currentDeleteId})
-  }).then(()=>{closeDelete(); loadWorld();});
-}
+function confirmDelete(){ fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({action:"delete_world",id:currentDeleteId})}).then(()=>{closeDelete();loadWorld();}); }
 
 // Logout
 logoutBtn.onclick=(e)=>{e.preventDefault(); localStorage.removeItem("admin_login"); window.location.href="login.html";}
