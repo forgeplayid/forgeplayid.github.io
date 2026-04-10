@@ -56,7 +56,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
 
 // Format angka ke Rupiah
 function formatRupiah(angka){
@@ -80,6 +80,22 @@ async function loadHarga(){
 // Load harga saat halaman terbuka
 window.onload = loadHarga;
 setInterval(loadHarga, 60000); // Refresh tiap 1 menit
+
+// ====== Tombol redirect Diamond Lock & Blue Gem Lock =====
+const linkDiamond = "https://forgeplayid.github.io/desktop/diamond-lock/";
+const linkBlueGem = "https://forgeplayid.github.io/desktop/blue-gem-lock/";
+
+const menuCards = document.querySelectorAll('.menu-card');
+
+// Tombol kiri = Diamond Lock
+menuCards[0].addEventListener('click', () => {
+    window.location.href = linkDiamond;
+});
+
+// Tombol kanan = Blue Gem Lock
+menuCards[1].addEventListener('click', () => {
+    window.location.href = linkBlueGem;
+});
 </script>
 
 </body>
