@@ -64,14 +64,17 @@ function formatRupiah(angka){
   return "Rp. " + Number(angka).toLocaleString("id-ID");
 }
 
-// Load harga dari Web App
+// Load harga dari Web App (ambil baris 2 spreadsheet)
 async function loadHarga(){
     try {
         const res = await fetch(SCRIPT_URL);
         const data = await res.json();
-        document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(data.sell_dl);
-        document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(data.buy_dl);
-        document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(data.sell_bgl);
+        console.log("Data harga:", data);
+        // ambil dari baris kedua jika JSON array
+        const row = Array.isArray(data) ? data[1] : data; 
+        document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(row.sell_dl);
+        document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(row.buy_dl);
+        document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(row.sell_bgl);
     } catch(err){
         console.error("Gagal ambil harga:", err);
     }
