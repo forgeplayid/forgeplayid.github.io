@@ -4,54 +4,168 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Admin</title>
+
 <style>
-body { font-family: Arial; background: #020617; color: white; margin:0; }
-.header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background:#0f172a; border-bottom:1px solid #1e293b; }
-.header .logo img { height:40px; }
-.header .header-right a { display:inline-block; padding:8px 18px; font-weight:bold; border-radius:6px; text-decoration:none; color:white; background:#ef4444; }
-.header .header-right a:hover { background:#dc2626; }
-.container { max-width:500px; margin:30px auto; padding:0 15px; }
-.card { background: #1e293b; padding:20px; border-radius:10px; margin-bottom:20px; }
-input, button { width:100%; padding:10px; margin:8px 0; font-size:16px; border-radius:6px; border:none; }
-button { background:#38bdf8; color:#020617; font-weight:600; cursor:pointer; transition:0.2s; }
-button:hover { background:#0ea5e9; }
-h2,h3 { color:#38bdf8; margin:0 0 10px 0; }
-small { color:#94a3b8; display:block; margin-top:10px; min-height:20px; }
+body {
+  font-family: Arial;
+  background: #020617;
+  color: white;
+  margin: 0;
+}
+
+/* HEADER ATAS */
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  background:#0f172a;
+  border-bottom:1px solid #1e293b;
+}
+
+.logo img {
+  height:40px;
+}
+
+/* LOGOUT */
+.header-right a {
+  display:inline-block;
+  padding:8px 18px;
+  font-weight:bold;
+  border-radius:6px;
+  text-decoration:none;
+  color:white;
+  background:#ef4444;
+}
+
+.header-right a:hover {
+  background:#dc2626;
+}
+
+/* ========================= */
+/* LAYOUT BAWAH HEADER */
+/* ========================= */
+.layout {
+  display: flex;
+  min-height: calc(100vh - 70px);
+}
+
+/* SIDEBAR KIRI */
+.sidebar {
+  width: 180px;
+  background: #0f172a;
+  border-right: 1px solid #1e293b;
+  padding: 15px 10px;
+}
+
+/* MENU VERTIKAL */
+.menu {
+  display: block;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #1e293b;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.menu:hover {
+  background: #38bdf8;
+  color: #020617;
+}
+
+/* CONTENT KANAN */
+.content {
+  flex: 1;
+  padding: 30px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+}
+
+/* FORM */
+input, button {
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  font-size:16px;
+  border-radius:6px;
+  border:none;
+}
+
+button {
+  background:#38bdf8;
+  color:#020617;
+  font-weight:600;
+  cursor:pointer;
+}
+
+button:hover {
+  background:#0ea5e5;
+}
+
+h2,h3 {
+  color:#38bdf8;
+}
+
+small {
+  color:#94a3b8;
+}
 </style>
 </head>
+
 <body>
 
+<!-- HEADER -->
 <div class="header">
   <div class="logo">
     <a href="dashboard.html">
-      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="Logo">
+      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
     </a>
   </div>
+
   <div class="header-right">
     <a href="#" id="logoutBtn">Log Out</a>
   </div>
 </div>
 
-<div class="container">
-<div class="card">
-<h2>Dashboard Admin</h2>
-<h3>List Harga</h3>
+<!-- LAYOUT BAWAH -->
+<div class="layout">
 
-<input type="number" id="sell-dl" placeholder="Sell DL (Rp)">
-<input type="number" id="sell-bgl" placeholder="Sell BGL (Rp)">
-<input type="number" id="buy-dl" placeholder="Buy DL (Rp)">
+  <!-- SIDEBAR VERTIKAL -->
+  <div class="sidebar">
+    <a href="#" class="menu">Dashboard</a>
+    <a href="#" class="menu">List Harga</a>
+    <a href="#" class="menu">List World</a>
+  </div>
 
-<button id="updateBtn">~~~~~ UPDATE HARGA ~~~~~</button>
-<small id="harga-status"></small>
-</div>
+  <!-- CONTENT -->
+  <div class="content">
+
+    <div class="card">
+      <h2>Dashboard Admin</h2>
+      <h3>List Harga</h3>
+
+      <input type="number" id="sell-dl" placeholder="Sell DL (Rp)">
+      <input type="number" id="sell-bgl" placeholder="Sell BGL (Rp)">
+      <input type="number" id="buy-dl" placeholder="Buy DL (Rp)">
+
+      <button id="updateBtn">~~~~~ UPDATE HARGA ~~~~~</button>
+      <small id="harga-status"></small>
+    </div>
+
+  </div>
+
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
 
-// =====================
-// Load Harga dari Google Apps Script
-// =====================
 async function loadHarga(){
     try {
         const res = await fetch(SCRIPT_URL);
@@ -60,13 +174,10 @@ async function loadHarga(){
         document.getElementById("sell-bgl").value = data.sell_bgl || "";
         document.getElementById("buy-dl").value = data.buy_dl || "";
     } catch(err){
-        console.error("Gagal load harga:", err);
+        console.error(err);
     }
 }
 
-// =====================
-// Update Harga
-// =====================
 document.getElementById("updateBtn").addEventListener("click", async function(){
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
@@ -87,31 +198,26 @@ document.getElementById("updateBtn").addEventListener("click", async function(){
             method: "POST",
             body: formData
         });
+
         const result = await res.json();
+
         if(result.status === "success"){
             document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
             loadHarga();
-            setTimeout(()=>document.getElementById("harga-status").textContent="", 3000);
         } else {
-            throw new Error(result.error || "Update gagal");
+            throw new Error(result.error);
         }
     } catch(err){
-        console.error(err);
-        document.getElementById("harga-status").textContent = "❌ Gagal update harga! " + err.message;
+        document.getElementById("harga-status").textContent = "❌ Gagal update!";
     }
 });
 
-// =====================
-// Logout
-// =====================
 document.getElementById("logoutBtn").addEventListener("click", function(e){
     e.preventDefault();
     localStorage.removeItem("admin_login");
-    alert("Log Out berhasil!");
     window.location.href = "login.html";
 });
 
-// Load harga saat pertama kali
 window.onload = loadHarga;
 </script>
 
