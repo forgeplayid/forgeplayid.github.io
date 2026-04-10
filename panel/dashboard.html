@@ -1,1 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
 
+<style>
+body {
+  font-family: Arial;
+  background: #020617;
+  color: white;
+  margin: 0;
+}
+
+/* HEADER */
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  background:#0f172a;
+  border-bottom:1px solid #1e293b;
+}
+
+.logo img {
+  height:40px;
+}
+
+.header-right a {
+  padding:8px 18px;
+  background:#ef4444;
+  color:white;
+  text-decoration:none;
+  border-radius:6px;
+  font-weight:bold;
+}
+
+.header-right a:hover {
+  background:#dc2626;
+}
+
+/* LAYOUT */
+.layout {
+  display: flex;
+  min-height: calc(100vh - 70px);
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 180px;
+  background: #0f172a;
+  border-right: 1px solid #1e293b;
+  padding: 15px 10px;
+}
+
+/* MENU */
+.menu {
+  display: block;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #1e293b;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.menu:hover {
+  background: #38bdf8;
+  color: #020617;
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 30px;
+}
+
+/* CARD */
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <a href="#">
+      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
+    </a>
+  </div>
+
+  <div class="header-right">
+    <a href="#" id="logoutBtn">Log Out</a>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <a href="https://forgeplayid.github.io/panel/dashboard.html" class="menu">Dashboard</a>
+    <a href="https://forgeplayid.github.io/panel/price.html" class="menu">List Harga</a>
+    <a href="https://forgeplayid.github.io/panel/world.html" class="menu">List World</a>
+  </div>
+
+  <!-- CONTENT (optional kalau masih dipakai halaman ini) -->
+  <div class="content">
+    <div class="card">
+      <h2>Admin Panel</h2>
+      <p>Silakan pilih menu di sebelah kiri.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.getElementById("logoutBtn").addEventListener("click", function(e){
+    e.preventDefault();
+    localStorage.removeItem("admin_login");
+    window.location.href = "login.html";
+});
+</script>
+
+</body>
+</html>
