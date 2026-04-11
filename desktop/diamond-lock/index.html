@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pembayaran Diamond Lock</title>
 
-<!-- Google Font Montserrat -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -16,7 +15,6 @@
         color: white;
     }
 
-    /* HEADER UTAMA */
     .header {
         display: flex;
         justify-content: space-between;
@@ -26,9 +24,7 @@
         border-bottom: 1px solid #1e293b;
     }
 
-    .logo img {
-        height: 35px;
-    }
+    .logo img { height: 35px; }
 
     .header-right {
         display: flex;
@@ -44,14 +40,12 @@
         border-radius: 6px;
         text-decoration: none;
         transition: background-color 0.2s;
-        font-family: 'Montserrat', sans-serif;
     }
 
     .header-right a.button:hover {
         background-color: #0ea5e9;
     }
 
-    /* CONTAINER */
     .container {
         max-width: 860px;
         margin: 30px auto;
@@ -65,16 +59,9 @@
         font-weight: 700;
     }
 
-    /* LOGO DIAMOND LOCK BESAR */
-    .logo-dl {
-        margin-bottom: 15px;
-    }
+    .logo-dl { margin-bottom: 15px; }
+    .logo-dl img { height: 100px; }
 
-    .logo-dl img {
-        height: 100px;
-    }
-
-    /* PAYMENT FRAME */
     .payment-frame {
         display: flex;
         justify-content: space-between;
@@ -105,7 +92,6 @@
     .payment-card p {
         margin: 5px 0;
         font-size: 16px;
-        font-family: 'Montserrat', sans-serif;
         font-weight: 600;
     }
 
@@ -117,7 +103,30 @@
         font-size: 16px;
         box-shadow: 0 6px 15px rgba(0,0,0,0.3);
         min-height: 50px;
-        font-family: 'Montserrat', sans-serif;
+    }
+
+    /* =========================
+       QRIS FIX (SAMA DENGAN BGL)
+    ========================= */
+    .qris-container img {
+        width: 260px;
+        max-width: 90%;
+        height: auto;
+        display: block;
+        margin: 0 auto 10px auto;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .qris-container img:hover {
+        transform: scale(1.05);
+    }
+
+    .qris-container p {
+        margin: 0;
+        font-size: 16px;
+        color: #cbd5f5;
+        font-weight: 600;
     }
 
     .whatsapp-button {
@@ -130,40 +139,30 @@
         border-radius: 8px;
         text-decoration: none;
         transition: background-color 0.2s;
-        font-family: 'Montserrat', sans-serif;
     }
 
     .whatsapp-button:hover {
         background-color: #1ebe57;
     }
 
-    /* RESPONSIVE */
     @media (max-width: 500px) {
-        .header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .header-right {
-            margin-top: 10px;
-        }
-        .payment-frame {
-            flex-direction: column;
-        }
-        .payment-card {
-            margin: 10px 0;
-        }
+        .header { flex-direction: column; align-items: flex-start; }
+        .header-right { margin-top: 10px; }
+        .payment-frame { flex-direction: column; }
+        .payment-card { margin: 10px 0; }
     }
 </style>
 </head>
+
 <body>
 
-<!-- HEADER UTAMA -->
 <div class="header">
     <div class="logo">
         <a href="https://forgeplayid.github.io/">
-            <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="Logo">
+            <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
         </a>
     </div>
+
     <div class="header-right">
         <a href="https://forgeplayid.github.io/desktop/world" class="button">Cari World Disini</a>
     </div>
@@ -171,37 +170,36 @@
 
 <div class="container">
 
-    <!-- LOGO DIAMOND LOCK -->
     <div class="logo-dl">
-        <img src="https://forgeplayid.github.io/assets/diamond-lock.png" alt="Diamond Lock Logo">
+        <img src="https://forgeplayid.github.io/assets/diamond-lock.png">
     </div>
 
-    <!-- JUDUL PEMBAYARAN -->
     <h1>Pembayaran Diamond Lock ( DL )</h1>
 
-    <!-- PAYMENT FRAME -->
     <div class="payment-frame">
         <div class="payment-card" onclick="showRekening('BCA')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/BCA_logo.svg/2560px-BCA_logo.svg.png" alt="BCA">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/BCA_logo.svg/2560px-BCA_logo.svg.png">
             <p>BCA</p>
         </div>
+
         <div class="payment-card" onclick="showRekening('BRI')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/BRI_logo.svg" alt="BRI">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/BRI_logo.svg">
             <p>BRI</p>
         </div>
+
         <div class="payment-card" onclick="showRekening('QRIS')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/QRIS_Logo.png" alt="QRIS">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/QRIS_Logo.png">
             <p>QRIS</p>
         </div>
     </div>
 
-    <!-- REKENING INFO -->
-    <div id="rekening-info">Klik salah satu metode pembayaran untuk melihat nomor rekening / QRIS</div>
+    <div id="rekening-info">
+        Klik salah satu metode pembayaran untuk melihat nomor rekening / QRIS
+    </div>
 
-    <!-- WHATSAPP BUTTON -->
-    <a id="whatsapp-link" 
-       href="https://wa.me/6285175215549?text=Halo%20Admin,%20saya%20ingin%20membeli%20DL" 
-       target="_blank" 
+    <a id="whatsapp-link"
+       href="https://wa.me/6285175215549?text=Halo%20Admin,%20saya%20ingin%20membeli%20DL"
+       target="_blank"
        class="whatsapp-button">
        Kirim Bukti transaksi + World ID + Grow ID di WhatsApp
     </a>
@@ -209,34 +207,33 @@
 </div>
 
 <script>
-    const rekeningData = {
-        BCA: "BCA 1234567890 a.n. Nama Pemilik",
-        BRI: "BRI 0987654321 a.n. Nama Pemilik",
-        QRIS: `
-            <div style="text-align:center;">
-                <img src="https://forgeplayid.github.io/assets/forgeplayid-qris.png" 
-                     alt="QRIS" 
-                     style="max-width:200px; display:block; margin: 0 auto 10px auto;">
-                <p>Silahkan Scan QRIS diatas</p>
-            </div>
-        `
-    };
+const rekeningData = {
+    BCA: "BCA 1234567890 a.n. Nama Pemilik",
+    BRI: "BRI 0987654321 a.n. Nama Pemilik",
+    QRIS: `
+        <div class="qris-container">
+            <img src="https://forgeplayid.github.io/assets/forgeplayid-qris.png"
+                 alt="QRIS"
+                 onclick="this.style.transform = (this.style.transform === 'scale(1.5)') ? 'scale(1)' : 'scale(1.5)';">
+            <p>Silahkan Scan QRIS diatas</p>
+        </div>
+    `
+};
 
-    function showRekening(bank) {
-        const info = document.getElementById('rekening-info');
+function showRekening(bank) {
+    const info = document.getElementById('rekening-info');
 
-        // gunakan innerHTML untuk QRIS agar gambar muncul
-        if(bank === 'QRIS') {
-            info.innerHTML = rekeningData[bank];
-        } else {
-            info.textContent = rekeningData[bank];
-        }
-
-        // Update WhatsApp link otomatis
-        const waNumber = "6281234567890"; // ganti nomor admin
-        const message = encodeURIComponent(`Halo Admin, saya sudah melakukan pembayaran Diamond Lock via ${bank}. Bukti transaksi + World ID + Grow ID`);
-        document.getElementById('whatsapp-link').href = `https://wa.me/${waNumber}?text=${message}`;
+    if(bank === 'QRIS') {
+        info.innerHTML = rekeningData[bank];
+    } else {
+        info.textContent = rekeningData[bank];
     }
+
+    const waNumber = "6281234567890";
+    const message = encodeURIComponent(`Halo Admin, saya sudah melakukan pembayaran Diamond Lock via ${bank}. Bukti transaksi + World ID + Grow ID`);
+    document.getElementById('whatsapp-link').href =
+        `https://wa.me/${waNumber}?text=${message}`;
+}
 </script>
 
 </body>
