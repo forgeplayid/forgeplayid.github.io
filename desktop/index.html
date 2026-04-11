@@ -104,13 +104,13 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 .dot.active { background: white; }
 
-/* MENU */
+/* ================= MENU 2 KOTAK ================= */
 .menu-frame {
   display:flex;
   justify-content:space-between;
   width:100%;
   max-width:860px;
-  margin:25px auto 0 auto;
+  margin:25px auto 10px auto;
   padding:0 10px;
   background-color:#0f172a;
   border-radius:12px;
@@ -135,6 +135,32 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 .menu-card img.menu-img { width:50px; height:auto; margin-bottom:10px; }
 .menu-card p { margin:5px 0; font-size:16px; }
+
+/* ================= 1 KOTAK PANJANG BARU ================= */
+.buy-frame {
+  width:100%;
+  max-width:860px;
+  margin:10px auto 0 auto;
+}
+
+.buy-card {
+  display:block;
+  width:100%;
+  background-color:#1e293b;
+  border-radius:10px;
+  padding:18px;
+  text-align:center;
+  color:white;
+  text-decoration:none;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  transition:transform 0.2s;
+  font-weight:600;
+}
+
+.buy-card:hover {
+  transform:translateY(-5px);
+  background-color:#0f172a;
+}
 
 .content {
   margin-top:25px;
@@ -184,7 +210,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
   <div class="dots" id="dots"></div>
 </div>
 
-<!-- MENU -->
+<!-- MENU 2 KOTAK -->
 <div class="menu-frame">
   <a class="menu-card" href="https://forgeplayid.github.io/desktop/diamond-lock/">
     <img src="https://forgeplayid.github.io/assets/diamond-lock.png" class="menu-img">
@@ -198,13 +224,19 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
   </a>
 </div>
 
+<!-- 1 KOTAK PANJANG -->
+<div class="buy-frame">
+  <a class="buy-card" href="https://forgeplayid.github.io/desktop/buy/">
+    Mau jual DL? Langsung Ke Sini
+  </a>
+</div>
+
 <div class="content"></div>
 
 </div>
 
 <script>
 
-/* GOOGLE SCRIPT */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
 
 /* SLIDES */
@@ -228,7 +260,6 @@ let current = 0;
 const track = document.getElementById("sliderTrack");
 const dots = document.getElementById("dots");
 
-/* INIT RENDER ONCE */
 function initSlider(){
   track.innerHTML = "";
   dots.innerHTML = "";
@@ -250,30 +281,20 @@ function initSlider(){
   update();
 }
 
-/* UPDATE POSITION (NO REBUILD) */
 function update(){
   track.style.transform = `translateX(-${current * 100}%)`;
-
   document.querySelectorAll(".dot").forEach((d,i)=>{
     d.classList.toggle("active", i===current);
   });
 }
 
-/* NEXT (SMOOTH LOOP RIGHT → LEFT) */
 function next(){
-  current++;
-  if(current >= slides.length){
-    current = 0;
-  }
+  current = (current + 1) % slides.length;
   update();
 }
 
-/* PREV (SMOOTH LOOP LEFT → RIGHT) */
 function prev(){
-  current--;
-  if(current < 0){
-    current = slides.length - 1;
-  }
+  current = (current - 1 + slides.length) % slides.length;
   update();
 }
 
@@ -282,21 +303,10 @@ function goTo(i){
   update();
 }
 
-/* BUTTON */
 document.getElementById("nextBtn").onclick = next;
 document.getElementById("prevBtn").onclick = prev;
 
-/* AUTO */
 setInterval(next, 4000);
-
-/* TOUCH */
-let startX = 0;
-track.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
-track.addEventListener("touchend",e=>{
-  let endX = e.changedTouches[0].clientX;
-  if(startX-endX>50) next();
-  else if(endX-startX>50) prev();
-});
 
 /* HARGA */
 function formatRupiah(a){
