@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Desktop Layout</title>
+
 <style>
 body { margin:0; font-family: Arial, sans-serif; background-color: #020617; color: white; }
 .header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background-color:#0f172a; border-bottom:1px solid #1e293b; }
@@ -19,9 +20,17 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 .menu-card img.menu-img { width:50px; height:auto; margin-bottom:10px; }
 .menu-card p { margin:5px 0; font-size:16px; }
 .content { margin-top:25px; height:350px; background-color:#020617; border-radius:12px; border:1px dashed #1e293b; }
-@media(max-width:500px){.menu-card{padding:10px}.menu-card img.menu-img{width:40px}.menu-card p{font-size:14px}.header{flex-direction:column;align-items:flex-start}.header-right{margin-top:10px}}
+
+@media(max-width:500px){
+.menu-card{padding:10px}
+.menu-card img.menu-img{width:40px}
+.menu-card p{font-size:14px}
+.header{flex-direction:column;align-items:flex-start}
+.header-right{margin-top:10px}
+}
 </style>
 </head>
+
 <body>
 
 <div class="header">
@@ -30,59 +39,75 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
       <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="Logo">
     </a>
   </div>
+
   <div class="header-right">
     <a href="https://forgeplayid.github.io/desktop/world" class="button">Cari World Disini</a>
   </div>
 </div>
 
 <div class="container">
+
   <div class="slider">
     <img src="https://forgeplayid.github.io/assets/gt-slider1.png" alt="Slider">
   </div>
 
   <div class="menu-frame">
     <a class="menu-card" href="https://forgeplayid.github.io/desktop/diamond-lock/">
-      <img src="https://forgeplayid.github.io/assets/diamond-lock.png" alt="DL" class="menu-img">
+      <img src="https://forgeplayid.github.io/assets/diamond-lock.png" class="menu-img">
       <p id="sell-dl">Sell Rp. -</p>
       <p id="buy-dl">Buy Rp. -</p>
     </a>
+
     <a class="menu-card" href="https://forgeplayid.github.io/desktop/blue-gem-lock/">
-      <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" alt="BGL" class="menu-img">
+      <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" class="menu-img">
       <p id="sell-bgl">Sell Rp. -</p>
     </a>
   </div>
 
   <div class="content"></div>
+
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
 
-// Format angka ke Rupiah
+/* ✅ URL BARU (FIX FINAL) */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
+
+/* FORMAT RUPIAH */
 function formatRupiah(angka){
   if(!angka) return "Rp. -";
   return "Rp. " + Number(angka).toLocaleString("id-ID");
 }
 
-// Load harga dari Web App (ambil baris 2 spreadsheet)
+/* LOAD DATA */
 async function loadHarga(){
-    try {
-        const res = await fetch(SCRIPT_URL);
-        const data = await res.json();
-        console.log("Data harga:", data);
-        // ambil dari baris kedua jika JSON array
-        const row = Array.isArray(data) ? data[1] : data; 
-        document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(row.sell_dl);
-        document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(row.buy_dl);
-        document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(row.sell_bgl);
-    } catch(err){
-        console.error("Gagal ambil harga:", err);
-    }
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+
+    console.log("DATA API:", data);
+
+    // langsung object (dari Code.gs kamu)
+    const row = data;
+
+    document.getElementById("sell-dl").innerText =
+      "Sell " + formatRupiah(row.sell_dl);
+
+    document.getElementById("buy-dl").innerText =
+      "Buy " + formatRupiah(row.buy_dl);
+
+    document.getElementById("sell-bgl").innerText =
+      "Sell " + formatRupiah(row.sell_bgl);
+
+  } catch(err){
+    console.error("ERROR LOAD:", err);
+  }
 }
 
-// Load harga saat halaman terbuka
+/* INIT */
 window.onload = loadHarga;
-setInterval(loadHarga, 60000); // Refresh tiap 1 menit
+setInterval(loadHarga, 60000);
+
 </script>
 
 </body>
