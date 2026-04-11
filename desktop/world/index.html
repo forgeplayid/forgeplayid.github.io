@@ -39,9 +39,9 @@ body {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  max-width:1200px;
+  max-width:1100px; /* 🔥 dikit diperkecil */
   margin:30px auto 10px auto;
-  padding:0 15px;
+  padding:0 25px; /* 🔥 tambah jarak kiri kanan */
 }
 
 .title-bar h1{
@@ -49,7 +49,7 @@ body {
   color:#38bdf8;
 }
 
-/* SORT BOX (TIDAK DIUBAH) */
+/* SORT BOX */
 .sort-box{
   display:flex;
   align-items:center;
@@ -102,11 +102,55 @@ body {
   transform:translateX(22px);
 }
 
+/* 🔥 SELL WORLD BOX */
+.sell-world-wrapper{
+  max-width:1100px; /* 🔥 diperkecil dikit */
+  margin:10px auto 20px auto;
+  padding:0 25px; /* 🔥 tambah jarak */
+}
+
+.sell-world-box{
+  width:100%;
+  padding:15px 20px;
+  background:#0f172a;
+  border:1px solid #38bdf8;
+  border-radius:10px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+}
+
+.sell-text{
+  font-size:14px;
+  color:#cbd5f5;
+}
+
+.sell-text b{
+  color:#38bdf8;
+}
+
+.sell-btn{
+  padding:8px 16px;
+  background:#22c55e;
+  color:#020617;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.sell-btn:hover{
+  background:#16a34a;
+  transform:translateY(-2px);
+}
+
 /* GRID */
 .container{
-  max-width:1200px;
+  max-width:1100px; /* 🔥 diperkecil */
   margin:10px auto 50px;
-  padding:0 15px;
+  padding:0 25px; /* 🔥 tambah jarak */
 }
 
 .world-grid{
@@ -115,16 +159,16 @@ body {
   gap:20px;
 }
 
-/* CARD (FIX PENTING DI SINI) */
+/* CARD */
 .world-card{
   background:#1e293b;
   border-radius:12px;
   overflow:hidden;
   box-shadow:0 6px 15px rgba(0,0,0,0.3);
 
-  display:flex;              /* 🔥 FIX */
-  flex-direction:column;     /* 🔥 FIX */
-  height:100%;               /* 🔥 FIX biar stabil */
+  display:flex;
+  flex-direction:column;
+  height:100%;
 }
 
 /* IMAGE */
@@ -148,11 +192,10 @@ body {
   padding:15px;
   font-size:14px;
   color:#cbd5f5;
-
-  flex:1; /* 🔥 bikin isi fleksibel */
+  flex:1;
 }
 
-/* BUTTON (FIX DIKUNCI BAWAH) */
+/* BUTTON */
 .buy-button{
   display:block;
   margin:15px auto 20px;
@@ -162,8 +205,7 @@ body {
   border-radius:8px;
   font-weight:600;
   text-decoration:none;
-
-  margin-top:auto; /* 🔥 INI KUNCI UTAMA */
+  margin-top:auto;
 }
 
 /* STATUS */
@@ -190,7 +232,20 @@ body {
 
 /* RESPONSIVE */
 @media(max-width:1024px){ .world-grid{grid-template-columns:repeat(3,1fr);} }
-@media(max-width:700px){ .world-grid{grid-template-columns:repeat(2,1fr);} }
+
+@media(max-width:700px){
+  .world-grid{grid-template-columns:repeat(2,1fr);}
+
+  .sell-world-box{
+    flex-direction:column;
+    text-align:center;
+  }
+
+  .sell-btn{
+    width:100%;
+  }
+}
+
 @media(max-width:400px){ .world-grid{grid-template-columns:1fr;} }
 
 </style>
@@ -222,6 +277,21 @@ body {
   </div>
 </div>
 
+<div class="sell-world-wrapper">
+  <div class="sell-world-box">
+    <div class="sell-text">
+      💬 <b>Jual World?</b><br>
+      Contact Admin aja, Dijamin Harga Pasti COCOK!
+    </div>
+
+    <a href="https://wa.me/6285175215549?text=Halo%20Admin,%20Saya%20ingin%20menjual%20World%20Saya!"
+       target="_blank"
+       class="sell-btn">
+      Hubungi Sekarang
+    </a>
+  </div>
+</div>
+
 <div class="container">
   <div class="world-grid" id="grid"></div>
 </div>
@@ -231,7 +301,6 @@ body {
 </div>
 
 <script>
-
 const API = "https://script.google.com/macros/s/AKfycbxeNnRvtTbuacVFi1vX3fy1HvpKeEZgfJXKBGoh_13njwmY2y4hbR7E-WgsLhgBDr5YBA/exec";
 
 const grid = document.getElementById("grid");
@@ -288,7 +357,7 @@ function render(){
 
       ${
         isSold
-        ? `<div class="buy-button" style="background:#ef4444;color:#020617;pointer-events:none;">SOLD</div>`
+        ? `<div class="buy-button" style="background:#ef4444;color:#020617;">SOLD</div>`
         : `<a class="buy-button" style="background:#22c55e;color:#020617"
              href="https://wa.me/6285175215549?text=Saya%20ingin%20membeli%20world%20${encodeURIComponent(item.name)}">
              BUY WORLD
@@ -302,7 +371,6 @@ function render(){
   grid.innerHTML = "";
   newEls.forEach(el=>grid.appendChild(el));
 
-  /* FLIP ANIMATION */
   newEls.forEach(el=>{
     const last = el.getBoundingClientRect();
     const firstPos = first[el.dataset.id];
@@ -334,7 +402,6 @@ document.getElementById("zoomOverlay").onclick = ()=>{
 };
 
 loadWorlds();
-
 </script>
 
 </body>
