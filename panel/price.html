@@ -73,7 +73,6 @@ body {
   color: #020617;
 }
 
-/* ACTIVE MENU */
 .menu.active {
   background: #38bdf8;
   color: #020617;
@@ -169,11 +168,24 @@ small {
 </div>
 
 <script>
-/* ✅ URL BARU (SUDAH FIX) */
+
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
 
 /* =========================
-   LOAD HARGA (GET)
+   STATUS HELPER (AUTO HILANG 5 DETIK)
+========================= */
+function showStatus(msg, success=true){
+    const el = document.getElementById("harga-status");
+    el.textContent = msg;
+    el.style.color = success ? "#22c55e" : "#ef4444";
+
+    setTimeout(()=>{
+        el.textContent = "";
+    }, 5000);
+}
+
+/* =========================
+   LOAD HARGA
 ========================= */
 async function loadHarga(){
     try {
@@ -190,7 +202,7 @@ async function loadHarga(){
 }
 
 /* =========================
-   UPDATE HARGA (POST FIXED)
+   UPDATE HARGA (FIX FINAL)
 ========================= */
 document.getElementById("updateBtn").addEventListener("click", async function(){
 
@@ -199,11 +211,10 @@ document.getElementById("updateBtn").addEventListener("click", async function(){
     const buyDL = document.getElementById("buy-dl").value;
 
     if(!sellDL && !sellBGL && !buyDL){
-        alert("Isi minimal satu harga!");
+        showStatus("Isi minimal satu harga!", false);
         return;
     }
 
-    /* FIX: kirim JSON sesuai Code.gs kamu */
     const payload = {
         sell_dl: sellDL,
         sell_bgl: sellBGL,
@@ -213,24 +224,28 @@ document.getElementById("updateBtn").addEventListener("click", async function(){
     try {
         const res = await fetch(SCRIPT_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify(payload)
         });
 
-        const result = await res.json();
+        const text = await res.text();
+
+        let result;
+        try {
+            result = JSON.parse(text);
+        } catch (e) {
+            result = { status: "error" };
+        }
 
         if(result.status === "ok"){
-            document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
+            showStatus("✅ Harga berhasil diupdate!", true);
             loadHarga();
         } else {
-            document.getElementById("harga-status").textContent = "❌ Gagal update!";
+            showStatus("❌ Gagal update!", false);
         }
 
     } catch(err){
         console.error(err);
-        document.getElementById("harga-status").textContent = "❌ Gagal update!";
+        showStatus("❌ Gagal update!", false);
     }
 });
 
@@ -243,6 +258,7 @@ document.getElementById("logoutBtn").addEventListener("click", function(e){
 
 /* INIT */
 window.onload = loadHarga;
+
 </script>
 
 </body>
