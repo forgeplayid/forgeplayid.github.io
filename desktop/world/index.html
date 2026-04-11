@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Daftar World Responsif Grid</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
 
 <style>
@@ -48,7 +49,7 @@ body {
   color:#38bdf8;
 }
 
-/* SORT BOX */
+/* SORT BOX (TIDAK DIUBAH) */
 .sort-box{
   display:flex;
   align-items:center;
@@ -114,13 +115,16 @@ body {
   gap:20px;
 }
 
-/* CARD */
+/* CARD (FIX PENTING DI SINI) */
 .world-card{
   background:#1e293b;
   border-radius:12px;
   overflow:hidden;
   box-shadow:0 6px 15px rgba(0,0,0,0.3);
-  will-change: transform, opacity;
+
+  display:flex;              /* 🔥 FIX */
+  flex-direction:column;     /* 🔥 FIX */
+  height:100%;               /* 🔥 FIX biar stabil */
 }
 
 /* IMAGE */
@@ -144,9 +148,11 @@ body {
   padding:15px;
   font-size:14px;
   color:#cbd5f5;
+
+  flex:1; /* 🔥 bikin isi fleksibel */
 }
 
-/* BUTTON */
+/* BUTTON (FIX DIKUNCI BAWAH) */
 .buy-button{
   display:block;
   margin:15px auto 20px;
@@ -156,6 +162,8 @@ body {
   border-radius:8px;
   font-weight:600;
   text-decoration:none;
+
+  margin-top:auto; /* 🔥 INI KUNCI UTAMA */
 }
 
 /* STATUS */
@@ -171,6 +179,7 @@ body {
   justify-content:center;
   align-items:center;
 }
+
 .zoom-overlay.active{ display:flex; }
 
 .zoom-overlay img{
@@ -201,7 +210,6 @@ body {
   </div>
 </div>
 
-<!-- TITLE -->
 <div class="title-bar">
   <h1>Daftar World</h1>
 
@@ -239,9 +247,6 @@ async function loadWorlds(){
   render();
 }
 
-/* =========================
-   FLIP ANIMATION SORT FIX
-========================= */
 function render(){
 
   const first = {};
@@ -281,11 +286,14 @@ function render(){
         <p>${item.desc ? item.desc.replace(/\n/g,"<br>") : ""}</p>
       </div>
 
-      <a class="buy-button"
-         style="background:${isSold?'#ef4444':'#22c55e'};color:#020617"
-         href="${isSold?'#':'https://wa.me/6285175215549?text=Saya%20ingin%20membeli%20world%20'+encodeURIComponent(item.name)}">
-         ${isSold?'SOLD':'BUY WORLD'}
-      </a>
+      ${
+        isSold
+        ? `<div class="buy-button" style="background:#ef4444;color:#020617;pointer-events:none;">SOLD</div>`
+        : `<a class="buy-button" style="background:#22c55e;color:#020617"
+             href="https://wa.me/6285175215549?text=Saya%20ingin%20membeli%20world%20${encodeURIComponent(item.name)}">
+             BUY WORLD
+           </a>`
+      }
     `;
 
     newEls.push(el);
@@ -321,7 +329,6 @@ function render(){
   });
 }
 
-/* ZOOM CLOSE */
 document.getElementById("zoomOverlay").onclick = ()=>{
   document.getElementById("zoomOverlay").classList.remove("active");
 };
