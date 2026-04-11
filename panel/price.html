@@ -142,7 +142,7 @@ small {
 <!-- LAYOUT -->
 <div class="layout">
 
-  <!-- SIDEBAR (SUDAH LINK FIX) -->
+  <!-- SIDEBAR -->
   <div class="sidebar">
     <a href="dashboard.html" class="menu">Dashboard</a>
     <a href="price.html" class="menu active">List Harga</a>
@@ -169,21 +169,31 @@ small {
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzU0WG8W524Vn6LpnbRjhZIrc19Xvle31Os3LskY2gqkBEmQ_CHj44q6NXtJQagbhmTGA/exec";
+/* ✅ URL BARU (SUDAH FIX) */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
 
+/* =========================
+   LOAD HARGA (GET)
+========================= */
 async function loadHarga(){
     try {
         const res = await fetch(SCRIPT_URL);
         const data = await res.json();
+
         document.getElementById("sell-dl").value = data.sell_dl || "";
         document.getElementById("sell-bgl").value = data.sell_bgl || "";
         document.getElementById("buy-dl").value = data.buy_dl || "";
+
     } catch(err){
-        console.error(err);
+        console.error("Load error:", err);
     }
 }
 
+/* =========================
+   UPDATE HARGA (POST FIXED)
+========================= */
 document.getElementById("updateBtn").addEventListener("click", async function(){
+
     const sellDL = document.getElementById("sell-dl").value;
     const sellBGL = document.getElementById("sell-bgl").value;
     const buyDL = document.getElementById("buy-dl").value;
@@ -193,36 +203,45 @@ document.getElementById("updateBtn").addEventListener("click", async function(){
         return;
     }
 
-    const formData = new URLSearchParams();
-    formData.append("sell_dl", sellDL);
-    formData.append("sell_bgl", sellBGL);
-    formData.append("buy_dl", buyDL);
+    /* FIX: kirim JSON sesuai Code.gs kamu */
+    const payload = {
+        sell_dl: sellDL,
+        sell_bgl: sellBGL,
+        buy_dl: buyDL
+    };
 
     try {
         const res = await fetch(SCRIPT_URL, {
             method: "POST",
-            body: formData
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
         });
 
         const result = await res.json();
 
-        if(result.status === "success"){
+        if(result.status === "ok"){
             document.getElementById("harga-status").textContent = "✅ Harga berhasil diupdate!";
             loadHarga();
         } else {
-            throw new Error(result.error);
+            document.getElementById("harga-status").textContent = "❌ Gagal update!";
         }
+
     } catch(err){
+        console.error(err);
         document.getElementById("harga-status").textContent = "❌ Gagal update!";
     }
 });
 
+/* LOGOUT */
 document.getElementById("logoutBtn").addEventListener("click", function(e){
     e.preventDefault();
     localStorage.removeItem("admin_login");
     window.location.href = "login.html";
 });
 
+/* INIT */
 window.onload = loadHarga;
 </script>
 
