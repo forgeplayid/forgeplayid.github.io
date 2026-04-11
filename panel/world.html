@@ -4,74 +4,147 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>World Admin</title>
+
 <style>
 body { font-family: Arial; background:#020617; color:white; margin:0; }
+
 .header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background:#0f172a; border-bottom:1px solid #1e293b; }
+
 .logo img { height:40px; }
+
 .header-right a { padding:6px 14px; background:#ef4444; color:white; text-decoration:none; border-radius:6px; font-weight:bold; }
+
 .layout { display:flex; min-height:100vh; }
+
 .sidebar { width:180px; background:#0f172a; border-right:1px solid #1e293b; padding:10px; }
+
 .menu { display:block; padding:10px; margin-bottom:8px; background:#1e293b; color:white; text-decoration:none; border-radius:6px; font-size:13px; }
+
 .menu:hover { background:#38bdf8; color:#020617; }
+
 .content { flex:1; padding:20px; }
+
 .card { background:#1e293b; padding:20px; border-radius:10px; max-width:700px; }
+
 .label { color:#38bdf8; font-size:13px; margin-top:10px; margin-bottom:4px; display:block; }
-input, textarea, select { width:100%; padding:10px; border:none; border-radius:6px; margin-bottom:8px; font-size:14px; background:white; color:black; }
-button { width:100%; padding:10px; background:#38bdf8; border:none; border-radius:6px; font-weight:bold; cursor:pointer; color:#020617; }
+
+input, textarea, select {
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:6px;
+  margin-bottom:8px;
+  font-size:14px;
+  background:white;
+  color:black;
+}
+
+button {
+  width:100%;
+  padding:10px;
+  background:#38bdf8;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+  color:#020617;
+}
+
 button:hover { background:#0ea5e5; }
+
 small { display:block; margin-top:10px; color:#94a3b8; min-height:18px; }
+
 .world-item { padding:5px 0; }
+
 .status-ready { color:#22c55e; font-weight:bold; }
 .status-sold { color:#ef4444; font-weight:bold; }
 </style>
 </head>
+
 <body>
 
+<!-- 🔐 PROTECTION LOGIN (FIX UTAMA) -->
+<script>
+if (localStorage.getItem("admin_login") !== "true") {
+  window.location.replace("https://forgeplayid.github.io/panel/login.html");
+}
+</script>
+
 <div class="header">
-  <div class="logo"><a href="dashboard.html"><img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png"></a></div>
-  <div class="header-right"><a href="#" id="logoutBtn">Log Out</a></div>
+  <div class="logo">
+    <a href="dashboard.html">
+      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
+    </a>
+  </div>
+
+  <div class="header-right">
+    <a href="#" id="logoutBtn">Log Out</a>
+  </div>
 </div>
 
 <div class="layout">
+
   <div class="sidebar">
     <a class="menu" href="dashboard.html">Dashboard</a>
     <a class="menu" href="price.html">List Harga</a>
     <a class="menu" href="world.html">List World</a>
   </div>
+
   <div class="content">
     <div class="card">
       <h2 style="color:#38bdf8;">LIST WORLD</h2>
-      <label class="label">Name</label><input id="name">
-      <label class="label">Link Gambar (1280x798)</label><input id="image">
-      <label class="label">Deskripsi</label><textarea id="desc" rows="4"></textarea>
+
+      <label class="label">Name</label>
+      <input id="name">
+
+      <label class="label">Link Gambar (1280x798)</label>
+      <input id="image">
+
+      <label class="label">Deskripsi</label>
+      <textarea id="desc" rows="4"></textarea>
+
       <label class="label">Status</label>
-      <select id="status"><option value="READY">READY</option><option value="SOLD">SOLD</option></select>
+      <select id="status">
+        <option value="READY">READY</option>
+        <option value="SOLD">SOLD</option>
+      </select>
 
       <button id="addBtn" onclick="addWorld()">~~~~~ TAMBAH WORLD ~~~~~</button>
       <small id="msg"></small>
+
       <hr style="margin:20px 0; border:1px solid #0f293b">
+
       <div id="list"></div>
     </div>
   </div>
+
 </div>
 
 <script>
+
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbxeNnRvtTbuacVFi1vX3fy1HvpKeEZgfJXKBGoh_13njwmY2y4hbR7E-WgsLhgBDr5YBA/exec";
-const msg=document.getElementById("msg"), addBtn=document.getElementById("addBtn");
+
+const msg=document.getElementById("msg"),
+      addBtn=document.getElementById("addBtn");
 
 async function loadWorld(){
   try{
     const res = await fetch(SCRIPT_URL);
     const data = await res.json();
+
     const list = document.getElementById("list");
     list.innerHTML="";
+
     data.forEach((item,index)=>{
       const statusClass = item.status.toUpperCase() === 'READY' ? 'status-ready' : 'status-sold';
+
       const html = document.createElement("div");
       html.className="world-item";
       html.innerHTML = `${index+1}. ${item.name} (<span class="${statusClass}">${item.status.toUpperCase()}</span>)`;
+
       list.appendChild(html);
     });
+
   } catch(e){
     msg.style.color="#ef4444";
     msg.innerText = "❌ Gagal load daftar: " + e.message;
@@ -79,29 +152,66 @@ async function loadWorld(){
 }
 
 async function addWorld(){
-  const nameEl=document.getElementById("name"), imageEl=document.getElementById("image"),
-        descEl=document.getElementById("desc"), statusEl=document.getElementById("status");
-  addBtn.disabled=true; const orig=addBtn.innerText; addBtn.innerText="Loading...";
+  const nameEl=document.getElementById("name"),
+        imageEl=document.getElementById("image"),
+        descEl=document.getElementById("desc"),
+        statusEl=document.getElementById("status");
+
+  addBtn.disabled=true;
+  const orig=addBtn.innerText;
+  addBtn.innerText="Loading...";
+
   if(!nameEl.value.trim()||!imageEl.value.trim()||!descEl.value.trim()||!statusEl.value.trim()){
-    msg.style.color="#ef4444"; msg.innerText="❌ Input tidak lengkap"; addBtn.disabled=false; addBtn.innerText=orig; return;
+    msg.style.color="#ef4444";
+    msg.innerText="❌ Input tidak lengkap";
+    addBtn.disabled=false;
+    addBtn.innerText=orig;
+    return;
   }
-  const body={action:"add_world", name:nameEl.value.trim(), image:imageEl.value.trim(), desc:descEl.value.trim(), status:statusEl.value.trim().toUpperCase()};
+
+  const body={
+    action:"add_world",
+    name:nameEl.value.trim(),
+    image:imageEl.value.trim(),
+    desc:descEl.value.trim(),
+    status:statusEl.value.trim().toUpperCase()
+  };
+
   try{
-    const res = await fetch(SCRIPT_URL,{method:"POST", headers:{"Content-Type":"text/plain"}, body:JSON.stringify(body)});
+    const res = await fetch(SCRIPT_URL,{
+      method:"POST",
+      headers:{"Content-Type":"text/plain"},
+      body:JSON.stringify(body)
+    });
+
     const result = await res.json();
+
     msg.style.color = result.status==="success"?"#22c55e":"#ef4444";
     msg.innerText = result.status==="success"?"✅ World berhasil ditambahkan":"❌ Gagal: "+(result.message||"");
+
     await loadWorld();
+
   } catch(e){
-    msg.style.color="#ef4444"; msg.innerText="❌ Error koneksi: "+e.message;
+    msg.style.color="#ef4444";
+    msg.innerText="❌ Error koneksi: "+e.message;
   }
-  addBtn.disabled=false; addBtn.innerText=orig;
-  setTimeout(()=>{msg.innerText="";},5000);
+
+  addBtn.disabled=false;
+  addBtn.innerText=orig;
+
+  setTimeout(()=>{ msg.innerText=""; },5000);
 }
 
-document.getElementById("logoutBtn").onclick=e=>{ e.preventDefault(); localStorage.removeItem("admin_login"); window.location.href="login.html"; }
+/* LOGOUT */
+document.getElementById("logoutBtn").onclick=e=>{
+  e.preventDefault();
+  localStorage.removeItem("admin_login");
+  window.location.href="https://forgeplayid.github.io/panel/login.html";
+}
 
 window.onload=loadWorld;
+
 </script>
+
 </body>
 </html>
