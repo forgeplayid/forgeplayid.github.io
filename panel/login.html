@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin Panel ForgePlayID</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #020617;
+    color: white;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #0f172a;
+    border-bottom: 1px solid #1e293b;
+}
+.header a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+}
+.container {
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 0 15px;
+    text-align: center;
+}
+h1 {
+    color: #38bdf8;
+    text-align: center;
+    margin-bottom: 20px;
+}
+input,
+button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+}
+button {
+    background-color: #38bdf8;
+    color: #020617;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+button:hover {
+    background-color: #0ea5e5;
+}
+.admin-panel {
+    background-color: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 30px;
+}
+.admin-panel h2 {
+    margin-top: 0;
+    color: #38bdf8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <a href="#">Admin Panel ForgePlayID</a>
+</div>
+
+<div class="container">
+
+    <!-- LOGIN -->
+    <div id="login-panel" class="admin-panel">
+        <h2>Login Admin</h2>
+
+        <input type="text" id="admin-user" placeholder="User ID" />
+        <input type="password" id="admin-pass" placeholder="Password" />
+
+        <button onclick="loginAdmin()">Login</button>
+        <p id="status" style="color:#94a3b8;font-size:12px;"></p>
+    </div>
+
+    <!-- ADMIN CONTROL -->
+    <div id="admin-controls" class="admin-panel" style="display:none;">
+        <h2>Kontrol Admin</h2>
+        <p>Selamat datang, admin!</p>
+    </div>
+
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyphrJaOV0v3SOaGh6IH2Vpm_ZFFDaKlY7KeCa0tNJsey0O2YUnN0OUtwDoZEV71NhNTg/exec";
+
+async function loginAdmin() {
+    const user = document.getElementById("admin-user").value;
+    const pass = document.getElementById("admin-pass").value;
+    const status = document.getElementById("status");
+
+    if (!user || !pass) {
+        status.innerText = "Isi User ID dan Password!";
+        return;
+    }
+
+    status.innerText = "Memproses login...";
+
+    try {
+        const res = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "login",
+                user: user,
+                pass: pass
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.status === "ok") {
+            localStorage.setItem("admin_login", "true");
+            localStorage.setItem("admin_token", data.token);
+
+            window.location.assign("https://forgeplayid.github.io/panel/dashboard.html");
+        } else {
+            status.innerText = "Login gagal!";
+        }
+
+    } catch (err) {
+        console.error(err);
+        status.innerText = "Server error!";
+    }
+}
+</script>
+
+</body>
+</html>
