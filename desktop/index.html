@@ -7,20 +7,144 @@
 
 <style>
 body { margin:0; font-family: Arial, sans-serif; background-color: #020617; color: white; }
-.header { display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background-color:#0f172a; border-bottom:1px solid #1e293b; }
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  background-color:#0f172a;
+  border-bottom:1px solid #1e293b;
+}
+
 .logo img { height: 40px; }
-.header-right a.button { padding:8px 18px; background-color:#38bdf8; color:#020617; font-weight:bold; border-radius:6px; text-decoration:none; transition:0.2s; }
+
+.header-right a.button {
+  padding:8px 18px;
+  background-color:#38bdf8;
+  color:#020617;
+  font-weight:bold;
+  border-radius:6px;
+  text-decoration:none;
+  transition:0.2s;
+}
 .header-right a.button:hover { background-color:#0ea5e9; }
+
 .container { max-width:1100px; margin:30px auto; padding:0 15px; }
-.slider { width:100%; max-width:860px; margin:auto; border-radius:12px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.4); }
-.slider img { width:100%; height:auto; display:block; border-radius:12px; }
-.menu-frame { display:flex; justify-content:space-between; width:100%; max-width:860px; margin:25px auto 0 auto; padding:0 10px; background-color:#0f172a; border-radius:12px; box-shadow:0 6px 15px rgba(0,0,0,0.3); }
-.menu-card { flex:1; margin:0 10px; background-color:#1e293b; border-radius:10px; padding:15px; text-align:center; color:white; box-shadow:0 4px 10px rgba(0,0,0,0.2); transition:transform 0.2s; text-decoration:none; cursor:pointer; }
+
+/* ================= SLIDER ================= */
+.slider-container {
+  max-width: 860px;
+  margin: auto;
+  position: relative;
+}
+
+.slider-wrapper {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.6s ease;
+  will-change: transform;
+}
+
+.slide {
+  flex: 0 0 100%;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 12px;
+  cursor: pointer;
+  display: block;
+}
+
+/* ARROW */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-size: 30px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+}
+.arrow:hover { background: rgba(255,255,255,0.25); }
+
+.left { left: 10px; }
+.right { right: 10px; }
+
+/* DOTS */
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.dot {
+  height: 4px;
+  width: 25px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 5px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.dot.active { background: white; }
+
+/* MENU */
+.menu-frame {
+  display:flex;
+  justify-content:space-between;
+  width:100%;
+  max-width:860px;
+  margin:25px auto 0 auto;
+  padding:0 10px;
+  background-color:#0f172a;
+  border-radius:12px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.3);
+}
+
+.menu-card {
+  flex:1;
+  margin:0 10px;
+  background-color:#1e293b;
+  border-radius:10px;
+  padding:15px;
+  text-align:center;
+  color:white;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  transition:transform 0.2s;
+  text-decoration:none;
+  cursor:pointer;
+}
+
 .menu-card:hover { transform:translateY(-5px); }
+
 .menu-card img.menu-img { width:50px; height:auto; margin-bottom:10px; }
 .menu-card p { margin:5px 0; font-size:16px; }
-.content { margin-top:25px; height:350px; background-color:#020617; border-radius:12px; border:1px dashed #1e293b; }
 
+.content {
+  margin-top:25px;
+  height:350px;
+  background-color:#020617;
+  border-radius:12px;
+  border:1px dashed #1e293b;
+}
+
+/* RESPONSIVE */
 @media(max-width:500px){
 .menu-card{padding:10px}
 .menu-card img.menu-img{width:40px}
@@ -36,7 +160,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 <div class="header">
   <div class="logo">
     <a href="https://forgeplayid.github.io/">
-      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="Logo">
+      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
     </a>
   </div>
 
@@ -47,66 +171,154 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 <div class="container">
 
-  <div class="slider">
-    <img src="https://forgeplayid.github.io/assets/gt-slider1.png" alt="Slider">
+<!-- SLIDER -->
+<div class="slider-container">
+
+  <div class="slider-wrapper">
+    <div class="slider-track" id="sliderTrack"></div>
+
+    <button class="arrow left" id="prevBtn">‹</button>
+    <button class="arrow right" id="nextBtn">›</button>
   </div>
 
-  <div class="menu-frame">
-    <a class="menu-card" href="https://forgeplayid.github.io/desktop/diamond-lock/">
-      <img src="https://forgeplayid.github.io/assets/diamond-lock.png" class="menu-img">
-      <p id="sell-dl">Sell Rp. -</p>
-      <p id="buy-dl">Buy Rp. -</p>
-    </a>
+  <div class="dots" id="dots"></div>
+</div>
 
-    <a class="menu-card" href="https://forgeplayid.github.io/desktop/blue-gem-lock/">
-      <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" class="menu-img">
-      <p id="sell-bgl">Sell Rp. -</p>
-    </a>
-  </div>
+<!-- MENU -->
+<div class="menu-frame">
+  <a class="menu-card" href="https://forgeplayid.github.io/desktop/diamond-lock/">
+    <img src="https://forgeplayid.github.io/assets/diamond-lock.png" class="menu-img">
+    <p id="sell-dl">Sell Rp. -</p>
+    <p id="buy-dl">Buy Rp. -</p>
+  </a>
 
-  <div class="content"></div>
+  <a class="menu-card" href="https://forgeplayid.github.io/desktop/blue-gem-lock/">
+    <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" class="menu-img">
+    <p id="sell-bgl">Sell Rp. -</p>
+  </a>
+</div>
+
+<div class="content"></div>
 
 </div>
 
 <script>
 
-/* ✅ URL BARU (FIX FINAL) */
+/* GOOGLE SCRIPT */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
 
-/* FORMAT RUPIAH */
-function formatRupiah(angka){
-  if(!angka) return "Rp. -";
-  return "Rp. " + Number(angka).toLocaleString("id-ID");
-}
-
-/* LOAD DATA */
-async function loadHarga(){
-  try {
-    const res = await fetch(SCRIPT_URL);
-    const data = await res.json();
-
-    console.log("DATA API:", data);
-
-    // langsung object (dari Code.gs kamu)
-    const row = data;
-
-    document.getElementById("sell-dl").innerText =
-      "Sell " + formatRupiah(row.sell_dl);
-
-    document.getElementById("buy-dl").innerText =
-      "Buy " + formatRupiah(row.buy_dl);
-
-    document.getElementById("sell-bgl").innerText =
-      "Sell " + formatRupiah(row.sell_bgl);
-
-  } catch(err){
-    console.error("ERROR LOAD:", err);
+/* SLIDES */
+const slides = [
+  {
+    img: "https://forgeplayid.github.io/assets/gt-slider1.png",
+    link: "https://forgeplayid.github.io/"
+  },
+  {
+    img: "https://digivospaces.b-cdn.net/UniPlay/Sliders/ffca0068cadc5ad7867236cc8332ca0d.webp",
+    link: "https://forgeplayid.github.io/"
+  },
+  {
+    img: "https://digivospaces.b-cdn.net/UniPlay/Sliders/3660f44efa3591427e275041c287a272.png",
+    link: "https://forgeplayid.github.io/"
   }
+];
+
+let current = 0;
+
+const track = document.getElementById("sliderTrack");
+const dots = document.getElementById("dots");
+
+/* INIT RENDER ONCE */
+function initSlider(){
+  track.innerHTML = "";
+  dots.innerHTML = "";
+
+  slides.forEach((s,i)=>{
+    const a = document.createElement("a");
+    a.className = "slide";
+    a.href = s.link;
+    a.target = "_self";
+    a.innerHTML = `<img src="${s.img}">`;
+    track.appendChild(a);
+
+    const dot = document.createElement("div");
+    dot.className = "dot" + (i===current?" active":"");
+    dot.onclick = ()=> goTo(i);
+    dots.appendChild(dot);
+  });
+
+  update();
 }
 
-/* INIT */
-window.onload = loadHarga;
-setInterval(loadHarga, 60000);
+/* UPDATE POSITION (NO REBUILD) */
+function update(){
+  track.style.transform = `translateX(-${current * 100}%)`;
+
+  document.querySelectorAll(".dot").forEach((d,i)=>{
+    d.classList.toggle("active", i===current);
+  });
+}
+
+/* NEXT (SMOOTH LOOP RIGHT → LEFT) */
+function next(){
+  current++;
+  if(current >= slides.length){
+    current = 0;
+  }
+  update();
+}
+
+/* PREV (SMOOTH LOOP LEFT → RIGHT) */
+function prev(){
+  current--;
+  if(current < 0){
+    current = slides.length - 1;
+  }
+  update();
+}
+
+function goTo(i){
+  current = i;
+  update();
+}
+
+/* BUTTON */
+document.getElementById("nextBtn").onclick = next;
+document.getElementById("prevBtn").onclick = prev;
+
+/* AUTO */
+setInterval(next, 4000);
+
+/* TOUCH */
+let startX = 0;
+track.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+track.addEventListener("touchend",e=>{
+  let endX = e.changedTouches[0].clientX;
+  if(startX-endX>50) next();
+  else if(endX-startX>50) prev();
+});
+
+/* HARGA */
+function formatRupiah(a){
+  if(!a) return "Rp. -";
+  return "Rp. " + Number(a).toLocaleString("id-ID");
+}
+
+async function loadHarga(){
+  const res = await fetch(SCRIPT_URL);
+  const data = await res.json();
+
+  document.getElementById("sell-dl").innerText="Sell "+formatRupiah(data.sell_dl);
+  document.getElementById("buy-dl").innerText="Buy "+formatRupiah(data.buy_dl);
+  document.getElementById("sell-bgl").innerText="Sell "+formatRupiah(data.sell_bgl);
+}
+
+window.onload = ()=>{
+  initSlider();
+  loadHarga();
+};
+
+setInterval(loadHarga,60000);
 
 </script>
 
