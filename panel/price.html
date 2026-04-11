@@ -125,6 +125,13 @@ small {
 
 <body>
 
+<!-- 🔐 LOGIN PROTECTION (FIX PENTING) -->
+<script>
+if (localStorage.getItem("admin_login") !== "true") {
+  window.location.replace("https://forgeplayid.github.io/panel/login.html");
+}
+</script>
+
 <!-- HEADER -->
 <div class="header">
   <div class="logo">
@@ -202,7 +209,7 @@ async function loadHarga(){
 }
 
 /* =========================
-   UPDATE HARGA (FIX FINAL)
+   UPDATE HARGA
 ========================= */
 document.getElementById("updateBtn").addEventListener("click", async function(){
 
@@ -253,7 +260,7 @@ document.getElementById("updateBtn").addEventListener("click", async function(){
 document.getElementById("logoutBtn").addEventListener("click", function(e){
     e.preventDefault();
     localStorage.removeItem("admin_login");
-    window.location.href = "login.html";
+    window.location.href = "https://forgeplayid.github.io/panel/login.html";
 });
 
 /* INIT */
