@@ -103,6 +103,7 @@ small {
 
 <body>
 
+<!-- SECURITY -->
 <script>
 if (localStorage.getItem("admin_login") !== "true") {
   window.location.replace("https://forgeplayid.github.io/panel/login.html");
@@ -136,9 +137,9 @@ if (localStorage.getItem("admin_login") !== "true") {
       <h2 style="color:#38bdf8;">EDIT RUNNING INFO</h2>
 
       <label class="label">Pengumuman</label>
-      <textarea id="infoInput" placeholder="🔥 WhatsApp admin ⚡ Promo hari ini 💎 Stock aman"></textarea>
+      <textarea id="infoInput" placeholder="🔥 Promo hari ini ⚡ Stock aman 💎"></textarea>
 
-      <button id="btn" onclick="updateInfo(event)">UPDATE INFO</button>
+      <button onclick="updateInfo()">UPDATE INFO</button>
 
       <small id="msg"></small>
 
@@ -149,69 +150,62 @@ if (localStorage.getItem("admin_login") !== "true") {
 
 <script>
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7nH1QXZhe7-LgJPiQuo7IjWeaCoJP2sYVAl1UFX-7m10lRJBnkcfA3YUToEmVcwME/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxosDqCVh7_FgPFnGLpLTqOkSFnLhv4dzkaPkFIY1YHIjJ27yABOzFriMk-fVvcTHACFg/exec";
 
 const msg = document.getElementById("msg");
-const btn = document.getElementById("btn");
 
-/* LOAD INFO */
-async function loadInfo(){
+/* ================= LOAD ================= */
+async function loadInfo() {
   try {
-    const url = SCRIPT_URL + "?t=" + new Date().getTime();
+    const res = await fetch(SCRIPT_URL, {
+      method: "GET",
+      cache: "no-cache"
+    });
 
-    const res = await fetch(url);
     const data = await res.json();
 
     document.getElementById("infoInput").value = data.info || "";
 
-  } catch(e){
-    console.log(e);
+  } catch (e) {
+    console.log("LOAD ERROR:", e);
+    msg.innerText = "❌ gagal load";
   }
 }
 
-/* UPDATE INFO */
-async function updateInfo(e){
+/* ================= UPDATE ================= */
+async function updateInfo() {
 
   const val = document.getElementById("infoInput").value.trim();
 
-  if(!val){
-    msg.style.color = "#ef4444";
-    msg.innerText = "❌ Tidak boleh kosong";
-    setTimeout(()=>msg.innerText="",5000);
+  if (!val) {
+    msg.innerText = "❌ tidak boleh kosong";
+    setTimeout(()=>msg.innerText="",3000);
     return;
   }
 
-  btn.disabled = true;
-  btn.innerText = "Loading...";
-
   try {
 
-    const url =
-      SCRIPT_URL +
-      "?action=update" +
-      "&info=" + encodeURIComponent(val) +
-      "&t=" + new Date().getTime();
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain"
+      },
+      body: JSON.stringify({
+        action: "update_info",
+        info: val
+      })
+    });
 
-    const res = await fetch(url);
-    const result = await res.json();
+    msg.style.color = "#22c55e";
+    msg.innerText = "✅ berhasil dikirim ke server";
 
-    console.log(result);
+    loadInfo();
 
-    if(result.status === "success"){
-      msg.style.color = "#22c55e";
-      msg.innerText = "✅ Info berhasil diupdate";
-    } else {
-      msg.style.color = "#ef4444";
-      msg.innerText = "❌ Gagal update";
-    }
-
-  } catch(err){
+  } catch (e) {
     msg.style.color = "#ef4444";
-    msg.innerText = "❌ Error koneksi: " + err.message;
+    msg.innerText = "❌ error koneksi";
   }
-
-  btn.disabled = false;
-  btn.innerText = "UPDATE INFO";
 
   setTimeout(()=>msg.innerText="",5000);
 }
