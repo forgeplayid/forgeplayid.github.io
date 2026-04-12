@@ -15,7 +15,9 @@
         color: white;
     }
 
+    /* ================= HEADER ================= */
     .header {
+        position: relative;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -26,24 +28,30 @@
 
     .logo img { height: 35px; }
 
-    .header-right {
-        display: flex;
-        align-items: center;
-    }
-
     .header-right a.button {
-        display: inline-block;
         padding: 8px 18px;
         background-color: #38bdf8;
         color: #020617;
         font-weight: 600;
         border-radius: 6px;
         text-decoration: none;
-        transition: background-color 0.2s;
     }
 
-    .header-right a.button:hover {
-        background-color: #0ea5e9;
+    /* ================= 🔥 CCTV FIX FINAL ================= */
+    .cctv-gif {
+        position: absolute;
+
+        /* 🔥 DIPAKSA LEBIH KE KIRI */
+        left: 70px;
+
+        /* 🔥 TURUN AGAR TIDAK LEWAT GARIS HEADER */
+        top: 58px;
+
+        width: 80px;
+        height: auto;
+        z-index: 10;
+        opacity: 0.95;
+        pointer-events: none;
     }
 
     .container {
@@ -59,8 +67,9 @@
         font-weight: 700;
     }
 
-    .logo-dl { margin-bottom: 15px; }
-    .logo-dl img { height: 100px; }
+    .logo-dl img {
+        height: 100px;
+    }
 
     .payment-frame {
         display: flex;
@@ -73,10 +82,9 @@
         flex: 1;
         background: linear-gradient(145deg, #0f172a, #1e3a8a);
         border-radius: 16px;
-        padding: 0;
         cursor: pointer;
         overflow: hidden;
-        transition: all 0.25s ease;
+        transition: 0.25s;
     }
 
     .payment-card:hover {
@@ -86,7 +94,6 @@
 
     .payment-card img {
         width: 100%;
-        height: auto;
         display: block;
     }
 
@@ -95,30 +102,11 @@
         padding: 15px;
         background-color: #0f172a;
         border-radius: 12px;
-        font-size: 16px;
-        box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-        min-height: 50px;
     }
 
     .qris-container img {
         width: 260px;
         max-width: 90%;
-        height: auto;
-        display: block;
-        margin: 0 auto 10px auto;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
-
-    .qris-container img:hover {
-        transform: scale(1.05);
-    }
-
-    .qris-container p {
-        margin: 0;
-        font-size: 16px;
-        color: #cbd5f5;
-        font-weight: 600;
     }
 
     .whatsapp-button {
@@ -130,20 +118,14 @@
         font-weight: 600;
         border-radius: 8px;
         text-decoration: none;
-        transition: background-color 0.2s;
     }
 
-    .whatsapp-button:hover {
-        background-color: #1ebe57;
-    }
-
+    /* ================= MOBILE ================= */
     @media (max-width: 500px) {
-        .header { flex-direction: column; align-items: flex-start; }
-        .header-right { margin-top: 10px; }
-
-        .payment-frame {
-            flex-direction: column;
-            gap: 15px;
+        .cctv-gif {
+            left: 40px;
+            top: 55px;
+            width: 65px;
         }
     }
 </style>
@@ -151,7 +133,9 @@
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
+
     <div class="logo">
         <a href="https://forgeplayid.github.io/">
             <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
@@ -161,8 +145,13 @@
     <div class="header-right">
         <a href="https://forgeplayid.github.io/desktop/world" class="button">Cari World Disini</a>
     </div>
+
+    <!-- 🔥 CCTV FIX FINAL POSISI -->
+    <img class="cctv-gif" src="https://forgeplayid.github.io/assets/cctv-growtopia.gif">
+
 </div>
 
+<!-- CONTENT -->
 <div class="container">
 
     <div class="logo-dl">
@@ -189,10 +178,9 @@
         Klik salah satu metode pembayaran untuk melihat nomor rekening / QRIS
     </div>
 
-    <a id="whatsapp-link" 
-       href="https://wa.me/6285175215549?text=Halo%20Admin,%20saya%20ingin%20membeli%20BGL" 
-       target="_blank" 
-       class="whatsapp-button">
+    <a class="whatsapp-button"
+       href="https://wa.me/6285175215549"
+       target="_blank">
        Kirim Bukti transaksi + World ID + Grow ID di WhatsApp
     </a>
 
@@ -204,9 +192,7 @@ const rekeningData = {
     BRI: "BRI 0987654321 a.n. Nama Pemilik",
     QRIS: `
         <div class="qris-container">
-            <img src="https://forgeplayid.github.io/assets/forgeplayid-qris.png"
-                 alt="QRIS"
-                 onclick="this.style.transform = (this.style.transform === 'scale(1.5)') ? 'scale(1)' : 'scale(1.5)';">
+            <img src="https://forgeplayid.github.io/assets/forgeplayid-qris.png">
             <p>Silahkan Scan QRIS diatas</p>
         </div>
     `
@@ -220,11 +206,6 @@ function showRekening(bank) {
     } else {
         info.textContent = rekeningData[bank];
     }
-
-    const waNumber = "6281234567890";
-    const message = encodeURIComponent(`Halo Admin, saya sudah melakukan pembayaran Blue Gem Lock via ${bank}. Bukti transaksi + World ID + Grow ID`);
-    document.getElementById('whatsapp-link').href =
-        `https://wa.me/${waNumber}?text=${message}`;
 }
 </script>
 
