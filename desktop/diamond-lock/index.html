@@ -47,7 +47,7 @@
     }
 
     .container {
-        max-width: 860px;
+        max-width: 1000px; /* diperlebar dikit */
         margin: 30px auto;
         padding: 0 15px;
         text-align: center;
@@ -65,38 +65,33 @@
     .payment-frame {
         display: flex;
         justify-content: space-between;
-        margin-top: 20px;
+        gap: 20px; /* biar lega */
+        margin-top: 25px;
     }
 
     .payment-card {
         flex: 1;
-        margin: 0 10px;
-        background-color: #1e293b;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
+        background: linear-gradient(145deg, #0f172a, #1e3a8a);
+        border-radius: 16px;
+        padding: 0;
         cursor: pointer;
-        transition: transform 0.2s, background-color 0.2s;
+        overflow: hidden;
+        transition: all 0.25s ease;
     }
 
     .payment-card:hover {
-        transform: translateY(-5px);
-        background-color: #0f172a;
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
     }
 
     .payment-card img {
-        width: 60px;
-        margin-bottom: 10px;
-    }
-
-    .payment-card p {
-        margin: 5px 0;
-        font-size: 16px;
-        font-weight: 600;
+        width: 100%;
+        height: auto;
+        display: block;
     }
 
     #rekening-info {
-        margin-top: 25px;
+        margin-top: 30px;
         padding: 15px;
         background-color: #0f172a;
         border-radius: 12px;
@@ -105,9 +100,6 @@
         min-height: 50px;
     }
 
-    /* =========================
-       QRIS FIX (SAMA DENGAN BGL)
-    ========================= */
     .qris-container img {
         width: 260px;
         max-width: 90%;
@@ -148,8 +140,11 @@
     @media (max-width: 500px) {
         .header { flex-direction: column; align-items: flex-start; }
         .header-right { margin-top: 10px; }
-        .payment-frame { flex-direction: column; }
-        .payment-card { margin: 10px 0; }
+
+        .payment-frame {
+            flex-direction: column;
+            gap: 15px;
+        }
     }
 </style>
 </head>
@@ -178,18 +173,15 @@
 
     <div class="payment-frame">
         <div class="payment-card" onclick="showRekening('BCA')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/BCA_logo.svg/2560px-BCA_logo.svg.png">
-            <p>BCA</p>
+            <img src="https://forgeplayid.github.io/assets/bca.png">
         </div>
 
         <div class="payment-card" onclick="showRekening('BRI')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/BRI_logo.svg">
-            <p>BRI</p>
+            <img src="https://forgeplayid.github.io/assets/bri.png">
         </div>
 
         <div class="payment-card" onclick="showRekening('QRIS')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/QRIS_Logo.png">
-            <p>QRIS</p>
+            <img src="https://forgeplayid.github.io/assets/qris.png">
         </div>
     </div>
 
