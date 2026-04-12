@@ -271,9 +271,10 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
 
-/* INFO GAS BARU */
+/* INFO URL */
 const INFO_URL = "https://script.google.com/macros/s/AKfycbw7nH1QXZhe7-LgJPiQuo7IjWeaCoJP2sYVAl1UFX-7m10lRJBnkcfA3YUToEmVcwME/exec";
 
+/* FIXED INFO LOADER */
 async function loadInfo(){
   try {
     const res = await fetch(INFO_URL);
@@ -281,11 +282,16 @@ async function loadInfo(){
 
     const el = document.getElementById("infoText");
 
-    if(data.info && data.info.trim() !== ""){
-      el.innerHTML = data.info;
+    if(!data || !data.info || data.info.trim() === ""){
+      el.innerText = "⚡ Info belum tersedia";
+      return;
     }
+
+    el.innerHTML = data.info;
+
   } catch (e) {
     console.log("INFO ERROR", e);
+    document.getElementById("infoText").innerText = "⚠️ Gagal load info";
   }
 }
 
