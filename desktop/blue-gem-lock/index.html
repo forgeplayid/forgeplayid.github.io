@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pembayaran Blue Gem Lock</title>
 
-<!-- Google Font Montserrat -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -16,7 +15,6 @@
         color: white;
     }
 
-    /* HEADER UTAMA */
     .header {
         display: flex;
         justify-content: space-between;
@@ -26,9 +24,7 @@
         border-bottom: 1px solid #1e293b;
     }
 
-    .logo img {
-        height: 35px;
-    }
+    .logo img { height: 35px; }
 
     .header-right {
         display: flex;
@@ -44,16 +40,14 @@
         border-radius: 6px;
         text-decoration: none;
         transition: background-color 0.2s;
-        font-family: 'Montserrat', sans-serif;
     }
 
     .header-right a.button:hover {
         background-color: #0ea5e9;
     }
 
-    /* CONTAINER */
     .container {
-        max-width: 860px;
+        max-width: 1000px;
         margin: 30px auto;
         padding: 0 15px;
         text-align: center;
@@ -65,51 +59,39 @@
         font-weight: 700;
     }
 
-    /* LOGO BLUE GEM LOCK */
-    .logo-dl {
-        margin-bottom: 15px;
-    }
+    .logo-dl { margin-bottom: 15px; }
+    .logo-dl img { height: 100px; }
 
-    .logo-dl img {
-        height: 100px;
-    }
-
-    /* PAYMENT FRAME */
     .payment-frame {
         display: flex;
         justify-content: space-between;
-        margin-top: 20px;
+        gap: 20px;
+        margin-top: 25px;
     }
 
     .payment-card {
         flex: 1;
-        margin: 0 10px;
-        background-color: #1e293b;
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
+        background: linear-gradient(145deg, #0f172a, #1e3a8a);
+        border-radius: 16px;
+        padding: 0;
         cursor: pointer;
-        transition: transform 0.2s, background-color 0.2s;
+        overflow: hidden;
+        transition: all 0.25s ease;
     }
 
     .payment-card:hover {
-        transform: translateY(-5px);
-        background-color: #0f172a;
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
     }
 
     .payment-card img {
-        width: 60px;
-        margin-bottom: 10px;
-    }
-
-    .payment-card p {
-        margin: 5px 0;
-        font-size: 16px;
-        font-weight: 600;
+        width: 100%;
+        height: auto;
+        display: block;
     }
 
     #rekening-info {
-        margin-top: 25px;
+        margin-top: 30px;
         padding: 15px;
         background-color: #0f172a;
         border-radius: 12px;
@@ -118,10 +100,9 @@
         min-height: 50px;
     }
 
-    /* QRIS IMAGE */
     .qris-container img {
-        max-width: 300px;
-        width: 80%;
+        width: 260px;
+        max-width: 90%;
         height: auto;
         display: block;
         margin: 0 auto 10px auto;
@@ -156,33 +137,27 @@
         background-color: #1ebe57;
     }
 
-    /* RESPONSIVE */
     @media (max-width: 500px) {
-        .header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .header-right {
-            margin-top: 10px;
-        }
+        .header { flex-direction: column; align-items: flex-start; }
+        .header-right { margin-top: 10px; }
+
         .payment-frame {
             flex-direction: column;
-        }
-        .payment-card {
-            margin: 10px 0;
+            gap: 15px;
         }
     }
 </style>
 </head>
+
 <body>
 
-<!-- HEADER UTAMA -->
 <div class="header">
     <div class="logo">
         <a href="https://forgeplayid.github.io/">
-            <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="Logo">
+            <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
         </a>
     </div>
+
     <div class="header-right">
         <a href="https://forgeplayid.github.io/desktop/world" class="button">Cari World Disini</a>
     </div>
@@ -190,34 +165,30 @@
 
 <div class="container">
 
-    <!-- LOGO BLUE GEM LOCK -->
     <div class="logo-dl">
-        <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" alt="Blue Gem Lock Logo">
+        <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png">
     </div>
 
-    <!-- JUDUL PEMBAYARAN -->
     <h1>Pembayaran Blue Gem Lock ( BGL )</h1>
 
-    <!-- PAYMENT FRAME -->
     <div class="payment-frame">
         <div class="payment-card" onclick="showRekening('BCA')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/BCA_logo.svg/2560px-BCA_logo.svg.png" alt="BCA">
-            <p>BCA</p>
+            <img src="https://forgeplayid.github.io/assets/bca.png">
         </div>
+
         <div class="payment-card" onclick="showRekening('BRI')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/BRI_logo.svg" alt="BRI">
-            <p>BRI</p>
+            <img src="https://forgeplayid.github.io/assets/bri.png">
         </div>
+
         <div class="payment-card" onclick="showRekening('QRIS')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/QRIS_Logo.png" alt="QRIS">
-            <p>QRIS</p>
+            <img src="https://forgeplayid.github.io/assets/qris.png">
         </div>
     </div>
 
-    <!-- REKENING INFO -->
-    <div id="rekening-info">Klik salah satu metode pembayaran untuk melihat nomor rekening / QRIS</div>
+    <div id="rekening-info">
+        Klik salah satu metode pembayaran untuk melihat nomor rekening / QRIS
+    </div>
 
-    <!-- WHATSAPP BUTTON -->
     <a id="whatsapp-link" 
        href="https://wa.me/6285175215549?text=Halo%20Admin,%20saya%20ingin%20membeli%20BGL" 
        target="_blank" 
@@ -228,33 +199,33 @@
 </div>
 
 <script>
-    const rekeningData = {
-        BCA: "BCA 1234567890 a.n. Nama Pemilik",
-        BRI: "BRI 0987654321 a.n. Nama Pemilik",
-        QRIS: `
-            <div class="qris-container">
-                <img src="https://forgeplayid.github.io/assets/forgeplayid-qris.png" 
-                     alt="QRIS" 
-                     onclick="this.style.transform = (this.style.transform === 'scale(1.5)') ? 'scale(1)' : 'scale(1.5)';">
-                <p>Silahkan Scan QRIS diatas</p>
-            </div>
-        `
-    };
+const rekeningData = {
+    BCA: "BCA 1234567890 a.n. Nama Pemilik",
+    BRI: "BRI 0987654321 a.n. Nama Pemilik",
+    QRIS: `
+        <div class="qris-container">
+            <img src="https://forgeplayid.github.io/assets/forgeplayid-qris.png"
+                 alt="QRIS"
+                 onclick="this.style.transform = (this.style.transform === 'scale(1.5)') ? 'scale(1)' : 'scale(1.5)';">
+            <p>Silahkan Scan QRIS diatas</p>
+        </div>
+    `
+};
 
-    function showRekening(bank) {
-        const info = document.getElementById('rekening-info');
+function showRekening(bank) {
+    const info = document.getElementById('rekening-info');
 
-        if(bank === 'QRIS') {
-            info.innerHTML = rekeningData[bank];
-        } else {
-            info.textContent = rekeningData[bank];
-        }
-
-        // Update WhatsApp link otomatis
-        const waNumber = "6281234567890"; // ganti nomor admin
-        const message = encodeURIComponent(`Halo Admin, saya ingin membeli BGL`);
-        document.getElementById('whatsapp-link').href = `https://wa.me/${waNumber}?text=${message}`;
+    if(bank === 'QRIS') {
+        info.innerHTML = rekeningData[bank];
+    } else {
+        info.textContent = rekeningData[bank];
     }
+
+    const waNumber = "6281234567890";
+    const message = encodeURIComponent(`Halo Admin, saya sudah melakukan pembayaran Blue Gem Lock via ${bank}. Bukti transaksi + World ID + Grow ID`);
+    document.getElementById('whatsapp-link').href =
+        `https://wa.me/${waNumber}?text=${message}`;
+}
 </script>
 
 </body>
