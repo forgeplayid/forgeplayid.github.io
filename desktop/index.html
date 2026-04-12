@@ -104,13 +104,38 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 .dot.active { background: white; }
 
+/* ================= INFO BAR BARU ================= */
+.info-bar {
+  max-width: 860px;
+  margin: 15px auto 0 auto;
+  background: linear-gradient(90deg, #0f172a, #1e3a8a);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(56,189,248,0.3);
+  box-shadow: 0 0 15px rgba(56,189,248,0.2);
+}
+
+.info-content {
+  white-space: nowrap;
+  display: inline-block;
+  padding: 12px 20px;
+  animation: scrollText 18s linear infinite;
+  font-weight: 600;
+  color: #e0f2fe;
+}
+
+@keyframes scrollText {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
 /* ================= MENU 2 KOTAK ================= */
 .menu-frame {
   display:flex;
   justify-content:space-between;
   width:100%;
   max-width:860px;
-  margin:25px auto 10px auto;
+  margin:25px auto 10px auto; /* tetap, sudah aman */
   padding:0 10px;
   background-color:#0f172a;
   border-radius:12px;
@@ -136,7 +161,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 .menu-card img.menu-img { width:50px; height:auto; margin-bottom:10px; }
 .menu-card p { margin:5px 0; font-size:16px; }
 
-/* ================= 1 KOTAK PANJANG BARU ================= */
+/* ================= 1 KOTAK PANJANG ================= */
 .buy-frame {
   width:100%;
   max-width:860px;
@@ -210,6 +235,13 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
   <div class="dots" id="dots"></div>
 </div>
 
+<!-- ✅ INFO BAR (DITAMBAHKAN DISINI) -->
+<div class="info-bar">
+  <div class="info-content" id="infoText">
+    🔥 Promo hari ini: Harga DL naik! | ⚡ Transaksi cepat 1-5 menit | 💎 Stock aman!
+  </div>
+</div>
+
 <!-- MENU 2 KOTAK -->
 <div class="menu-frame">
   <a class="menu-card" href="https://forgeplayid.github.io/desktop/diamond-lock/">
@@ -238,6 +270,15 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 <script>
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
+
+/* INFO TEXT (NANTI BISA DARI ADMIN) */
+const infoList = [
+  "🔥 Promo hari ini: Harga DL naik!",
+  "⚡ Transaksi cepat 1-5 menit",
+  "💎 Stock aman",
+  "📢 Admin online 24 jam"
+];
+document.getElementById("infoText").innerText = infoList.join("   |   ");
 
 /* SLIDES */
 const slides = [
