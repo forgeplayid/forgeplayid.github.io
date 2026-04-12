@@ -271,8 +271,8 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
 
-/* INFO GAS */
-const INFO_URL = "https://script.google.com/macros/s/AKfycbxfgZzhZclYbiUdjk3mKOEd18ZQMedc9WH5GapH3R_738DbJ6Rm53MeTy3wgw-hnktlfg/exec";
+/* INFO GAS BARU */
+const INFO_URL = "https://script.google.com/macros/s/AKfycbw7nH1QXZhe7-LgJPiQuo7IjWeaCoJP2sYVAl1UFX-7m10lRJBnkcfA3YUToEmVcwME/exec";
 
 async function loadInfo(){
   try {
@@ -282,27 +282,18 @@ async function loadInfo(){
     const el = document.getElementById("infoText");
 
     if(data.info && data.info.trim() !== ""){
-      el.innerText = data.info;
+      el.innerHTML = data.info;
     }
   } catch (e) {
     console.log("INFO ERROR", e);
   }
 }
 
-/* SLIDES */
+/* SLIDER */
 const slides = [
-  {
-    img: "https://forgeplayid.github.io/assets/gt-slider1.png",
-    link: "https://forgeplayid.github.io/"
-  },
-  {
-    img: "https://digivospaces.b-cdn.net/UniPlay/Sliders/ffca0068cadc5ad7867236cc8332ca0d.webp",
-    link: "https://forgeplayid.github.io/"
-  },
-  {
-    img: "https://digivospaces.b-cdn.net/UniPlay/Sliders/3660f44efa3591427e275041c287a272.png",
-    link: "https://forgeplayid.github.io/"
-  }
+  { img:"https://forgeplayid.github.io/assets/gt-slider1.png", link:"https://forgeplayid.github.io/" },
+  { img:"https://digivospaces.b-cdn.net/UniPlay/Sliders/ffca0068cadc5ad7867236cc8332ca0d.webp", link:"https://forgeplayid.github.io/" },
+  { img:"https://digivospaces.b-cdn.net/UniPlay/Sliders/3660f44efa3591427e275041c287a272.png", link:"https://forgeplayid.github.io/" }
 ];
 
 let current = 0;
@@ -315,16 +306,15 @@ function initSlider(){
   dots.innerHTML = "";
 
   slides.forEach((s,i)=>{
-    const a = document.createElement("a");
-    a.className = "slide";
-    a.href = s.link;
-    a.target = "_self";
-    a.innerHTML = `<img src="${s.img}">`;
+    const a=document.createElement("a");
+    a.className="slide";
+    a.href=s.link;
+    a.innerHTML=`<img src="${s.img}">`;
     track.appendChild(a);
 
-    const dot = document.createElement("div");
-    dot.className = "dot" + (i===current?" active":"");
-    dot.onclick = ()=> goTo(i);
+    const dot=document.createElement("div");
+    dot.className="dot"+(i===current?" active":"");
+    dot.onclick=()=>goTo(i);
     dots.appendChild(dot);
   });
 
@@ -332,31 +322,20 @@ function initSlider(){
 }
 
 function update(){
-  track.style.transform = `translateX(-${current * 100}%)`;
+  track.style.transform=`translateX(-${current*100}%)`;
   document.querySelectorAll(".dot").forEach((d,i)=>{
     d.classList.toggle("active", i===current);
   });
 }
 
-function next(){
-  current = (current + 1) % slides.length;
-  update();
-}
+function next(){ current=(current+1)%slides.length; update(); }
+function prev(){ current=(current-1+slides.length)%slides.length; update(); }
+function goTo(i){ current=i; update(); }
 
-function prev(){
-  current = (current - 1 + slides.length) % slides.length;
-  update();
-}
+document.getElementById("nextBtn").onclick=next;
+document.getElementById("prevBtn").onclick=prev;
 
-function goTo(i){
-  current = i;
-  update();
-}
-
-document.getElementById("nextBtn").onclick = next;
-document.getElementById("prevBtn").onclick = prev;
-
-setInterval(next, 4000);
+setInterval(next,4000);
 
 /* HARGA */
 function formatRupiah(a){
