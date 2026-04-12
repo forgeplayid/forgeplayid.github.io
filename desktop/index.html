@@ -224,25 +224,20 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 <!-- SLIDER -->
 <div class="slider-container">
-
   <div class="slider-wrapper">
     <div class="slider-track" id="sliderTrack"></div>
-
     <button class="arrow left" id="prevBtn">‹</button>
     <button class="arrow right" id="nextBtn">›</button>
   </div>
-
   <div class="dots" id="dots"></div>
 </div>
 
 <!-- INFO BAR -->
 <div class="info-bar">
-  <div class="info-content" id="infoText">
-    Loading...
-  </div>
+  <div class="info-content" id="infoText">Loading...</div>
 </div>
 
-<!-- MENU 2 KOTAK -->
+<!-- MENU -->
 <div class="menu-frame">
   <a class="menu-card" href="https://forgeplayid.github.io/desktop/diamond-lock/">
     <img src="https://forgeplayid.github.io/assets/diamond-lock.png" class="menu-img">
@@ -256,7 +251,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
   </a>
 </div>
 
-<!-- 1 KOTAK PANJANG -->
+<!-- BUY -->
 <div class="buy-frame">
   <a class="buy-card" href="https://forgeplayid.github.io/desktop/buy/">
     Mau jual DL & BGL? Langsung Ke Sini
@@ -270,30 +265,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 <script>
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
-
-/* INFO URL */
-const INFO_URL = "https://script.google.com/macros/s/AKfycbw7nH1QXZhe7-LgJPiQuo7IjWeaCoJP2sYVAl1UFX-7m10lRJBnkcfA3YUToEmVcwME/exec";
-
-/* FIXED INFO LOADER */
-async function loadInfo(){
-  try {
-    const res = await fetch(INFO_URL);
-    const data = await res.json();
-
-    const el = document.getElementById("infoText");
-
-    if(!data || !data.info || data.info.trim() === ""){
-      el.innerText = "⚡ Info belum tersedia";
-      return;
-    }
-
-    el.innerHTML = data.info;
-
-  } catch (e) {
-    console.log("INFO ERROR", e);
-    document.getElementById("infoText").innerText = "⚠️ Gagal load info";
-  }
-}
+const INFO_URL = "https://script.google.com/macros/s/AKfycby-2OPm-YUwqVNEJy3YyfBHU8BEXSp9bN1dvU1Ca_uzMu3h5Ld-_P6UgolLlyRLtYyQ/exec";
 
 /* SLIDER */
 const slides = [
@@ -356,6 +328,24 @@ async function loadHarga(){
   document.getElementById("sell-dl").innerText="Sell "+formatRupiah(data.sell_dl);
   document.getElementById("buy-dl").innerText="Buy "+formatRupiah(data.buy_dl);
   document.getElementById("sell-bgl").innerText="Sell "+formatRupiah(data.sell_bgl);
+}
+
+async function loadInfo(){
+  try {
+    const res = await fetch(INFO_URL + "?t=" + Date.now());
+    const data = await res.json();
+
+    const el = document.getElementById("infoText");
+
+    if(data && data.info){
+      el.innerHTML = data.info;
+    } else {
+      el.innerText = "⚡ Info belum tersedia";
+    }
+
+  } catch(e){
+    document.getElementById("infoText").innerText = "⚠️ Gagal load info";
+  }
 }
 
 window.onload = ()=>{
