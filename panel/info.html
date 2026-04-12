@@ -103,6 +103,7 @@ small {
 
 <body>
 
+<!-- SECURITY LOGIN -->
 <script>
 if (localStorage.getItem("admin_login") !== "true") {
   window.location.replace("https://forgeplayid.github.io/panel/login.html");
@@ -138,7 +139,7 @@ if (localStorage.getItem("admin_login") !== "true") {
       <label class="label">Pengumuman</label>
       <textarea id="infoInput" placeholder="🔥 WhatsApp admin ⚡ Promo hari ini 💎 Stock aman"></textarea>
 
-      <button onclick="updateInfo(event)">UPDATE INFO</button>
+      <button id="btn" onclick="updateInfo(event)">UPDATE INFO</button>
 
       <small id="msg"></small>
 
@@ -152,6 +153,7 @@ if (localStorage.getItem("admin_login") !== "true") {
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7nH1QXZhe7-LgJPiQuo7IjWeaCoJP2sYVAl1UFX-7m10lRJBnkcfA3YUToEmVcwME/exec";
 
 const msg = document.getElementById("msg");
+const btn = document.getElementById("btn");
 
 /* LOAD INFO */
 async function loadInfo(){
@@ -167,7 +169,7 @@ async function loadInfo(){
   }
 }
 
-/* FIXED UPDATE INFO (PALING STABIL UNTUK GAS) */
+/* UPDATE INFO - FIXED NO CORS (GET METHOD) */
 async function updateInfo(e){
 
   const val = document.getElementById("infoInput").value.trim();
@@ -179,21 +181,14 @@ async function updateInfo(e){
     return;
   }
 
-  const btn = e.target;
-  const oldText = btn.innerText;
-
   btn.disabled = true;
   btn.innerText = "Loading...";
 
   try {
 
-    const res = await fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        info: val
-      })
-    });
+    const url = `${SCRIPT_URL}?action=update&info=${encodeURIComponent(val)}`;
 
+    const res = await fetch(url);
     const result = await res.json();
 
     if(result.status === "success"){
@@ -204,14 +199,13 @@ async function updateInfo(e){
       msg.innerText = "❌ Gagal update";
     }
 
-  } catch(e){
+  } catch(err){
     msg.style.color = "#ef4444";
-    msg.innerText = "❌ Error koneksi: " + e.message;
-    console.log(e);
+    msg.innerText = "❌ Error koneksi: " + err.message;
   }
 
   btn.disabled = false;
-  btn.innerText = oldText;
+  btn.innerText = "UPDATE INFO";
 
   setTimeout(()=>msg.innerText="",5000);
 }
