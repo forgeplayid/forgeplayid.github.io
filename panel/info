@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Info Panel</title>
+
+<style>
+body { font-family: Arial; background:#020617; color:white; margin:0; }
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  background:#0f172a;
+  border-bottom:1px solid #1e293b;
+}
+
+.logo img { height:40px; }
+
+.header-right a {
+  padding:6px 14px;
+  background:#ef4444;
+  color:white;
+  text-decoration:none;
+  border-radius:6px;
+  font-weight:bold;
+}
+
+.layout { display:flex; min-height:100vh; }
+
+.sidebar {
+  width:180px;
+  background:#0f172a;
+  border-right:1px solid #1e293b;
+  padding:10px;
+}
+
+.menu {
+  display:block;
+  padding:10px;
+  margin-bottom:8px;
+  background:#1e293b;
+  color:white;
+  text-decoration:none;
+  border-radius:6px;
+  font-size:13px;
+}
+
+.menu:hover { background:#38bdf8; color:#020617; }
+
+.content { flex:1; padding:20px; }
+
+.card {
+  background:#1e293b;
+  padding:20px;
+  border-radius:10px;
+  max-width:700px;
+}
+
+.label {
+  color:#38bdf8;
+  font-size:13px;
+  margin-top:10px;
+  margin-bottom:4px;
+  display:block;
+}
+
+textarea {
+  width:100%;
+  min-height:160px;
+  padding:12px;
+  border:none;
+  border-radius:6px;
+  font-size:14px;
+  background:white;
+  color:black;
+  resize: vertical;
+}
+
+button {
+  width:100%;
+  padding:10px;
+  background:#38bdf8;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+  color:#020617;
+}
+
+button:hover { background:#0ea5e5; }
+
+small {
+  display:block;
+  margin-top:10px;
+  color:#94a3b8;
+  min-height:18px;
+}
+</style>
+</head>
+
+<body>
+
+<script>
+if (localStorage.getItem("admin_login") !== "true") {
+  window.location.replace("https://forgeplayid.github.io/panel/login.html");
+}
+</script>
+
+<div class="header">
+  <div class="logo">
+    <a href="dashboard.html">
+      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
+    </a>
+  </div>
+
+  <div class="header-right">
+    <a href="#" id="logoutBtn">Log Out</a>
+  </div>
+</div>
+
+<div class="layout">
+
+  <div class="sidebar">
+    <a class="menu" href="dashboard.html">Dashboard</a>
+    <a class="menu" href="price.html">List Harga</a>
+    <a class="menu" href="world.html">List World</a>
+    <a class="menu" href="info.html">Info</a>
+  </div>
+
+  <div class="content">
+    <div class="card">
+
+      <h2 style="color:#38bdf8;">EDIT RUNNING INFO</h2>
+
+      <label class="label">Pengumuman</label>
+      <textarea id="infoInput" placeholder="🔥 WhatsApp admin ⚡ Promo hari ini 💎 Stock aman"></textarea>
+
+      <button onclick="updateInfo(event)">UPDATE INFO</button>
+
+      <small id="msg"></small>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7nH1QXZhe7-LgJPiQuo7IjWeaCoJP2sYVAl1UFX-7m10lRJBnkcfA3YUToEmVcwME/exec";
+
+const msg = document.getElementById("msg");
+
+/* LOAD INFO */
+async function loadInfo(){
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+
+    if(data.info){
+      document.getElementById("infoInput").value = data.info;
+    }
+  } catch(e){
+    console.log("LOAD ERROR", e);
+  }
+}
+
+/* FIXED UPDATE INFO (PALING STABIL UNTUK GAS) */
+async function updateInfo(e){
+
+  const val = document.getElementById("infoInput").value.trim();
+
+  if(!val){
+    msg.style.color = "#ef4444";
+    msg.innerText = "❌ Tidak boleh kosong";
+    setTimeout(()=>msg.innerText="",5000);
+    return;
+  }
+
+  const btn = e.target;
+  const oldText = btn.innerText;
+
+  btn.disabled = true;
+  btn.innerText = "Loading...";
+
+  try {
+
+    const res = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        info: val
+      })
+    });
+
+    const result = await res.json();
+
+    if(result.status === "success"){
+      msg.style.color = "#22c55e";
+      msg.innerText = "✅ Info berhasil diupdate";
+    } else {
+      msg.style.color = "#ef4444";
+      msg.innerText = "❌ Gagal update";
+    }
+
+  } catch(e){
+    msg.style.color = "#ef4444";
+    msg.innerText = "❌ Error koneksi: " + e.message;
+    console.log(e);
+  }
+
+  btn.disabled = false;
+  btn.innerText = oldText;
+
+  setTimeout(()=>msg.innerText="",5000);
+}
+
+/* LOGOUT */
+document.getElementById("logoutBtn").onclick = (e)=>{
+  e.preventDefault();
+  localStorage.removeItem("admin_login");
+  window.location.href = "https://forgeplayid.github.io/panel/login.html";
+}
+
+window.onload = loadInfo;
+
+</script>
+
+</body>
+</html>
