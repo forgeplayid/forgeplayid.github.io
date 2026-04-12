@@ -265,7 +265,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 <script>
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
-const INFO_URL = "https://script.google.com/macros/s/AKfycby-2OPm-YUwqVNEJy3YyfBHU8BEXSp9bN1dvU1Ca_uzMu3h5Ld-_P6UgolLlyRLtYyQ/exec";
+const INFO_URL = "https://script.google.com/macros/s/AKfycbyYY0pt19KzeSFfMf3udOpSBJxvQ1cR6MUtT3bmKUVQugW5KyO18MNem5INQRdsUZVVSw/exec";
 
 /* SLIDER */
 const slides = [
@@ -330,21 +330,27 @@ async function loadHarga(){
   document.getElementById("sell-bgl").innerText="Sell "+formatRupiah(data.sell_bgl);
 }
 
+/* 🔥 FIXED INFO LOADER */
 async function loadInfo(){
   try {
     const res = await fetch(INFO_URL + "?t=" + Date.now());
-    const data = await res.json();
+    const text = await res.text();
+
+    console.log("RAW INFO RESPONSE:", text);
+
+    const data = JSON.parse(text);
 
     const el = document.getElementById("infoText");
 
     if(data && data.info){
-      el.innerHTML = data.info;
+      el.innerText = data.info;
     } else {
       el.innerText = "⚡ Info belum tersedia";
     }
 
   } catch(e){
-    document.getElementById("infoText").innerText = "⚠️ Gagal load info";
+    console.log("LOAD INFO ERROR:", e);
+    document.getElementById("infoText").innerText = "❌ Gagal load info";
   }
 }
 
