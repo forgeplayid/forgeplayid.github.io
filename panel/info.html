@@ -103,7 +103,6 @@ small {
 
 <body>
 
-<!-- SECURITY LOGIN -->
 <script>
 if (localStorage.getItem("admin_login") !== "true") {
   window.location.replace("https://forgeplayid.github.io/panel/login.html");
@@ -158,18 +157,19 @@ const btn = document.getElementById("btn");
 /* LOAD INFO */
 async function loadInfo(){
   try {
-    const res = await fetch(SCRIPT_URL);
+    const url = SCRIPT_URL + "?t=" + new Date().getTime();
+
+    const res = await fetch(url);
     const data = await res.json();
 
-    if(data.info){
-      document.getElementById("infoInput").value = data.info;
-    }
+    document.getElementById("infoInput").value = data.info || "";
+
   } catch(e){
-    console.log("LOAD ERROR", e);
+    console.log(e);
   }
 }
 
-/* UPDATE INFO - FIXED NO CORS (GET METHOD) */
+/* UPDATE INFO */
 async function updateInfo(e){
 
   const val = document.getElementById("infoInput").value.trim();
@@ -186,10 +186,16 @@ async function updateInfo(e){
 
   try {
 
-    const url = `${SCRIPT_URL}?action=update&info=${encodeURIComponent(val)}`;
+    const url =
+      SCRIPT_URL +
+      "?action=update" +
+      "&info=" + encodeURIComponent(val) +
+      "&t=" + new Date().getTime();
 
     const res = await fetch(url);
     const result = await res.json();
+
+    console.log(result);
 
     if(result.status === "success"){
       msg.style.color = "#22c55e";
