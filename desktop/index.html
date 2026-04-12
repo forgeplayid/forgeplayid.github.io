@@ -104,7 +104,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 .dot.active { background: white; }
 
-/* ================= INFO BAR BARU ================= */
+/* ================= INFO BAR ================= */
 .info-bar {
   max-width: 860px;
   margin: 15px auto 0 auto;
@@ -135,7 +135,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
   justify-content:space-between;
   width:100%;
   max-width:860px;
-  margin:25px auto 10px auto; /* tetap, sudah aman */
+  margin:25px auto 10px auto;
   padding:0 10px;
   background-color:#0f172a;
   border-radius:12px;
@@ -235,10 +235,10 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
   <div class="dots" id="dots"></div>
 </div>
 
-<!-- ✅ INFO BAR (DITAMBAHKAN DISINI) -->
+<!-- INFO BAR -->
 <div class="info-bar">
   <div class="info-content" id="infoText">
-    🔥 Promo hari ini: Harga DL naik! | ⚡ Transaksi cepat 1-5 menit | 💎 Stock aman!
+    Loading...
   </div>
 </div>
 
@@ -271,14 +271,23 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
 
-/* INFO TEXT (NANTI BISA DARI ADMIN) */
-const infoList = [
-  "🔥 Promo hari ini: Harga DL naik!",
-  "⚡ Transaksi cepat 1-5 menit",
-  "💎 Stock aman",
-  "📢 Admin online 24 jam"
-];
-document.getElementById("infoText").innerText = infoList.join("   |   ");
+/* INFO GAS */
+const INFO_URL = "https://script.google.com/macros/s/AKfycbxfgZzhZclYbiUdjk3mKOEd18ZQMedc9WH5GapH3R_738DbJ6Rm53MeTy3wgw-hnktlfg/exec";
+
+async function loadInfo(){
+  try {
+    const res = await fetch(INFO_URL);
+    const data = await res.json();
+
+    const el = document.getElementById("infoText");
+
+    if(data.info && data.info.trim() !== ""){
+      el.innerText = data.info;
+    }
+  } catch (e) {
+    console.log("INFO ERROR", e);
+  }
+}
 
 /* SLIDES */
 const slides = [
@@ -367,6 +376,7 @@ async function loadHarga(){
 window.onload = ()=>{
   initSlider();
   loadHarga();
+  loadInfo();
 };
 
 setInterval(loadHarga,60000);
