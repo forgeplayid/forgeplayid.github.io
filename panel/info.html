@@ -103,7 +103,6 @@ small {
 
 <body>
 
-<!-- SECURITY -->
 <script>
 if (localStorage.getItem("admin_login") !== "true") {
   window.location.replace("https://forgeplayid.github.io/panel/login.html");
@@ -150,24 +149,22 @@ if (localStorage.getItem("admin_login") !== "true") {
 
 <script>
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxosDqCVh7_FgPFnGLpLTqOkSFnLhv4dzkaPkFIY1YHIjJ27yABOzFriMk-fVvcTHACFg/exec";
+/* 🔥 UPDATED URL (GAS BARU KAMU) */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYY0pt19KzeSFfMf3udOpSBJxvQ1cR6MUtT3bmKUVQugW5KyO18MNem5INQRdsUZVVSw/exec";
 
 const msg = document.getElementById("msg");
 
 /* ================= LOAD ================= */
 async function loadInfo() {
   try {
-    const res = await fetch(SCRIPT_URL, {
-      method: "GET",
-      cache: "no-cache"
-    });
-
+    const res = await fetch(SCRIPT_URL + "?t=" + Date.now());
     const data = await res.json();
 
     document.getElementById("infoInput").value = data.info || "";
 
   } catch (e) {
     console.log("LOAD ERROR:", e);
+    msg.style.color = "#ef4444";
     msg.innerText = "❌ gagal load";
   }
 }
@@ -178,36 +175,35 @@ async function updateInfo() {
   const val = document.getElementById("infoInput").value.trim();
 
   if (!val) {
+    msg.style.color = "#ef4444";
     msg.innerText = "❌ tidak boleh kosong";
-    setTimeout(()=>msg.innerText="",3000);
     return;
   }
 
   try {
 
-    await fetch(SCRIPT_URL, {
+    const res = await fetch(SCRIPT_URL, {
       method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain"
-      },
-      body: JSON.stringify({
-        action: "update_info",
+      body: new URLSearchParams({
         info: val
       })
     });
 
+    const data = await res.json();
+    console.log("POST RESULT:", data);
+
     msg.style.color = "#22c55e";
-    msg.innerText = "✅ berhasil dikirim ke server";
+    msg.innerText = "✅ berhasil update";
 
     loadInfo();
 
   } catch (e) {
+    console.log(e);
     msg.style.color = "#ef4444";
-    msg.innerText = "❌ error koneksi";
+    msg.innerText = "❌ gagal koneksi";
   }
 
-  setTimeout(()=>msg.innerText="",5000);
+  setTimeout(()=>msg.innerText="",4000);
 }
 
 /* LOGOUT */
