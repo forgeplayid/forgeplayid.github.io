@@ -13,6 +13,7 @@ body {
   margin: 0;
 }
 
+/* HEADER */
 .header {
   display:flex;
   justify-content:space-between;
@@ -33,13 +34,20 @@ body {
   font-weight:bold;
 }
 
-.layout { display:flex; }
+/* 🔥 FIX LAYOUT FULL HEIGHT */
+.layout {
+  display:flex;
+  min-height: calc(100vh - 70px);
+}
 
+/* 🔥 FIX SIDEBAR FULL STRETCH */
 .sidebar {
   width:180px;
   background:#0f172a;
   border-right:1px solid #1e293b;
   padding:15px 10px;
+
+  min-height: calc(100vh - 70px);
 }
 
 .menu {
@@ -263,7 +271,7 @@ function parseNumber(v){
   return parseInt((v||"").replace(/\./g,""))||0;
 }
 
-/* 🔥 RESTORED LOAD DATA */
+/* LOAD */
 async function loadData(){
   const res = await fetch(API_URL);
   const data = await res.json();
@@ -329,6 +337,7 @@ updateBtn.onclick = async ()=>{
     }
 
     showMsg("Data berhasil diupdate", true);
+
     updateBtn.style.display = "none";
     editMode = false;
 
@@ -405,9 +414,6 @@ document.querySelectorAll("tbody tr").forEach(r=>{
   buy += parseNumber(r.children[2].children[0].value);
   sell += parseNumber(r.children[3].children[0].value);
   nego += parseNumber(r.children[4].children[0].value);
-
-  let profit = sell - buy - nego;
-  r.children[5].children[0].value = formatNumber(profit);
 });
 
 let totalProfit = sell - buy - nego;
