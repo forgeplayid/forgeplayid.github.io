@@ -65,8 +65,12 @@ th, td {
   text-align:center;
 }
 
+td:nth-child(2){
+  width:320px; /* 🔥 DESCRIPTION LEBAR */
+}
+
 input {
-  width:90%;
+  width:95%;
   background:#334155;
   border:none;
   color:white;
@@ -92,7 +96,7 @@ input.editable {
   color:#ef4444;
 }
 
-/* ACTION */
+/* ACTION BAR */
 .action-bar{
   margin-top:20px;
   display:flex;
@@ -101,14 +105,17 @@ input.editable {
 }
 
 button {
-  padding:10px;
-  margin-right:10px;
+  padding:8px 12px;
   border:none;
   cursor:pointer;
+  margin-right:6px;
+  border-radius:5px;
 }
 
 #editBtn { background:orange; }
 #updateBtn { background:limegreen; display:none; }
+#addRow { background:#3b82f6; color:white; }
+#removeRow { background:#ef4444; color:white; }
 
 /* CONVERT */
 .convert{
@@ -145,11 +152,10 @@ button {
 <div class="layout">
 
 <div class="sidebar">
-  <a href="https://forgeplayid.github.io/panel/dashboard.html" class="menu">Dashboard</a>
-    <a href="https://forgeplayid.github.io/panel/price.html" class="menu">List Harga</a>
-    <a href="https://forgeplayid.github.io/panel/world.html" class="menu">List World</a>
-    <a href="https://forgeplayid.github.io/panel/info.html" class="menu">Info</a>
-  <a href="https://forgeplayid.github.io/panel/stock.html" class="menu">Stock</a>
+  <a href="#" class="menu">Dashboard</a>
+  <a href="#" class="menu">List Harga</a>
+  <a href="#" class="menu">List World</a>
+  <a href="#" class="menu">Info</a>
 </div>
 
 <div class="content">
@@ -183,16 +189,23 @@ button {
 </tfoot>
 </table>
 
+<!-- ACTION -->
 <div class="action-bar">
-  <div>
-    <button id="editBtn">EDIT</button>
-    <button id="updateBtn">UPDATE</button>
-  </div>
-  <div>
-    Format DL/WL: <b id="format">0 DL / 0 WL</b>
-  </div>
+
+<div>
+<button id="editBtn">EDIT</button>
+<button id="updateBtn">UPDATE</button>
+<button id="addRow">+</button>
+<button id="removeRow">-</button>
 </div>
 
+<div>
+Format DL/WL: <b id="format">0 DL / 0 WL</b>
+</div>
+
+</div>
+
+<!-- CONVERT -->
 <div class="convert">
 <b>CONVERT :</b>
 
@@ -219,53 +232,48 @@ button {
 
 <script>
 const tbody=document.getElementById("tableBody");
-const totalBuyEl=document.getElementById("totalBuy");
-const totalSellEl=document.getElementById("totalSell");
-const totalNegoEl=document.getElementById("totalNego");
-const totalProfitEl=document.getElementById("totalProfit");
-const formatEl=document.getElementById("format");
-
 let editMode=false;
 
-// FORMAT
-function formatNumber(num){
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+/* FORMAT */
+function formatNumber(n){
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
 }
-function parseNumber(str){
-  return parseInt((str||"").replace(/\./g,""))||0;
-}
-
-// ROW
-for(let i=0;i<10;i++){
-tbody.innerHTML+=`
-<tr>
-<td><input disabled></td>
-<td><input disabled></td>
-<td><input value="0" disabled></td>
-<td><input value="0" disabled></td>
-<td><input value="0" disabled></td>
-<td><input disabled></td>
-<td><div class="sort-box">READY</div></td>
-</tr>`;
+function parseNumber(v){
+  return parseInt((v||"").replace(/\./g,""))||0;
 }
 
-// EDIT
+/* ROW */
+function createRow(){
+  const tr=document.createElement("tr");
+  tr.innerHTML=`
+  <td><input disabled></td>
+  <td><input disabled></td>
+  <td><input value="0" disabled></td>
+  <td><input value="0" disabled></td>
+  <td><input value="0" disabled></td>
+  <td><input disabled></td>
+  <td><div class="sort-box">READY</div></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+for(let i=0;i<10;i++) createRow();
+
+/* EDIT */
 editBtn.onclick=()=>{
   editMode=true;
   updateBtn.style.display="inline-block";
 
   document.querySelectorAll("tbody input").forEach(i=>{
-    if(i.parentElement.cellIndex!==5){
-      i.disabled=false;
-      i.classList.add("editable");
-    }
+    i.disabled=false;
+    i.classList.add("editable");
   });
 };
 
-// UPDATE
-updateBtn.onclick=function(){
+/* UPDATE */
+updateBtn.onclick=()=>{
   alert("Updated!");
-  this.style.display="none";
+  updateBtn.style.display="none";
   editMode=false;
 
   document.querySelectorAll("tbody input").forEach(i=>{
@@ -274,28 +282,37 @@ updateBtn.onclick=function(){
   });
 };
 
-// STATUS
+/* ADD ROW */
+addRow.onclick=()=>{
+  createRow();
+};
+
+/* REMOVE ROW */
+removeRow.onclick=()=>{
+  if(tbody.lastChild) tbody.removeChild(tbody.lastChild);
+};
+
+/* STATUS */
 document.addEventListener("click",e=>{
-if(e.target.classList.contains("sort-box") && editMode){
-  e.target.classList.toggle("sold");
-  e.target.innerText=e.target.classList.contains("sold")?"SOLD":"READY";
-}
-});
-
-// INPUT
-document.addEventListener("input",e=>{
-if(e.target.tagName==="INPUT"){
-  let col=e.target.parentElement.cellIndex;
-
-  if(col>=2 && col<=4){
-    let val=parseNumber(e.target.value);
-    e.target.value=formatNumber(val);
-    calculate();
+  if(e.target.classList.contains("sort-box") && editMode){
+    e.target.classList.toggle("sold");
+    e.target.innerText=e.target.classList.contains("sold")?"SOLD":"READY";
   }
-}
 });
 
-// CALCULATE
+/* INPUT */
+document.addEventListener("input",e=>{
+  if(e.target.tagName==="INPUT"){
+    let col=e.target.parentElement.cellIndex;
+    if(col>=2 && col<=4){
+      let val=parseNumber(e.target.value);
+      e.target.value=formatNumber(val);
+      calculate();
+    }
+  }
+});
+
+/* CALCULATE */
 function calculate(){
 let totalBuy=0,totalSell=0,totalNego=0;
 
@@ -322,19 +339,19 @@ totalProfitEl.innerText=formatNumber(totalProfit);
 formatDLWL(totalProfit);
 }
 
-// DL WL
-function formatDLWL(val){
-let dl=Math.floor(val/100);
-let wl=val%100;
+/* DL WL */
+function formatDLWL(v){
+let dl=Math.floor(v/100);
+let wl=v%100;
 formatEl.innerText=dl+" DL / "+wl+" WL";
 }
 
-// CONVERT
-function handleConvert(input,callback){
+/* CONVERT */
+function handleConvert(input,cb){
 input.addEventListener("input",()=>{
   let val=parseNumber(input.value);
   input.value=formatNumber(val);
-  callback(val);
+  cb(val);
 });
 }
 
@@ -343,7 +360,6 @@ handleConvert(dlInput,v=> dlToWl.innerText=formatNumber(v*100));
 handleConvert(dlBglInput,v=> dlToBgl.innerText=formatNumber(v/100));
 handleConvert(bglInput,v=> bglToWl.innerText=formatNumber(v*100*100));
 
-calculate();
 </script>
 
 </body>
