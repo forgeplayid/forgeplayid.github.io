@@ -6,6 +6,11 @@
 <title>Admin Panel</title>
 
 <style>
+
+html, body {
+  height: 100%;
+}
+
 body {
   font-family: Arial;
   background: #020617;
@@ -33,13 +38,17 @@ body {
   font-weight:bold;
 }
 
-.layout { display:flex; }
+.layout {
+  display:flex;
+  min-height:100vh;
+}
 
 .sidebar {
   width:180px;
   background:#0f172a;
   border-right:1px solid #1e293b;
   padding:15px 10px;
+  min-height:100vh;
 }
 
 .menu {
@@ -75,7 +84,6 @@ input.editable {
   color:black;
 }
 
-/* STATUS */
 .sort-box{
   padding:6px;
   border:1px solid #38bdf8;
@@ -89,7 +97,6 @@ input.editable {
   color:#ef4444;
 }
 
-/* ACTION */
 .action-bar{
   margin-top:20px;
   display:flex;
@@ -112,7 +119,6 @@ button {
 #addBtn { background:#3b82f6; color:white; }
 #removeBtn { background:#ef4444; color:white; }
 
-/* NOTIF */
 #msg{
   margin-top:10px;
   font-size:13px;
@@ -120,7 +126,6 @@ button {
   font-weight:600;
 }
 
-/* CONVERT */
 .convert{
   margin-top:20px;
   background:#0f172a;
@@ -200,7 +205,6 @@ button {
 <button id="removeBtn">-</button>
 
 <div id="msg"></div>
-
 </div>
 
 <div>
@@ -247,15 +251,12 @@ const formatEl = document.getElementById("format");
 
 let editMode = false;
 
-/* NOTIF */
 function showMsg(text, ok=true){
   msg.innerText = (ok ? "✅ " : "❌ ") + text;
   msg.style.color = ok ? "#22c55e" : "#ef4444";
-
   setTimeout(()=> msg.innerText = "", 5000);
 }
 
-/* FORMAT */
 function formatNumber(n){
   return (n||0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
 }
@@ -263,7 +264,6 @@ function parseNumber(v){
   return parseInt((v||"").replace(/\./g,""))||0;
 }
 
-/* 🔥 RESTORED LOAD DATA */
 async function loadData(){
   const res = await fetch(API_URL);
   const data = await res.json();
@@ -290,123 +290,26 @@ async function loadData(){
   calculate();
 }
 
-/* EDIT */
-editBtn.onclick = ()=>{
-  editMode = true;
-  updateBtn.style.display = "inline-block";
-
-  document.querySelectorAll("tbody tr").forEach(row=>{
-    row.querySelectorAll("input").forEach((input, idx)=>{
-      if(idx === 5) return;
-      input.disabled = false;
-      input.classList.add("editable");
-    });
-  });
-};
-
-/* UPDATE */
-updateBtn.onclick = async ()=>{
-  updateBtn.disabled = true;
-  updateBtn.innerText = "Saving...";
-
-  try{
-    const rows = [...tbody.querySelectorAll("tr")];
-
-    for(let tr of rows){
-      await fetch(API_URL,{
-        method:"POST",
-        body: JSON.stringify({
-          action:"update",
-          id: tr.dataset.id,
-          world: tr.children[0].children[0].value,
-          description: tr.children[1].children[0].value,
-          buy: parseNumber(tr.children[2].children[0].value),
-          sell: parseNumber(tr.children[3].children[0].value),
-          nego: parseNumber(tr.children[4].children[0].value),
-          status: tr.children[6].children[0].innerText
-        })
-      });
-    }
-
-    showMsg("Data berhasil diupdate", true);
-    updateBtn.style.display = "none";
-    editMode = false;
-
-    loadData();
-
-  } catch(e){
-    showMsg("Gagal update: " + e.message, false);
-  }
-
-  updateBtn.disabled = false;
-  updateBtn.innerText = "UPDATE";
-};
-
-/* ADD */
-addBtn.onclick = async ()=>{
-  await fetch(API_URL,{
-    method:"POST",
-    body: JSON.stringify({
-      action:"add",
-      world:"",
-      description:"",
-      buy:0,
-      sell:0,
-      nego:0,
-      status:"READY"
-    })
-  });
-
-  loadData();
-};
-
-/* DELETE */
-removeBtn.onclick = async ()=>{
-  const last = tbody.lastChild;
-  if(!last) return;
-
-  await fetch(API_URL,{
-    method:"POST",
-    body: JSON.stringify({
-      action:"delete",
-      id:last.dataset.id
-    })
-  });
-
-  loadData();
-};
-
-/* STATUS */
-document.addEventListener("click",e=>{
-  if(e.target.classList.contains("sort-box") && editMode){
-    e.target.classList.toggle("sold");
-    e.target.innerText = e.target.classList.contains("sold") ? "SOLD" : "READY";
-  }
-});
-
-/* INPUT */
-document.addEventListener("input",e=>{
-  if(e.target.tagName==="INPUT"){
-    let col = e.target.parentElement.cellIndex;
-
-    if(col>=2 && col<=4){
-      let val = parseNumber(e.target.value);
-      e.target.value = formatNumber(val);
-      calculate();
-    }
-  }
-});
-
-/* CALC */
+/* 🔥 FIX DISINI */
 function calculate(){
 let buy=0,sell=0,nego=0;
 
 document.querySelectorAll("tbody tr").forEach(r=>{
-  buy += parseNumber(r.children[2].children[0].value);
-  sell += parseNumber(r.children[3].children[0].value);
-  nego += parseNumber(r.children[4].children[0].value);
 
-  let profit = sell - buy - nego;
+  let b = parseNumber(r.children[2].children[0].value);
+  let s = parseNumber(r.children[3].children[0].value);
+  let n = parseNumber(r.children[4].children[0].value);
+
+  if(b === 0 && s === 0 && n === 0){
+    r.children[5].children[0].value = "";
+    return;
+  }
+
+  buy += b;
+  sell += s;
+  nego += n;
+
+  let profit = s - b - n;
   r.children[5].children[0].value = formatNumber(profit);
 });
 
@@ -422,12 +325,70 @@ let wl = totalProfit%100;
 formatEl.innerText = dl + " DL / " + wl + " WL";
 }
 
-/* CONVERT */
+/* sisanya tetap */
+editBtn.onclick = ()=>{ editMode=true; updateBtn.style.display="inline-block";
+document.querySelectorAll("tbody tr").forEach(row=>{
+row.querySelectorAll("input").forEach((input, idx)=>{
+if(idx===5)return; input.disabled=false; input.classList.add("editable");
+});});};
+
+updateBtn.onclick = async ()=>{
+updateBtn.disabled=true; updateBtn.innerText="Saving...";
+try{
+const rows=[...tbody.querySelectorAll("tr")];
+for(let tr of rows){
+await fetch(API_URL,{method:"POST",body:JSON.stringify({
+action:"update",
+id: tr.dataset.id,
+world: tr.children[0].children[0].value,
+description: tr.children[1].children[0].value,
+buy: parseNumber(tr.children[2].children[0].value),
+sell: parseNumber(tr.children[3].children[0].value),
+nego: parseNumber(tr.children[4].children[0].value),
+status: tr.children[6].children[0].innerText
+})});
+}
+showMsg("Data berhasil diupdate",true);
+updateBtn.style.display="none"; editMode=false; loadData();
+}catch(e){showMsg("Gagal update: "+e.message,false);}
+updateBtn.disabled=false; updateBtn.innerText="UPDATE";
+};
+
+addBtn.onclick = async ()=>{
+await fetch(API_URL,{method:"POST",body:JSON.stringify({
+action:"add",world:"",description:"",buy:0,sell:0,nego:0,status:"READY"
+})});
+loadData();
+};
+
+removeBtn.onclick = async ()=>{
+const last=tbody.lastChild; if(!last)return;
+await fetch(API_URL,{method:"POST",body:JSON.stringify({
+action:"delete",id:last.dataset.id
+})});
+loadData();
+};
+
+document.addEventListener("click",e=>{
+if(e.target.classList.contains("sort-box") && editMode){
+e.target.classList.toggle("sold");
+e.target.innerText=e.target.classList.contains("sold")?"SOLD":"READY";
+}});
+
+document.addEventListener("input",e=>{
+if(e.target.tagName==="INPUT"){
+let col=e.target.parentElement.cellIndex;
+if(col>=2 && col<=4){
+let val=parseNumber(e.target.value);
+e.target.value=formatNumber(val);
+calculate();
+}}});
+
 function bind(input,cb){
 input.addEventListener("input",()=>{
-  let val = parseNumber(input.value);
-  input.value = formatNumber(val);
-  cb(val);
+let val=parseNumber(input.value);
+input.value=formatNumber(val);
+cb(val);
 });
 }
 
