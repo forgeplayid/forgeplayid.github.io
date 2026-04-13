@@ -33,10 +33,7 @@ body {
   font-weight:bold;
 }
 
-.layout {
-  display:flex;
-  min-height: calc(100vh - 70px);
-}
+.layout { display:flex; }
 
 .sidebar {
   width:180px;
@@ -115,6 +112,14 @@ button {
 #addBtn { background:#3b82f6; color:white; }
 #removeBtn { background:#ef4444; color:white; }
 
+/* NOTIF */
+#msg{
+  margin-top:10px;
+  font-size:13px;
+  min-height:18px;
+  font-weight:600;
+}
+
 /* CONVERT */
 .convert{
   margin-top:20px;
@@ -131,14 +136,6 @@ button {
   width:120px;
   background:white;
   color:black;
-}
-
-/* MSG */
-#msg{
-  margin-top:10px;
-  font-size:13px;
-  font-weight:600;
-  min-height:18px;
 }
 </style>
 </head>
@@ -212,7 +209,6 @@ Format DL/WL: <b id="format">0 DL / 0 WL</b>
 
 </div>
 
-<!-- ✅ CONVERT (FULL BALIK LAGI) -->
 <div class="convert">
 <b>CONVERT :</b>
 
@@ -232,29 +228,32 @@ Format DL/WL: <b id="format">0 DL / 0 WL</b>
 <input id="bglInput"> BGL = <span id="bglToWl">0</span> WL
 </div>
 
-<div class="convert-item">
-<input id="bglToDlInput"> BGL = <span id="bglToDl">0</span> DL
-</div>
-
 </div>
 
 </div>
 </div>
 
 <script>
-
 const API_URL = "https://script.google.com/macros/s/AKfycbyxM6gjh2JPi1BENAndUPEJ6ireXJjdh-rM8sSPz36lfdxuMVoo080ucMWYdLkbVrduWw/exec";
 
 const tbody = document.getElementById("tableBody");
+const msg = document.getElementById("msg");
 
 const totalBuyEl = document.getElementById("totalBuy");
 const totalSellEl = document.getElementById("totalSell");
 const totalNegoEl = document.getElementById("totalNego");
 const totalProfitEl = document.getElementById("totalProfit");
 const formatEl = document.getElementById("format");
-const msg = document.getElementById("msg");
 
 let editMode = false;
+
+/* NOTIF */
+function showMsg(text, ok=true){
+  msg.innerText = (ok ? "✅ " : "❌ ") + text;
+  msg.style.color = ok ? "#22c55e" : "#ef4444";
+
+  setTimeout(()=> msg.innerText = "", 5000);
+}
 
 /* FORMAT */
 function formatNumber(n){
@@ -264,7 +263,7 @@ function parseNumber(v){
   return parseInt((v||"").replace(/\./g,""))||0;
 }
 
-/* LOAD */
+/* 🔥 RESTORED LOAD DATA */
 async function loadData(){
   const res = await fetch(API_URL);
   const data = await res.json();
@@ -273,6 +272,7 @@ async function loadData(){
 
   data.forEach(r=>{
     const tr = document.createElement("tr");
+    tr.dataset.id = r.id;
 
     tr.innerHTML = `
       <td><input value="${r.world||""}" disabled></td>
@@ -280,7 +280,7 @@ async function loadData(){
       <td><input value="${formatNumber(r.buy)}" disabled></td>
       <td><input value="${formatNumber(r.sell)}" disabled></td>
       <td><input value="${formatNumber(r.nego)}" disabled></td>
-      <td><input disabled></td>
+      <td><input value="" disabled></td>
       <td><div class="sort-box ${r.status==='SOLD'?'sold':''}">${r.status||'READY'}</div></td>
     `;
 
@@ -291,54 +291,89 @@ async function loadData(){
 }
 
 /* EDIT */
-document.getElementById("editBtn").onclick = ()=>{
+editBtn.onclick = ()=>{
   editMode = true;
-  document.getElementById("updateBtn").style.display = "inline-block";
+  updateBtn.style.display = "inline-block";
 
-  document.querySelectorAll("tbody input").forEach((i,idx)=>{
-    if(idx%7 !== 5){
-      i.disabled = false;
-      i.classList.add("editable");
-    }
+  document.querySelectorAll("tbody tr").forEach(row=>{
+    row.querySelectorAll("input").forEach((input, idx)=>{
+      if(idx === 5) return;
+      input.disabled = false;
+      input.classList.add("editable");
+    });
   });
 };
 
-/* UPDATE (HANYA SIMULASI + LOCK LAGI) */
-document.getElementById("updateBtn").onclick = ()=>{
-  editMode = false;
-  document.getElementById("updateBtn").style.display = "none";
+/* UPDATE */
+updateBtn.onclick = async ()=>{
+  updateBtn.disabled = true;
+  updateBtn.innerText = "Saving...";
 
-  document.querySelectorAll("tbody input").forEach(i=>{
-    i.disabled = true;
-    i.classList.remove("editable");
-  });
+  try{
+    const rows = [...tbody.querySelectorAll("tr")];
 
-  msg.innerText = "✅ Update berhasil";
-  msg.style.color = "#22c55e";
+    for(let tr of rows){
+      await fetch(API_URL,{
+        method:"POST",
+        body: JSON.stringify({
+          action:"update",
+          id: tr.dataset.id,
+          world: tr.children[0].children[0].value,
+          description: tr.children[1].children[0].value,
+          buy: parseNumber(tr.children[2].children[0].value),
+          sell: parseNumber(tr.children[3].children[0].value),
+          nego: parseNumber(tr.children[4].children[0].value),
+          status: tr.children[6].children[0].innerText
+        })
+      });
+    }
 
-  setTimeout(()=>msg.innerText="",5000);
+    showMsg("Data berhasil diupdate", true);
+    updateBtn.style.display = "none";
+    editMode = false;
+
+    loadData();
+
+  } catch(e){
+    showMsg("Gagal update: " + e.message, false);
+  }
+
+  updateBtn.disabled = false;
+  updateBtn.innerText = "UPDATE";
 };
 
 /* ADD */
-document.getElementById("addBtn").onclick = ()=>{
-  const tr = document.createElement("tr");
+addBtn.onclick = async ()=>{
+  await fetch(API_URL,{
+    method:"POST",
+    body: JSON.stringify({
+      action:"add",
+      world:"",
+      description:"",
+      buy:0,
+      sell:0,
+      nego:0,
+      status:"READY"
+    })
+  });
 
-  tr.innerHTML = `
-    <td><input></td>
-    <td><input></td>
-    <td><input value="0"></td>
-    <td><input value="0"></td>
-    <td><input value="0"></td>
-    <td><input disabled></td>
-    <td><div class="sort-box">READY</div></td>
-  `;
-
-  tbody.appendChild(tr);
+  loadData();
 };
 
-/* REMOVE */
-document.getElementById("removeBtn").onclick = ()=>{
-  if(tbody.lastChild) tbody.removeChild(tbody.lastChild);
+/* DELETE */
+removeBtn.onclick = async ()=>{
+  const last = tbody.lastChild;
+  if(!last) return;
+
+  await fetch(API_URL,{
+    method:"POST",
+    body: JSON.stringify({
+      action:"delete",
+      id:last.dataset.id
+    })
+  });
+
+  loadData();
 };
 
 /* STATUS */
@@ -349,10 +384,11 @@ document.addEventListener("click",e=>{
   }
 });
 
-/* INPUT + CALC REALTIME */
+/* INPUT */
 document.addEventListener("input",e=>{
   if(e.target.tagName==="INPUT"){
     let col = e.target.parentElement.cellIndex;
+
     if(col>=2 && col<=4){
       let val = parseNumber(e.target.value);
       e.target.value = formatNumber(val);
@@ -363,47 +399,42 @@ document.addEventListener("input",e=>{
 
 /* CALC */
 function calculate(){
-  let buy=0,sell=0,nego=0;
+let buy=0,sell=0,nego=0;
 
-  document.querySelectorAll("tbody tr").forEach(r=>{
-    let b = parseNumber(r.children[2].children[0].value);
-    let s = parseNumber(r.children[3].children[0].value);
-    let n = parseNumber(r.children[4].children[0].value);
+document.querySelectorAll("tbody tr").forEach(r=>{
+  buy += parseNumber(r.children[2].children[0].value);
+  sell += parseNumber(r.children[3].children[0].value);
+  nego += parseNumber(r.children[4].children[0].value);
 
-    buy += b;
-    sell += s;
-    nego += n;
+  let profit = sell - buy - nego;
+  r.children[5].children[0].value = formatNumber(profit);
+});
 
-    let profit = s - b - n;
-    r.children[5].children[0].value = formatNumber(profit);
-  });
+let totalProfit = sell - buy - nego;
 
-  let totalProfit = sell - buy - nego;
+totalBuyEl.innerText = formatNumber(buy);
+totalSellEl.innerText = formatNumber(sell);
+totalNegoEl.innerText = formatNumber(nego);
+totalProfitEl.innerText = formatNumber(totalProfit);
 
-  totalBuyEl.innerText = formatNumber(buy);
-  totalSellEl.innerText = formatNumber(sell);
-  totalNegoEl.innerText = formatNumber(nego);
-  totalProfitEl.innerText = formatNumber(totalProfit);
-
-  let dl = Math.floor(totalProfit/100);
-  let wl = totalProfit%100;
-  formatEl.innerText = dl + " DL / " + wl + " WL";
+let dl = Math.floor(totalProfit/100);
+let wl = totalProfit%100;
+formatEl.innerText = dl + " DL / " + wl + " WL";
 }
 
 /* CONVERT */
 function bind(input,cb){
-  input.addEventListener("input",()=>{
-    let v = parseNumber(input.value);
-    input.value = formatNumber(v);
-    cb(v);
-  });
+input.addEventListener("input",()=>{
+  let val = parseNumber(input.value);
+  input.value = formatNumber(val);
+  cb(val);
+});
 }
 
 bind(wlInput,v=>wlToDl.innerText=formatNumber(v/100));
 bind(dlInput,v=>dlToWl.innerText=formatNumber(v*100));
 bind(dlBglInput,v=>dlToBgl.innerText=formatNumber(v/100));
 bind(bglInput,v=>bglToWl.innerText=formatNumber(v*100*100));
-bind(bglToDlInput,v=>bglToDl.innerText=formatNumber(v*100));
 
 loadData();
 </script>
