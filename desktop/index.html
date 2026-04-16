@@ -7,7 +7,16 @@
 <title>Agent Reseller Growtopia Terpercaya</title>
 
 <style>
-body { margin:0; font-family: Arial, sans-serif; background-color: #020617; color: white; }
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background-color: #020617;
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
 
 .header {
   display:flex;
@@ -31,7 +40,11 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 }
 .header-right a.button:hover { background-color:#0ea5e9; }
 
-.container { max-width:1100px; margin:30px auto; padding:0 15px; }
+.container {
+  max-width:1100px;
+  margin:30px auto;
+  padding:0 15px;
+}
 
 /* ================= SLIDER ================= */
 .slider-container {
@@ -134,33 +147,41 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 .menu-frame {
   display:flex;
   justify-content:space-between;
+  gap:20px;
   width:100%;
   max-width:860px;
   margin:25px auto 10px auto;
-  padding:0 10px;
-  background-color:#0f172a;
-  border-radius:12px;
-  box-shadow:0 6px 15px rgba(0,0,0,0.3);
+  padding:0;
 }
 
 .menu-card {
   flex:1;
-  margin:0 10px;
+  min-width:0;
   background-color:#1e293b;
   border-radius:10px;
-  padding:15px;
+  padding:15px 10px;
   text-align:center;
   color:white;
   box-shadow:0 4px 10px rgba(0,0,0,0.2);
   transition:transform 0.2s;
   text-decoration:none;
   cursor:pointer;
+  border: 1px solid rgba(56,189,248,0.08);
 }
 
 .menu-card:hover { transform:translateY(-5px); }
 
-.menu-card img.menu-img { width:50px; height:auto; margin-bottom:10px; }
-.menu-card p { margin:5px 0; font-size:16px; }
+.menu-card img.menu-img {
+  width:50px;
+  height:auto;
+  margin-bottom:10px;
+}
+
+.menu-card p {
+  margin:5px 0;
+  font-size:16px;
+  line-height:1.4;
+}
 
 /* ================= 1 KOTAK PANJANG ================= */
 .buy-frame {
@@ -181,6 +202,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
   box-shadow:0 4px 10px rgba(0,0,0,0.2);
   transition:transform 0.2s;
   font-weight:600;
+  border: 1px solid rgba(56,189,248,0.08);
 }
 
 .buy-card:hover {
@@ -188,6 +210,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
   background-color:#0f172a;
 }
 
+/* ================= CONTENT KOSONG ================= */
 .content {
   margin-top:25px;
   height:350px;
@@ -196,13 +219,295 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
   border:1px dashed #1e293b;
 }
 
+/* ================= FOOTER ================= */
+.site-footer {
+  margin-top: 40px;
+  background:
+    radial-gradient(circle at top center, rgba(56,189,248,0.08), transparent 35%),
+    linear-gradient(180deg, #071120 0%, #0b1324 55%, #0a1220 100%);
+  border-top: 1px solid rgba(56,189,248,0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  overflow: hidden;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 26px 15px 22px 15px;
+  text-align: center;
+}
+
+.footer-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 18px;
+  letter-spacing: 0.4px;
+}
+
+.payment-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.payment-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: paymentScroll 26s linear infinite;
+  will-change: transform;
+}
+
+.payment-item {
+  flex: 0 0 auto;
+  min-width: 132px;
+  height: 58px;
+  margin: 0 8px;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+  border: 1px solid rgba(15,23,42,0.06);
+}
+
+.payment-logo {
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.payment-logo.small {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.logo-alfamart {
+  font-style: italic;
+  color: #2563eb;
+}
+.logo-alfamart .red { color:#ef4444; }
+.logo-alfamart .yellow {
+  display:block;
+  height:4px;
+  width:88px;
+  margin:4px auto 0 auto;
+  border-radius:999px;
+  background: linear-gradient(90deg, #f59e0b, #facc15);
+}
+
+.logo-danamon {
+  color:#16a34a;
+  position:relative;
+  padding-top:8px;
+}
+.logo-danamon::before,
+.logo-danamon::after{
+  content:"";
+  position:absolute;
+  top:0;
+  height:5px;
+  border-radius:999px;
+}
+.logo-danamon::before{
+  left:0;
+  width:46px;
+  background:#f97316;
+}
+.logo-danamon::after{
+  right:0;
+  width:52px;
+  background:#f59e0b;
+}
+
+.logo-mandiri {
+  color:#1d4ed8;
+  position:relative;
+  padding-top:8px;
+}
+.logo-mandiri::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:54px;
+  height:6px;
+  border-radius:999px;
+  background: linear-gradient(90deg, #f59e0b, #facc15, #f59e0b);
+}
+
+.logo-bca { color:#2563eb; font-weight:900; }
+.logo-atm-bca { color:#2563eb; font-weight:900; font-size:16px; }
+.logo-permata { color:#6b7280; font-weight:700; }
+.logo-sinarmas { color:#9f1239; font-weight:700; }
+.logo-bri { color:#1d4ed8; font-weight:900; }
+.logo-bni { color:#ea580c; font-weight:900; }
+.logo-dana { color:#0284c7; font-weight:900; }
+.logo-ovo { color:#7c3aed; font-weight:900; }
+.logo-gopay { color:#0891b2; font-weight:900; }
+
+.social-links {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+  margin-top:28px;
+}
+
+.social-links a {
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  background: linear-gradient(180deg, #13233d, #0f1b31);
+  border: 1px solid rgba(56,189,248,0.14);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.social-links a:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56,189,248,0.4);
+  box-shadow: 0 0 18px rgba(56,189,248,0.18);
+}
+
+.social-links svg {
+  width: 22px;
+  height: 22px;
+  fill: #ffffff;
+  display:block;
+}
+
+.footer-copy {
+  margin-top: 18px;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+@keyframes paymentScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 /* RESPONSIVE */
+@media(max-width:768px){
+  .header {
+    padding:15px 20px;
+  }
+
+  .menu-frame {
+    gap:12px;
+  }
+
+  .menu-card {
+    padding:12px 8px;
+  }
+
+  .menu-card img.menu-img {
+    width:42px;
+  }
+
+  .menu-card p {
+    font-size:14px;
+  }
+
+  .buy-card {
+    padding:16px 12px;
+    font-size:15px;
+  }
+
+  .payment-item {
+    min-width:118px;
+    height:54px;
+    margin:0 6px;
+    padding:0 10px;
+  }
+
+  .payment-logo {
+    font-size:16px;
+  }
+
+  .payment-logo.small {
+    font-size:12px;
+  }
+}
+
 @media(max-width:500px){
-.menu-card{padding:10px}
-.menu-card img.menu-img{width:40px}
-.menu-card p{font-size:14px}
-.header{flex-direction:column;align-items:flex-start}
-.header-right{margin-top:10px}
+  .header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .header-right{
+    margin-top:10px;
+  }
+
+  .container {
+    padding:0 10px;
+  }
+
+  .menu-frame {
+    gap:10px;
+  }
+
+  .menu-card {
+    padding:10px 6px;
+    border-radius:8px;
+  }
+
+  .menu-card img.menu-img {
+    width:36px;
+    margin-bottom:8px;
+  }
+
+  .menu-card p {
+    font-size:13px;
+    margin:4px 0;
+  }
+
+  .buy-card {
+    font-size:14px;
+    padding:14px 10px;
+    border-radius:8px;
+  }
+
+  .content {
+    height:260px;
+  }
+
+  .footer-title {
+    font-size:16px;
+  }
+
+  .social-links {
+    gap:14px;
+  }
+
+  .social-links a {
+    width:42px;
+    height:42px;
+  }
+
+  .social-links svg {
+    width:20px;
+    height:20px;
+  }
+
+  .footer-copy {
+    font-size:13px;
+  }
 }
 </style>
 </head>
@@ -212,7 +517,7 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 <div class="header">
   <div class="logo">
     <a href="https://forgeplayid.github.io/">
-      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
+      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="ForgePlayID">
     </a>
   </div>
 
@@ -223,48 +528,94 @@ body { margin:0; font-family: Arial, sans-serif; background-color: #020617; colo
 
 <div class="container">
 
-<!-- SLIDER -->
-<div class="slider-container">
-  <div class="slider-wrapper">
-    <div class="slider-track" id="sliderTrack"></div>
-    <button class="arrow left" id="prevBtn">‹</button>
-    <button class="arrow right" id="nextBtn">›</button>
+  <div class="slider-container">
+    <div class="slider-wrapper">
+      <div class="slider-track" id="sliderTrack"></div>
+      <button class="arrow left" id="prevBtn">‹</button>
+      <button class="arrow right" id="nextBtn">›</button>
+    </div>
+    <div class="dots" id="dots"></div>
   </div>
-  <div class="dots" id="dots"></div>
+
+  <div class="info-bar">
+    <div class="info-content" id="infoText">Loading...</div>
+  </div>
+
+  <div class="menu-frame">
+    <a class="menu-card" href="https://forgeplayid.github.io/desktop/diamond-lock/">
+      <img src="https://forgeplayid.github.io/assets/diamond-lock.png" class="menu-img" alt="Diamond Lock">
+      <p id="sell-dl">Sell Rp. -</p>
+      <p id="buy-dl">Buy Rp. -</p>
+    </a>
+
+    <a class="menu-card" href="https://forgeplayid.github.io/desktop/blue-gem-lock/">
+      <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" class="menu-img" alt="Blue Gem Lock">
+      <p id="sell-bgl">Sell Rp. -</p>
+    </a>
+  </div>
+
+  <div class="buy-frame">
+    <a class="buy-card" href="https://forgeplayid.github.io/desktop/buy/">
+      Mau jual DL & BGL? Langsung Ke Sini
+    </a>
+  </div>
+
+  <div class="content"></div>
 </div>
 
-<!-- INFO BAR -->
-<div class="info-bar">
-  <div class="info-content" id="infoText">Loading...</div>
-</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-title">METODE PEMBAYARAN</div>
 
-<!-- MENU -->
-<div class="menu-frame">
-  <a class="menu-card" href="https://forgeplayid.github.io/desktop/diamond-lock/">
-    <img src="https://forgeplayid.github.io/assets/diamond-lock.png" class="menu-img">
-    <p id="sell-dl">Sell Rp. -</p>
-    <p id="buy-dl">Buy Rp. -</p>
-  </a>
+    <div class="payment-slider">
+      <div class="payment-track">
+        <div class="payment-item"><div class="payment-logo logo-alfamart">Alfa<span class="red">mart</span><span class="yellow"></span></div></div>
+        <div class="payment-item"><div class="payment-logo small logo-danamon">Danamon</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-mandiri">mandiri<br>virtual account</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-atm-bca">ATM BCA</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bca">BCA</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-permata">PermataBank</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-sinarmas">Sinarmas</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bri">BRI</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bni">BNI</div></div>
+        <div class="payment-item"><div class="payment-logo logo-dana">DANA</div></div>
+        <div class="payment-item"><div class="payment-logo logo-ovo">OVO</div></div>
+        <div class="payment-item"><div class="payment-logo logo-gopay">GoPay</div></div>
 
-  <a class="menu-card" href="https://forgeplayid.github.io/desktop/blue-gem-lock/">
-    <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" class="menu-img">
-    <p id="sell-bgl">Sell Rp. -</p>
-  </a>
-</div>
+        <div class="payment-item"><div class="payment-logo logo-alfamart">Alfa<span class="red">mart</span><span class="yellow"></span></div></div>
+        <div class="payment-item"><div class="payment-logo small logo-danamon">Danamon</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-mandiri">mandiri<br>virtual account</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-atm-bca">ATM BCA</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bca">BCA</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-permata">PermataBank</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-sinarmas">Sinarmas</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bri">BRI</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bni">BNI</div></div>
+        <div class="payment-item"><div class="payment-logo logo-dana">DANA</div></div>
+        <div class="payment-item"><div class="payment-logo logo-ovo">OVO</div></div>
+        <div class="payment-item"><div class="payment-logo logo-gopay">GoPay</div></div>
+      </div>
+    </div>
 
-<!-- BUY -->
-<div class="buy-frame">
-  <a class="buy-card" href="https://forgeplayid.github.io/desktop/buy/">
-    Mau jual DL & BGL? Langsung Ke Sini
-  </a>
-</div>
+    <div class="social-links">
+      <a href="https://instagram.com/" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2A3 3 0 0 0 4 7v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zm5.25-3.75a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/></svg>
+      </a>
 
-<div class="content"></div>
+      <a href="https://tiktok.com/" target="_blank" aria-label="TikTok">
+        <svg viewBox="0 0 24 24"><path d="M14 3c.4 1.9 1.7 3.5 3.6 4.2.8.3 1.6.5 2.4.5v3a8.6 8.6 0 0 1-3-.6v5.7a6.1 6.1 0 1 1-6.1-6.1c.3 0 .7 0 1 .1v3.1a3.1 3.1 0 1 0 2 2.9V3h3.1z"/></svg>
+      </a>
 
-</div>
+      <a href="https://wa.me/" target="_blank" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 0 0 3.7 17.1L2 22l5-1.6A11 11 0 1 0 20.5 3.5zM12 20a8.8 8.8 0 0 1-4.5-1.2l-.3-.2-3 .9 1-2.9-.2-.3A8.9 8.9 0 1 1 12 20zm4.9-6.6c-.3-.2-1.7-.8-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7 0a7.4 7.4 0 0 1-2.2-1.4 8.3 8.3 0 0 1-1.5-1.9c-.2-.3 0-.5.1-.7l.5-.6a.7.7 0 0 0 .1-.7c-.1-.2-.7-1.8-.9-2.4s-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.1 3.1 0 0 0-1 2.3 5.4 5.4 0 0 0 1.2 2.9 12.5 12.5 0 0 0 4.8 4.2 10.7 10.7 0 0 0 1.6.6 3.8 3.8 0 0 0 1.8.1 2.9 2.9 0 0 0 1.9-1.4 2.3 2.3 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.4z"/></svg>
+      </a>
+    </div>
+
+    <div class="footer-copy">© 2026 ForgePlayID Top Up</div>
+  </div>
+</footer>
 
 <script>
-
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
 const INFO_URL = "https://script.google.com/macros/s/AKfycbyYY0pt19KzeSFfMf3udOpSBJxvQ1cR6MUtT3bmKUVQugW5KyO18MNem5INQRdsUZVVSw/exec";
 
@@ -285,15 +636,15 @@ function initSlider(){
   dots.innerHTML = "";
 
   slides.forEach((s,i)=>{
-    const a=document.createElement("a");
-    a.className="slide";
-    a.href=s.link;
-    a.innerHTML=`<img src="${s.img}">`;
+    const a = document.createElement("a");
+    a.className = "slide";
+    a.href = s.link;
+    a.innerHTML = `<img src="${s.img}" alt="Banner ${i+1}">`;
     track.appendChild(a);
 
-    const dot=document.createElement("div");
-    dot.className="dot"+(i===current?" active":"");
-    dot.onclick=()=>goTo(i);
+    const dot = document.createElement("div");
+    dot.className = "dot" + (i === current ? " active" : "");
+    dot.onclick = () => goTo(i);
     dots.appendChild(dot);
   });
 
@@ -301,20 +652,20 @@ function initSlider(){
 }
 
 function update(){
-  track.style.transform=`translateX(-${current*100}%)`;
+  track.style.transform = `translateX(-${current*100}%)`;
   document.querySelectorAll(".dot").forEach((d,i)=>{
-    d.classList.toggle("active", i===current);
+    d.classList.toggle("active", i === current);
   });
 }
 
-function next(){ current=(current+1)%slides.length; update(); }
-function prev(){ current=(current-1+slides.length)%slides.length; update(); }
-function goTo(i){ current=i; update(); }
+function next(){ current = (current + 1) % slides.length; update(); }
+function prev(){ current = (current - 1 + slides.length) % slides.length; update(); }
+function goTo(i){ current = i; update(); }
 
-document.getElementById("nextBtn").onclick=next;
-document.getElementById("prevBtn").onclick=prev;
+document.getElementById("nextBtn").onclick = next;
+document.getElementById("prevBtn").onclick = prev;
 
-setInterval(next,4000);
+setInterval(next, 4000);
 
 /* HARGA */
 function formatRupiah(a){
@@ -323,24 +674,24 @@ function formatRupiah(a){
 }
 
 async function loadHarga(){
-  const res = await fetch(SCRIPT_URL);
-  const data = await res.json();
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
 
-  document.getElementById("sell-dl").innerText="Sell "+formatRupiah(data.sell_dl);
-  document.getElementById("buy-dl").innerText="Buy "+formatRupiah(data.buy_dl);
-  document.getElementById("sell-bgl").innerText="Sell "+formatRupiah(data.sell_bgl);
+    document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(data.sell_dl);
+    document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(data.buy_dl);
+    document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(data.sell_bgl);
+  } catch (e) {
+    console.log("LOAD HARGA ERROR:", e);
+  }
 }
 
-/* 🔥 FIXED INFO LOADER */
+/* INFO */
 async function loadInfo(){
   try {
     const res = await fetch(INFO_URL + "?t=" + Date.now());
     const text = await res.text();
-
-    console.log("RAW INFO RESPONSE:", text);
-
     const data = JSON.parse(text);
-
     const el = document.getElementById("infoText");
 
     if(data && data.info){
@@ -348,7 +699,6 @@ async function loadInfo(){
     } else {
       el.innerText = "⚡ Info belum tersedia";
     }
-
   } catch(e){
     console.log("LOAD INFO ERROR:", e);
     document.getElementById("infoText").innerText = "❌ Gagal load info";
@@ -361,8 +711,7 @@ window.onload = ()=>{
   loadInfo();
 };
 
-setInterval(loadHarga,60000);
-
+setInterval(loadHarga, 60000);
 </script>
 
 </body>
