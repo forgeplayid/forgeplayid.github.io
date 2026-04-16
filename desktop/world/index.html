@@ -40,9 +40,9 @@ body {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  max-width:1100px; /* 🔥 dikit diperkecil */
+  max-width:1100px;
   margin:30px auto 10px auto;
-  padding:0 25px; /* 🔥 tambah jarak kiri kanan */
+  padding:0 25px;
 }
 
 .title-bar h1{
@@ -103,11 +103,11 @@ body {
   transform:translateX(22px);
 }
 
-/* 🔥 SELL WORLD BOX */
+/* SELL WORLD BOX */
 .sell-world-wrapper{
-  max-width:1100px; /* 🔥 diperkecil dikit */
+  max-width:1100px;
   margin:10px auto 20px auto;
-  padding:0 25px; /* 🔥 tambah jarak */
+  padding:0 25px;
 }
 
 .sell-world-box{
@@ -149,9 +149,9 @@ body {
 
 /* GRID */
 .container{
-  max-width:1100px; /* 🔥 diperkecil */
+  max-width:1100px;
   margin:10px auto 50px;
-  padding:0 25px; /* 🔥 tambah jarak */
+  padding:0 25px;
 }
 
 .world-grid{
@@ -302,7 +302,7 @@ body {
 </div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbxeNnRvtTbuacVFi1vX3fy1HvpKeEZgfJXKBGoh_13njwmY2y4hbR7E-WgsLhgBDr5YBA/exec";
+const API = "https://script.google.com/macros/s/AKfycbyP8YiC0cxjdVM_Fm94W342_R-yUZGE4S1FJYPwo4SO8VhBkksIIZkzMvGbz40i99NGfg/exec";
 
 const grid = document.getElementById("grid");
 const toggle = document.getElementById("sortToggle");
@@ -312,9 +312,24 @@ let rawData = [];
 toggle.addEventListener("change", render);
 
 async function loadWorlds(){
-  const res = await fetch(API);
-  rawData = await res.json();
-  render();
+  try {
+    const res = await fetch(API + "?action=list_world");
+    const result = await res.json();
+
+    if (!result || result.status !== "success" || !Array.isArray(result.data)) {
+      console.error("Response API tidak valid:", result);
+      rawData = [];
+      render();
+      return;
+    }
+
+    rawData = result.data;
+    render();
+  } catch (err) {
+    console.error("Gagal load world:", err);
+    rawData = [];
+    render();
+  }
 }
 
 function render(){
@@ -343,11 +358,11 @@ function render(){
 
     const el = document.createElement("div");
     el.className = "world-card";
-    el.dataset.id = item.name;
+    el.dataset.id = item.id || item.name;
 
     el.innerHTML = `
       <div class="world-image">
-        <img src="${item.image}" class="zoom-img">
+        <img src="${item.image}" class="zoom-img" alt="${item.name}">
       </div>
 
       <div class="world-desc">
@@ -360,7 +375,7 @@ function render(){
         isSold
         ? `<div class="buy-button" style="background:#ef4444;color:#020617;">SOLD</div>`
         : `<a class="buy-button" style="background:#22c55e;color:#020617"
-             href="https://wa.me/6285175215549?text=Saya%20ingin%20membeli%20world%20${encodeURIComponent(item.name)}">
+             href="https://wa.me/6285175215549?text=${encodeURIComponent("Saya ingin membeli world " + item.name)}">
              BUY WORLD
            </a>`
       }
@@ -370,6 +385,16 @@ function render(){
   });
 
   grid.innerHTML = "";
+
+  if (newEls.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;background:#1e293b;padding:20px;border-radius:12px;text-align:center;color:#cbd5f5;">
+        Belum ada world yang tersedia.
+      </div>
+    `;
+    return;
+  }
+
   newEls.forEach(el=>grid.appendChild(el));
 
   newEls.forEach(el=>{
