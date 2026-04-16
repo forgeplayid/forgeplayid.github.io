@@ -30,7 +30,10 @@ body { font-family: Arial; background:#020617; color:white; margin:0; }
   font-weight:bold;
 }
 
-.layout { display:flex; min-height:100vh; }
+.layout {
+  display:flex;
+  min-height:100vh;
+}
 
 .sidebar {
   width:180px;
@@ -53,13 +56,21 @@ body { font-family: Arial; background:#020617; color:white; margin:0; }
 
 .menu:hover { background:#38bdf8; color:#020617; }
 
-.content { flex:1; padding:20px; }
+.content {
+  flex:1;
+  padding:22px 28px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
 
 .card {
+  width:100%;
+  max-width:920px;
   background:#1e293b;
   padding:20px;
-  border-radius:10px;
-  max-width:860px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.22);
 }
 
 .label {
@@ -320,6 +331,10 @@ small {
 }
 
 @media(max-width:768px){
+  .content {
+    padding:16px;
+  }
+
   .world-item {
     flex-direction:column;
   }
