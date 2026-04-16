@@ -7,7 +7,6 @@
 <title>Admin Panel</title>
 
 <style>
-
 html, body {
   height: 100%;
 }
@@ -17,6 +16,10 @@ body {
   background: #020617;
   color: white;
   margin: 0;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 .header {
@@ -50,6 +53,7 @@ body {
   border-right:1px solid #1e293b;
   padding:15px 10px;
   min-height:100vh;
+  flex-shrink: 0;
 }
 
 .menu {
@@ -62,22 +66,81 @@ body {
   border-radius:6px;
 }
 
-.content { flex:1; padding:30px; }
+.menu:hover {
+  background:#38bdf8;
+  color:#020617;
+}
 
-table { width:100%; border-collapse:collapse; }
+.content {
+  flex:1;
+  padding:30px;
+}
+
+.card {
+  background:#1e293b;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+.page-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+
+.page-head h2 {
+  margin:0;
+  color:#38bdf8;
+}
+
+.summary-chip {
+  padding:8px 12px;
+  border-radius:10px;
+  background:#0f172a;
+  border:1px solid rgba(56,189,248,0.18);
+  color:#cbd5e1;
+  font-size:13px;
+}
+
+.table-wrap {
+  overflow:auto;
+  border-radius:12px;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width: 820px;
+}
 
 th, td {
   border:1px solid #1e293b;
-  padding:6px;
+  padding:8px;
   text-align:center;
 }
 
+th {
+  background:#0f172a;
+  color:#cbd5e1;
+  font-size:13px;
+}
+
+td {
+  background:#111827;
+}
+
 input {
-  width:90%;
-  background:#334155;
+  width:100%;
   border:none;
   color:white;
   text-align:center;
+  border-radius:6px;
+  padding:10px 8px;
+  background:#334155;
 }
 
 input.editable {
@@ -85,12 +148,30 @@ input.editable {
   color:black;
 }
 
+input.locked {
+  background:#0f172a;
+  color:#cbd5e1;
+  cursor:not-allowed;
+}
+
+input.profit-field {
+  background:#0f172a;
+  color:#7dd3fc;
+  font-weight:700;
+}
+
 .sort-box{
-  padding:6px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:80px;
+  padding:8px 10px;
   border:1px solid #38bdf8;
   border-radius:8px;
   color:#38bdf8;
   cursor:pointer;
+  font-weight:700;
+  background:#0f172a;
 }
 
 .sort-box.sold{
@@ -107,18 +188,24 @@ input.editable {
   gap:10px;
 }
 
-button {
-  padding:10px;
-  margin-right:8px;
-  border:none;
-  cursor:pointer;
-  border-radius:5px;
+.action-left {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
 }
 
-#editBtn { background:orange; }
-#updateBtn { background:limegreen; display:none; }
-#addBtn { background:#3b82f6; color:white; }
-#removeBtn { background:#ef4444; color:white; }
+button {
+  padding:10px 14px;
+  border:none;
+  cursor:pointer;
+  border-radius:8px;
+  font-weight:700;
+}
+
+#editBtn { background:orange; color:#111827; }
+#updateBtn { background:limegreen; color:#111827; display:none; }
+#cancelBtn { background:#475569; color:#fff; display:none; }
 
 #msg{
   margin-top:10px;
@@ -127,21 +214,85 @@ button {
   font-weight:600;
 }
 
-.convert{
-  margin-top:20px;
-  background:#0f172a;
-  padding:15px;
-  border-radius:10px;
+.convert-card{
+  margin-top:22px;
+  background:linear-gradient(180deg, #101827, #0f172a);
+  padding:18px;
+  border-radius:14px;
+  border:1px solid #22314a;
+}
+
+.convert-title{
+  margin:0 0 14px 0;
+  color:#38bdf8;
+  font-size:16px;
+}
+
+.convert-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap:14px;
 }
 
 .convert-item{
-  margin-top:10px;
+  background:#111827;
+  border:1px solid #22314a;
+  border-radius:12px;
+  padding:14px;
 }
 
-.convert input{
-  width:120px;
+.convert-item label{
+  display:block;
+  margin-bottom:8px;
+  font-size:13px;
+  color:#7dd3fc;
+  font-weight:700;
+}
+
+.convert-input-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.convert-item input{
+  width:140px;
   background:white;
   color:black;
+  text-align:center;
+}
+
+.convert-result{
+  color:#e2e8f0;
+  font-weight:700;
+  line-height:1.5;
+}
+
+.convert-note{
+  margin-top:14px;
+  font-size:12px;
+  color:#94a3b8;
+}
+
+tfoot td {
+  background:#0f172a;
+  font-weight:700;
+}
+
+@media(max-width:900px){
+  .convert-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:768px){
+  .content {
+    padding:16px;
+  }
+
+  .header {
+    padding:15px 20px;
+  }
 }
 </style>
 </head>
@@ -150,16 +301,16 @@ button {
 
 <div class="header">
   <div class="logo">
-    <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
+    <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="ForgePlayID">
   </div>
   <div class="header-right">
-    <a href="#">Log Out</a>
+    <a href="#" id="logoutBtn">Log Out</a>
   </div>
 </div>
 
 <div class="layout">
 
-<div class="sidebar">
+  <div class="sidebar">
     <a href="https://forgeplayid.github.io/panel/dashboard.html" class="menu">Dashboard</a>
     <a href="https://forgeplayid.github.io/panel/price.html" class="menu">List Harga</a>
     <a href="https://forgeplayid.github.io/panel/world.html" class="menu">List World</a>
@@ -167,80 +318,104 @@ button {
     <a href="https://forgeplayid.github.io/panel/data.html" class="menu">Data</a>
   </div>
 
-<div class="content">
+  <div class="content">
+    <div class="card">
+      <div class="page-head">
+        <h2>Data World</h2>
+        <div class="summary-chip">SELL otomatis dikonversi ke WL dari List World</div>
+      </div>
 
-<h2>Data World</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>WORLD</th>
+              <th>BUY (WL)</th>
+              <th>SELL (WL)</th>
+              <th>NEGO (WL)</th>
+              <th>PROFIT (WL)</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
 
-<table>
-<thead>
-<tr>
-<th>World</th>
-<th>Description</th>
-<th>BUY</th>
-<th>SELL</th>
-<th>NEGO</th>
-<th>PROFIT</th>
-<th>STATUS</th>
-</tr>
-</thead>
+          <tbody id="tableBody"></tbody>
 
-<tbody id="tableBody"></tbody>
+          <tfoot>
+            <tr>
+              <td>TOTAL</td>
+              <td id="totalBuy">0</td>
+              <td id="totalSell">0</td>
+              <td id="totalNego">0</td>
+              <td id="totalProfit">0</td>
+              <td>-</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
-<tfoot>
-<tr>
-<td colspan="2">TOTAL</td>
-<td id="totalBuy">0</td>
-<td id="totalSell">0</td>
-<td id="totalNego">0</td>
-<td id="totalProfit">0</td>
-<td>-</td>
-</tr>
-</tfoot>
-</table>
+      <div class="action-bar">
+        <div>
+          <div class="action-left">
+            <button id="editBtn">EDIT</button>
+            <button id="updateBtn">UPDATE</button>
+            <button id="cancelBtn">BATAL</button>
+          </div>
+          <div id="msg"></div>
+        </div>
 
-<div class="action-bar">
+        <div>
+          Format Profit: <b id="format">0 DL / 0 WL</b>
+        </div>
+      </div>
+    </div>
 
-<div>
-<button id="editBtn">EDIT</button>
-<button id="updateBtn">UPDATE</button>
-<button id="addBtn">+</button>
-<button id="removeBtn">-</button>
+    <div class="convert-card">
+      <h3 class="convert-title">Converter Growtopia</h3>
 
-<div id="msg"></div>
-</div>
+      <div class="convert-grid">
+        <div class="convert-item">
+          <label>WL ke DL</label>
+          <div class="convert-input-row">
+            <input id="wlInput" placeholder="0">
+            <div class="convert-result">WL = <span id="wlToDl">0</span> DL</div>
+          </div>
+        </div>
 
-<div>
-Format DL/WL: <b id="format">0 DL / 0 WL</b>
-</div>
+        <div class="convert-item">
+          <label>DL ke WL</label>
+          <div class="convert-input-row">
+            <input id="dlInput" placeholder="0">
+            <div class="convert-result">DL = <span id="dlToWl">0</span> WL</div>
+          </div>
+        </div>
 
-</div>
+        <div class="convert-item">
+          <label>DL ke BGL</label>
+          <div class="convert-input-row">
+            <input id="dlBglInput" placeholder="0">
+            <div class="convert-result">DL = <span id="dlToBgl">0</span> BGL</div>
+          </div>
+        </div>
 
-<div class="convert">
-<b>CONVERT :</b>
+        <div class="convert-item">
+          <label>BGL ke WL</label>
+          <div class="convert-input-row">
+            <input id="bglInput" placeholder="0">
+            <div class="convert-result">BGL = <span id="bglToWl">0</span> WL</div>
+          </div>
+        </div>
+      </div>
 
-<div class="convert-item">
-<input id="wlInput"> WL = <span id="wlToDl">0</span> DL
-</div>
-
-<div class="convert-item">
-<input id="dlInput"> DL = <span id="dlToWl">0</span> WL
-</div>
-
-<div class="convert-item">
-<input id="dlBglInput"> DL = <span id="dlToBgl">0</span> BGL
-</div>
-
-<div class="convert-item">
-<input id="bglInput"> BGL = <span id="bglToWl">0</span> WL
-</div>
-
-</div>
-
-</div>
+      <div class="convert-note">
+        Konversi yang dipakai: 100 WL = 1 DL, 100 DL = 1 BGL.
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyxM6gjh2JPi1BENAndUPEJ6ireXJjdh-rM8sSPz36lfdxuMVoo080ucMWYdLkbVrduWw/exec";
+const WORLD_API = "https://script.google.com/macros/s/AKfycbz2723jBTnI7pgcaIH946LoS_LzKwRLgfjUxipHvUAeu34Y0jXWGD2lMB59wHxhzWlPEQ/exec";
+const DATA_API = "https://script.google.com/macros/s/AKfycbyxM6gjh2JPi1BENAndUPEJ6ireXJjdh-rM8sSPz36lfdxuMVoo080ucMWYdLkbVrduWw/exec";
 
 const tbody = document.getElementById("tableBody");
 const msg = document.getElementById("msg");
@@ -251,7 +426,12 @@ const totalNegoEl = document.getElementById("totalNego");
 const totalProfitEl = document.getElementById("totalProfit");
 const formatEl = document.getElementById("format");
 
+const editBtn = document.getElementById("editBtn");
+const updateBtn = document.getElementById("updateBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+
 let editMode = false;
+let mergedRows = [];
 
 function showMsg(text, ok=true){
   msg.innerText = (ok ? "✅ " : "❌ ") + text;
@@ -260,144 +440,260 @@ function showMsg(text, ok=true){
 }
 
 function formatNumber(n){
-  return (n||0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+  return (n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
 }
+
 function parseNumber(v){
-  return parseInt((v||"").replace(/\./g,""))||0;
+  return parseInt(String(v || "").replace(/[^\d]/g,""), 10) || 0;
+}
+
+function convertToWL(price, currency){
+  const p = parseNumber(price);
+  const c = String(currency || "").trim().toUpperCase();
+
+  if (c === "BGL") return p * 10000;
+  if (c === "DL") return p * 100;
+  return p;
+}
+
+function keyWorld(name){
+  return String(name || "").trim().toUpperCase();
+}
+
+async function fetchJson(url){
+  const res = await fetch(url);
+  return await res.json();
+}
+
+async function syncMissingWorlds(worldRows, dataRows){
+  const dataMap = new Map(
+    (dataRows || []).map(row => [keyWorld(row.world), row])
+  );
+
+  const missing = worldRows.filter(w => !dataMap.has(keyWorld(w.name)));
+
+  for (const w of missing) {
+    await fetch(DATA_API, {
+      method:"POST",
+      headers:{"Content-Type":"text/plain"},
+      body:JSON.stringify({
+        action:"add",
+        world:w.name,
+        description:"",
+        buy:0,
+        sell:convertToWL(w.price, w.currency),
+        nego:0,
+        status:w.status || "READY"
+      })
+    });
+  }
+
+  return missing.length;
 }
 
 async function loadData(){
-  const res = await fetch(API_URL);
-  const data = await res.json();
+  try{
+    const [worldResult, dataResult] = await Promise.all([
+      fetchJson(WORLD_API + "?action=list_world"),
+      fetchJson(DATA_API)
+    ]);
 
+    const worldRows = (worldResult && worldResult.status === "success" && Array.isArray(worldResult.data))
+      ? worldResult.data
+      : [];
+
+    const dataRows = Array.isArray(dataResult) ? dataResult : [];
+
+    await syncMissingWorlds(worldRows, dataRows);
+
+    const latestDataResult = await fetchJson(DATA_API);
+    const latestDataRows = Array.isArray(latestDataResult) ? latestDataResult : [];
+
+    const dataMap = new Map(
+      latestDataRows.map(row => [keyWorld(row.world), row])
+    );
+
+    mergedRows = worldRows.map(world => {
+      const existing = dataMap.get(keyWorld(world.name)) || {};
+      return {
+        id: existing.id || "",
+        world: world.name || "",
+        buy: parseNumber(existing.buy),
+        sell: convertToWL(world.price, world.currency),
+        nego: parseNumber(existing.nego),
+        status: String(existing.status || world.status || "READY").toUpperCase()
+      };
+    });
+
+    renderRows();
+    calculate();
+  } catch (e) {
+    showMsg("Gagal load data: " + e.message, false);
+  }
+}
+
+function renderRows(){
   tbody.innerHTML = "";
 
-  data.forEach(r=>{
+  mergedRows.forEach(r => {
     const tr = document.createElement("tr");
-    tr.dataset.id = r.id;
+    tr.dataset.id = r.id || "";
+    tr.dataset.world = r.world || "";
 
     tr.innerHTML = `
-      <td><input value="${r.world||""}" disabled></td>
-      <td><input value="${r.description||""}" disabled></td>
+      <td><input class="locked" value="${escapeHtmlAttr(r.world || "")}" disabled></td>
       <td><input value="${formatNumber(r.buy)}" disabled></td>
-      <td><input value="${formatNumber(r.sell)}" disabled></td>
+      <td><input class="locked" value="${formatNumber(r.sell)}" disabled></td>
       <td><input value="${formatNumber(r.nego)}" disabled></td>
-      <td><input value="" disabled></td>
-      <td><div class="sort-box ${r.status==='SOLD'?'sold':''}">${r.status||'READY'}</div></td>
+      <td><input class="profit-field" value="" disabled></td>
+      <td><div class="sort-box ${r.status === 'SOLD' ? 'sold' : ''}">${r.status || 'READY'}</div></td>
     `;
 
     tbody.appendChild(tr);
   });
 
-  calculate();
+  setEditableState();
 }
 
-/* 🔥 FIX DISINI */
+function setEditableState(){
+  document.querySelectorAll("tbody tr").forEach(row => {
+    const inputs = row.querySelectorAll("input");
+
+    inputs.forEach((input, idx) => {
+      // 0 = WORLD (locked), 1 = BUY (editable), 2 = SELL (locked), 3 = NEGO (editable), 4 = PROFIT (locked)
+      const editable = editMode && (idx === 1 || idx === 3);
+
+      input.disabled = !editable;
+      input.classList.remove("editable");
+
+      if (editable) {
+        input.classList.add("editable");
+      }
+    });
+  });
+
+  updateBtn.style.display = editMode ? "inline-block" : "none";
+  cancelBtn.style.display = editMode ? "inline-block" : "none";
+}
+
 function calculate(){
-let buy=0,sell=0,nego=0;
+  let buy = 0, sell = 0, nego = 0;
 
-document.querySelectorAll("tbody tr").forEach(r=>{
+  document.querySelectorAll("tbody tr").forEach(r => {
+    const b = parseNumber(r.children[1].children[0].value);
+    const s = parseNumber(r.children[2].children[0].value);
+    const n = parseNumber(r.children[3].children[0].value);
 
-  let b = parseNumber(r.children[2].children[0].value);
-  let s = parseNumber(r.children[3].children[0].value);
-  let n = parseNumber(r.children[4].children[0].value);
+    buy += b;
+    sell += s;
+    nego += n;
 
-  if(b === 0 && s === 0 && n === 0){
-    r.children[5].children[0].value = "";
-    return;
+    const profit = s - b - n;
+    r.children[4].children[0].value = formatNumber(profit);
+  });
+
+  const totalProfit = sell - buy - nego;
+
+  totalBuyEl.innerText = formatNumber(buy);
+  totalSellEl.innerText = formatNumber(sell);
+  totalNegoEl.innerText = formatNumber(nego);
+  totalProfitEl.innerText = formatNumber(totalProfit);
+
+  const dl = Math.floor(totalProfit / 100);
+  const wl = totalProfit % 100;
+  formatEl.innerText = dl + " DL / " + wl + " WL";
+}
+
+editBtn.onclick = () => {
+  editMode = true;
+  setEditableState();
+};
+
+cancelBtn.onclick = async () => {
+  editMode = false;
+  await loadData();
+};
+
+updateBtn.onclick = async () => {
+  updateBtn.disabled = true;
+  updateBtn.innerText = "Saving...";
+
+  try {
+    const rows = [...tbody.querySelectorAll("tr")];
+
+    for (const tr of rows) {
+      await fetch(DATA_API, {
+        method:"POST",
+        headers:{"Content-Type":"text/plain"},
+        body:JSON.stringify({
+          action:"update",
+          id: tr.dataset.id,
+          world: tr.dataset.world,
+          description:"",
+          buy: parseNumber(tr.children[1].children[0].value),
+          sell: parseNumber(tr.children[2].children[0].value),
+          nego: parseNumber(tr.children[3].children[0].value),
+          status: tr.children[5].children[0].innerText
+        })
+      });
+    }
+
+    showMsg("Data berhasil diupdate", true);
+    editMode = false;
+    await loadData();
+  } catch(e) {
+    showMsg("Gagal update: " + e.message, false);
   }
 
-  buy += b;
-  sell += s;
-  nego += n;
+  updateBtn.disabled = false;
+  updateBtn.innerText = "UPDATE";
+};
 
-  let profit = s - b - n;
-  r.children[5].children[0].value = formatNumber(profit);
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("sort-box") && editMode) {
+    e.target.classList.toggle("sold");
+    e.target.innerText = e.target.classList.contains("sold") ? "SOLD" : "READY";
+  }
 });
 
-let totalProfit = sell - buy - nego;
-
-totalBuyEl.innerText = formatNumber(buy);
-totalSellEl.innerText = formatNumber(sell);
-totalNegoEl.innerText = formatNumber(nego);
-totalProfitEl.innerText = formatNumber(totalProfit);
-
-let dl = Math.floor(totalProfit/100);
-let wl = totalProfit%100;
-formatEl.innerText = dl + " DL / " + wl + " WL";
-}
-
-/* sisanya tetap */
-editBtn.onclick = ()=>{ editMode=true; updateBtn.style.display="inline-block";
-document.querySelectorAll("tbody tr").forEach(row=>{
-row.querySelectorAll("input").forEach((input, idx)=>{
-if(idx===5)return; input.disabled=false; input.classList.add("editable");
-});});};
-
-updateBtn.onclick = async ()=>{
-updateBtn.disabled=true; updateBtn.innerText="Saving...";
-try{
-const rows=[...tbody.querySelectorAll("tr")];
-for(let tr of rows){
-await fetch(API_URL,{method:"POST",body:JSON.stringify({
-action:"update",
-id: tr.dataset.id,
-world: tr.children[0].children[0].value,
-description: tr.children[1].children[0].value,
-buy: parseNumber(tr.children[2].children[0].value),
-sell: parseNumber(tr.children[3].children[0].value),
-nego: parseNumber(tr.children[4].children[0].value),
-status: tr.children[6].children[0].innerText
-})});
-}
-showMsg("Data berhasil diupdate",true);
-updateBtn.style.display="none"; editMode=false; loadData();
-}catch(e){showMsg("Gagal update: "+e.message,false);}
-updateBtn.disabled=false; updateBtn.innerText="UPDATE";
-};
-
-addBtn.onclick = async ()=>{
-await fetch(API_URL,{method:"POST",body:JSON.stringify({
-action:"add",world:"",description:"",buy:0,sell:0,nego:0,status:"READY"
-})});
-loadData();
-};
-
-removeBtn.onclick = async ()=>{
-const last=tbody.lastChild; if(!last)return;
-await fetch(API_URL,{method:"POST",body:JSON.stringify({
-action:"delete",id:last.dataset.id
-})});
-loadData();
-};
-
-document.addEventListener("click",e=>{
-if(e.target.classList.contains("sort-box") && editMode){
-e.target.classList.toggle("sold");
-e.target.innerText=e.target.classList.contains("sold")?"SOLD":"READY";
-}});
-
-document.addEventListener("input",e=>{
-if(e.target.tagName==="INPUT"){
-let col=e.target.parentElement.cellIndex;
-if(col>=2 && col<=4){
-let val=parseNumber(e.target.value);
-e.target.value=formatNumber(val);
-calculate();
-}}});
-
-function bind(input,cb){
-input.addEventListener("input",()=>{
-let val=parseNumber(input.value);
-input.value=formatNumber(val);
-cb(val);
+document.addEventListener("input", e => {
+  if (e.target.tagName === "INPUT") {
+    const col = e.target.parentElement.cellIndex;
+    if (col === 1 || col === 3) {
+      const val = parseNumber(e.target.value);
+      e.target.value = formatNumber(val);
+      calculate();
+    }
+  }
 });
+
+function bind(input, cb){
+  input.addEventListener("input", () => {
+    const val = parseNumber(input.value);
+    input.value = formatNumber(val);
+    cb(val);
+  });
 }
 
-bind(wlInput,v=>wlToDl.innerText=formatNumber(v/100));
-bind(dlInput,v=>dlToWl.innerText=formatNumber(v*100));
-bind(dlBglInput,v=>dlToBgl.innerText=formatNumber(v/100));
-bind(bglInput,v=>bglToWl.innerText=formatNumber(v*100*100));
+function escapeHtmlAttr(str){
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+bind(wlInput, v => wlToDl.innerText = formatNumber(v / 100));
+bind(dlInput, v => dlToWl.innerText = formatNumber(v * 100));
+bind(dlBglInput, v => dlToBgl.innerText = formatNumber(v / 100));
+bind(bglInput, v => bglToWl.innerText = formatNumber(v * 100 * 100));
+
+document.getElementById("logoutBtn").onclick = e => {
+  e.preventDefault();
+  localStorage.removeItem("admin_login");
+  window.location.href = "https://forgeplayid.github.io/panel/login.html";
+};
 
 loadData();
 </script>
