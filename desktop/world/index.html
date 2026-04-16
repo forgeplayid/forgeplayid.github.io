@@ -166,7 +166,6 @@ body {
   border-radius:12px;
   overflow:hidden;
   box-shadow:0 6px 15px rgba(0,0,0,0.3);
-
   display:flex;
   flex-direction:column;
   height:100%;
@@ -194,6 +193,21 @@ body {
   font-size:14px;
   color:#cbd5f5;
   flex:1;
+}
+
+.world-title{
+  display:block;
+  margin-bottom:8px;
+}
+
+.price-line{
+  margin-top:10px;
+  font-weight:700;
+  color:#f8fafc;
+}
+
+.price-highlight{
+  color:#38bdf8;
 }
 
 /* BUTTON */
@@ -311,6 +325,16 @@ let rawData = [];
 
 toggle.addEventListener("change", render);
 
+function normalizePrice(value){
+  return parseInt(String(value || "").replace(/[^\d]/g, ""), 10) || 0;
+}
+
+function normalizeCurrency(value){
+  const v = String(value || "").trim().toUpperCase();
+  if (v === "WL" || v === "DL" || v === "BGL") return v;
+  return "DL";
+}
+
 async function loadWorlds(){
   try {
     const res = await fetch(API + "?action=list_world");
@@ -355,6 +379,8 @@ function render(){
     if(!item.name) return;
 
     const isSold = (item.status||"").toUpperCase()==="SOLD";
+    const price = normalizePrice(item.price);
+    const currency = normalizeCurrency(item.currency);
 
     const el = document.createElement("div");
     el.className = "world-card";
@@ -366,16 +392,17 @@ function render(){
       </div>
 
       <div class="world-desc">
-        <strong>WORLD: ${item.name}</strong>
+        <strong class="world-title">WORLD: ${item.name}</strong>
         <p class="${isSold?'status-sold':'status-ready'}">${item.status||"READY"}</p>
         <p>${item.desc ? item.desc.replace(/\n/g,"<br>") : ""}</p>
+        <p class="price-line">HARGA <span class="price-highlight">${price} ${currency}</span></p>
       </div>
 
       ${
         isSold
         ? `<div class="buy-button" style="background:#ef4444;color:#020617;">SOLD</div>`
         : `<a class="buy-button" style="background:#22c55e;color:#020617"
-             href="https://wa.me/6285175215549?text=${encodeURIComponent("Saya ingin membeli world " + item.name)}">
+             href="https://wa.me/6285175215549?text=${encodeURIComponent("Saya ingin membeli world " + item.name + " dengan harga " + price + " " + currency)}">
              BUY WORLD
            </a>`
       }
