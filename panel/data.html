@@ -169,7 +169,7 @@ input.profit-field {
   border:1px solid #38bdf8;
   border-radius:8px;
   color:#38bdf8;
-  cursor:pointer;
+  cursor:default;
   font-weight:700;
   background:#0f172a;
 }
@@ -322,7 +322,7 @@ tfoot td {
     <div class="card">
       <div class="page-head">
         <h2>Data World</h2>
-        <div class="summary-chip">SELL otomatis dikonversi ke WL dari List World</div>
+        <div class="summary-chip">SELL dan STATUS otomatis ikut dari List World</div>
       </div>
 
       <div class="table-wrap">
@@ -521,7 +521,7 @@ async function loadData(){
         buy: parseNumber(existing.buy),
         sell: convertToWL(world.price, world.currency),
         nego: parseNumber(existing.nego),
-        status: String(existing.status || world.status || "READY").toUpperCase()
+        status: String(world.status || "READY").toUpperCase()
       };
     });
 
@@ -539,6 +539,7 @@ function renderRows(){
     const tr = document.createElement("tr");
     tr.dataset.id = r.id || "";
     tr.dataset.world = r.world || "";
+    tr.dataset.status = r.status || "READY";
 
     tr.innerHTML = `
       <td><input class="locked" value="${escapeHtmlAttr(r.world || "")}" disabled></td>
@@ -570,6 +571,9 @@ function setEditableState(){
         input.classList.add("editable");
       }
     });
+
+    const statusBox = row.children[5].children[0];
+    statusBox.style.cursor = "default";
   });
 
   updateBtn.style.display = editMode ? "inline-block" : "none";
@@ -633,7 +637,7 @@ updateBtn.onclick = async () => {
           buy: parseNumber(tr.children[1].children[0].value),
           sell: parseNumber(tr.children[2].children[0].value),
           nego: parseNumber(tr.children[3].children[0].value),
-          status: tr.children[5].children[0].innerText
+          status: tr.dataset.status || "READY"
         })
       });
     }
@@ -648,13 +652,6 @@ updateBtn.onclick = async () => {
   updateBtn.disabled = false;
   updateBtn.innerText = "UPDATE";
 };
-
-document.addEventListener("click", e => {
-  if (e.target.classList.contains("sort-box") && editMode) {
-    e.target.classList.toggle("sold");
-    e.target.innerText = e.target.classList.contains("sold") ? "SOLD" : "READY";
-  }
-});
 
 document.addEventListener("input", e => {
   if (e.target.tagName === "INPUT") {
