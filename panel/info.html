@@ -77,16 +77,16 @@ body {
 
 .main-wrap {
   width:100%;
-  max-width:920px;
+  max-width:1020px;
 }
 
 .card {
   width:100%;
-  max-width:760px;
   background:#1e293b;
   padding:24px;
   border-radius:12px;
   box-shadow:0 10px 30px rgba(0,0,0,0.22);
+  margin-bottom:18px;
 }
 
 .card-header {
@@ -116,24 +116,28 @@ body {
 }
 
 .field-wrap {
-  max-width:640px;
+  max-width:680px;
 }
 
-textarea {
+textarea,
+input {
   width:100%;
-  min-height:170px;
   padding:12px;
   border:none;
   border-radius:8px;
   font-size:14px;
   background:white;
   color:black;
+}
+
+textarea {
+  min-height:160px;
   resize: vertical;
   line-height:1.5;
 }
 
 .button-wrap {
-  max-width:640px;
+  max-width:680px;
   margin-top:8px;
 }
 
@@ -152,8 +156,26 @@ button:hover {
   background:#0ea5e5;
 }
 
+button.secondary {
+  background:#475569;
+  color:white;
+}
+
+button.secondary:hover {
+  background:#64748b;
+}
+
+button.danger {
+  background:#ef4444;
+  color:white;
+}
+
+button.danger:hover {
+  background:#dc2626;
+}
+
 .status-wrap {
-  max-width:640px;
+  max-width:680px;
 }
 
 small {
@@ -164,8 +186,108 @@ small {
   font-size:13px;
 }
 
-.empty-space {
-  height:260px;
+.slider-toolbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+
+.slider-toolbar-left {
+  color:#94a3b8;
+  font-size:13px;
+}
+
+.slider-toolbar-right {
+  width:220px;
+}
+
+.slider-grid {
+  display:grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap:16px;
+}
+
+.slider-box {
+  background:#111827;
+  border:1px solid #263449;
+  border-radius:12px;
+  padding:16px;
+}
+
+.slider-box-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.slider-box-head h3 {
+  margin:0;
+  color:#7dd3fc;
+  font-size:15px;
+}
+
+.order-badge {
+  padding:4px 8px;
+  border-radius:999px;
+  background:#0f172a;
+  border:1px solid #22314a;
+  color:#cbd5e1;
+  font-size:12px;
+  font-weight:700;
+}
+
+.slider-preview {
+  width:100%;
+  aspect-ratio: 16 / 9;
+  border-radius:10px;
+  overflow:hidden;
+  background:#0b1220;
+  border:1px solid #22314a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:12px;
+}
+
+.slider-preview img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:none;
+}
+
+.slider-preview span {
+  color:#64748b;
+  font-size:12px;
+  text-align:center;
+  padding:10px;
+}
+
+.slider-actions {
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:8px;
+  margin-top:12px;
+}
+
+.empty-slider {
+  padding:30px 18px;
+  text-align:center;
+  color:#94a3b8;
+  border:1px dashed #334155;
+  border-radius:12px;
+  background:#111827;
+}
+
+@media(max-width:1100px){
+  .slider-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media(max-width:768px){
@@ -177,18 +299,14 @@ small {
     padding:16px;
   }
 
-  .card {
-    max-width:100%;
-  }
-
   .field-wrap,
   .button-wrap,
   .status-wrap {
     max-width:100%;
   }
 
-  .empty-space {
-    height:180px;
+  .slider-toolbar-right {
+    width:100%;
   }
 }
 </style>
@@ -226,8 +344,9 @@ if (localStorage.getItem("admin_login") !== "true") {
 
   <div class="content">
     <div class="main-wrap">
-      <div class="card">
 
+      <!-- RUNNING INFO -->
+      <div class="card">
         <div class="card-header">
           <h2>EDIT RUNNING INFO</h2>
           <p>Kelola teks pengumuman yang tampil berjalan di website.</p>
@@ -243,82 +362,330 @@ if (localStorage.getItem("admin_login") !== "true") {
         </div>
 
         <div class="status-wrap">
-          <small id="msg"></small>
+          <small id="infoMsg"></small>
         </div>
-
       </div>
 
-      <div class="empty-space"></div>
+      <!-- SLIDER MANAGER -->
+      <div class="card">
+        <div class="card-header">
+          <h2>SLIDER MANAGER</h2>
+          <p>Tambah, update, hapus, dan susun urutan slider website.</p>
+        </div>
+
+        <div class="slider-toolbar">
+          <div class="slider-toolbar-left">
+            Urutan slider mengikuti posisi card dari atas ke bawah.
+          </div>
+          <div class="slider-toolbar-right">
+            <button onclick="addSlider()">+ TAMBAH SLIDER</button>
+          </div>
+        </div>
+
+        <div id="sliderList" class="slider-grid"></div>
+
+        <div class="status-wrap" style="max-width:none;">
+          <small id="sliderMsg"></small>
+        </div>
+      </div>
+
     </div>
   </div>
 
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYY0pt19KzeSFfMf3udOpSBJxvQ1cR6MUtT3bmKUVQugW5KyO18MNem5INQRdsUZVVSw/exec";
+const INFO_URL = "https://script.google.com/macros/s/AKfycbyYY0pt19KzeSFfMf3udOpSBJxvQ1cR6MUtT3bmKUVQugW5KyO18MNem5INQRdsUZVVSw/exec";
+const SLIDER_URL = "https://script.google.com/macros/s/AKfycbzD8L_MBr3Ph_wHEBU5TxNKGLTPdne_Wf0h4hhCCbd9Hy0_1_gNJoB_46B0R-KMvT-tDA/exec";
 
-const msg = document.getElementById("msg");
+const infoMsg = document.getElementById("infoMsg");
+const sliderMsg = document.getElementById("sliderMsg");
+const sliderList = document.getElementById("sliderList");
 
-/* ================= LOAD ================= */
+/* ================= INFO ================= */
 async function loadInfo() {
   try {
-    const res = await fetch(SCRIPT_URL + "?t=" + Date.now());
+    const res = await fetch(INFO_URL + "?t=" + Date.now());
     const data = await res.json();
-
     document.getElementById("infoInput").value = data.info || "";
-
   } catch (e) {
-    console.log("LOAD ERROR:", e);
-    msg.style.color = "#ef4444";
-    msg.innerText = "❌ gagal load";
+    console.log("LOAD INFO ERROR:", e);
+    infoMsg.style.color = "#ef4444";
+    infoMsg.innerText = "❌ gagal load info";
   }
 }
 
-/* ================= UPDATE ================= */
 async function updateInfo() {
-
   const val = document.getElementById("infoInput").value.trim();
 
   if (!val) {
-    msg.style.color = "#ef4444";
-    msg.innerText = "❌ tidak boleh kosong";
+    infoMsg.style.color = "#ef4444";
+    infoMsg.innerText = "❌ tidak boleh kosong";
     return;
   }
 
   try {
-
-    const res = await fetch(SCRIPT_URL, {
+    const res = await fetch(INFO_URL, {
       method: "POST",
-      body: new URLSearchParams({
-        info: val
-      })
+      body: new URLSearchParams({ info: val })
     });
 
     const data = await res.json();
-    console.log("POST RESULT:", data);
+    console.log("POST INFO RESULT:", data);
 
-    msg.style.color = "#22c55e";
-    msg.innerText = "✅ berhasil update";
-
+    infoMsg.style.color = "#22c55e";
+    infoMsg.innerText = "✅ berhasil update info";
     loadInfo();
-
   } catch (e) {
     console.log(e);
-    msg.style.color = "#ef4444";
-    msg.innerText = "❌ gagal koneksi";
+    infoMsg.style.color = "#ef4444";
+    infoMsg.innerText = "❌ gagal koneksi";
   }
 
-  setTimeout(()=>msg.innerText="",4000);
+  setTimeout(() => infoMsg.innerText = "", 4000);
 }
 
-/* LOGOUT */
-document.getElementById("logoutBtn").onclick = (e)=>{
+/* ================= SLIDER ================= */
+function showSliderMsg(text, ok = true){
+  sliderMsg.style.color = ok ? "#22c55e" : "#ef4444";
+  sliderMsg.innerText = (ok ? "✅ " : "❌ ") + text;
+  setTimeout(() => { sliderMsg.innerText = ""; }, 4000);
+}
+
+function escapeHtml(str){
+  return String(str || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function createSliderCard(slider, index, total){
+  const image = slider.image || "";
+  const link = slider.link || "";
+  const key = slider.key || "";
+
+  return `
+    <div class="slider-box" data-key="${escapeHtml(key)}">
+      <div class="slider-box-head">
+        <h3>Slider ${index + 1}</h3>
+        <span class="order-badge">Urutan ${index + 1}</span>
+      </div>
+
+      <div class="slider-preview">
+        ${image
+          ? `<img src="${escapeHtml(image)}" style="display:block;" alt="Preview Slider ${index + 1}">`
+          : `<span>Preview gambar slider ${index + 1}</span>`
+        }
+      </div>
+
+      <label class="label">Link Gambar</label>
+      <input class="slider-image" value="${escapeHtml(image)}" placeholder="https://...">
+
+      <label class="label">Link Tujuan</label>
+      <input class="slider-link" value="${escapeHtml(link)}" placeholder="https://...">
+
+      <div class="slider-actions">
+        <button onclick="updateSingleSlider('${escapeHtml(key)}')">UPDATE</button>
+        <button class="danger" onclick="deleteSlider('${escapeHtml(key)}')">HAPUS</button>
+        <button class="secondary" onclick="moveUp('${escapeHtml(key)}')" ${index === 0 ? "disabled" : ""}>NAIK</button>
+        <button class="secondary" onclick="moveDown('${escapeHtml(key)}')" ${index === total - 1 ? "disabled" : ""}>TURUN</button>
+      </div>
+    </div>
+  `;
+}
+
+async function loadSliders() {
+  try {
+    const res = await fetch(SLIDER_URL + "?action=list_sliders");
+    const result = await res.json();
+
+    if (!result || result.status !== "success" || !Array.isArray(result.data)) {
+      sliderList.innerHTML = `<div class="empty-slider">Gagal load slider.</div>`;
+      return;
+    }
+
+    const sliders = result.data;
+
+    if (!sliders.length) {
+      sliderList.innerHTML = `<div class="empty-slider">Belum ada slider. Klik "Tambah Slider" untuk mulai.</div>`;
+      return;
+    }
+
+    sliderList.innerHTML = sliders.map((slider, index) => createSliderCard(slider, index, sliders.length)).join("");
+
+    bindPreviewInputs();
+  } catch (e) {
+    console.log("LOAD SLIDER ERROR:", e);
+    sliderList.innerHTML = `<div class="empty-slider">Gagal load slider.</div>`;
+  }
+}
+
+function bindPreviewInputs(){
+  document.querySelectorAll(".slider-box").forEach(box => {
+    const imageInput = box.querySelector(".slider-image");
+    const preview = box.querySelector(".slider-preview");
+
+    imageInput.addEventListener("input", () => {
+      const val = imageInput.value.trim();
+
+      if (val) {
+        preview.innerHTML = `<img src="${escapeHtml(val)}" style="display:block;" alt="Preview Slider">`;
+      } else {
+        preview.innerHTML = `<span>Preview gambar slider</span>`;
+      }
+    });
+  });
+}
+
+function getSliderBoxByKey(key){
+  return document.querySelector(`.slider-box[data-key="${CSS.escape(key)}"]`);
+}
+
+async function updateSingleSlider(key) {
+  const box = getSliderBoxByKey(key);
+  if (!box) return;
+
+  const image = box.querySelector(".slider-image").value.trim();
+  const link = box.querySelector(".slider-link").value.trim();
+
+  try {
+    const res = await fetch(SLIDER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        action: "update_slider",
+        key,
+        image,
+        link
+      })
+    });
+
+    const result = await res.json();
+
+    if (result.status === "success") {
+      showSliderMsg("slider berhasil diupdate", true);
+      await loadSliders();
+    } else {
+      showSliderMsg(result.message || "gagal update slider", false);
+    }
+  } catch (e) {
+    console.log("UPDATE SLIDER ERROR:", e);
+    showSliderMsg("gagal koneksi slider", false);
+  }
+}
+
+async function addSlider() {
+  try {
+    const res = await fetch(SLIDER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        action: "add_slider"
+      })
+    });
+
+    const result = await res.json();
+
+    if (result.status === "success") {
+      showSliderMsg("slider baru berhasil ditambahkan", true);
+      await loadSliders();
+    } else {
+      showSliderMsg(result.message || "gagal tambah slider", false);
+    }
+  } catch (e) {
+    console.log("ADD SLIDER ERROR:", e);
+    showSliderMsg("gagal koneksi slider", false);
+  }
+}
+
+async function deleteSlider(key) {
+  if (!confirm("Yakin ingin menghapus slider ini?")) return;
+
+  try {
+    const res = await fetch(SLIDER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        action: "delete_slider",
+        key
+      })
+    });
+
+    const result = await res.json();
+
+    if (result.status === "success") {
+      showSliderMsg("slider berhasil dihapus", true);
+      await loadSliders();
+    } else {
+      showSliderMsg(result.message || "gagal hapus slider", false);
+    }
+  } catch (e) {
+    console.log("DELETE SLIDER ERROR:", e);
+    showSliderMsg("gagal koneksi slider", false);
+  }
+}
+
+async function moveUp(key) {
+  try {
+    const res = await fetch(SLIDER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        action: "move_up",
+        key
+      })
+    });
+
+    const result = await res.json();
+
+    if (result.status === "success") {
+      await loadSliders();
+    } else {
+      showSliderMsg(result.message || "gagal pindah urutan", false);
+    }
+  } catch (e) {
+    console.log("MOVE UP ERROR:", e);
+    showSliderMsg("gagal koneksi slider", false);
+  }
+}
+
+async function moveDown(key) {
+  try {
+    const res = await fetch(SLIDER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        action: "move_down",
+        key
+      })
+    });
+
+    const result = await res.json();
+
+    if (result.status === "success") {
+      await loadSliders();
+    } else {
+      showSliderMsg(result.message || "gagal pindah urutan", false);
+    }
+  } catch (e) {
+    console.log("MOVE DOWN ERROR:", e);
+    showSliderMsg("gagal koneksi slider", false);
+  }
+}
+
+/* ================= LOGOUT ================= */
+document.getElementById("logoutBtn").onclick = (e) => {
   e.preventDefault();
   localStorage.removeItem("admin_login");
   window.location.href = "https://forgeplayid.github.io/panel/login.html";
-}
+};
 
-window.onload = loadInfo;
+window.onload = async () => {
+  await loadInfo();
+  await loadSliders();
+};
 </script>
 
 </body>
