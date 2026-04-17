@@ -174,18 +174,6 @@ button.danger:hover {
   background:#dc2626;
 }
 
-.status-wrap {
-  max-width:680px;
-}
-
-small {
-  display:block;
-  margin-top:10px;
-  color:#94a3b8;
-  min-height:18px;
-  font-size:13px;
-}
-
 .slider-toolbar {
   display:flex;
   justify-content:space-between;
@@ -243,7 +231,9 @@ small {
 
 .slider-preview {
   width:100%;
-  aspect-ratio: 16 / 9;
+  max-width:860px;
+  aspect-ratio: 860 / 310;
+  height:auto;
   border-radius:10px;
   overflow:hidden;
   background:#0b1220;
@@ -284,6 +274,114 @@ small {
   background:#111827;
 }
 
+/* TOAST POPUP */
+.toast {
+  position:fixed;
+  top:24px;
+  right:24px;
+  min-width:260px;
+  max-width:360px;
+  padding:14px 16px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:700;
+  box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  z-index:10000;
+  opacity:0;
+  transform:translateY(-10px);
+  pointer-events:none;
+  transition:0.25s ease;
+}
+
+.toast.show {
+  opacity:1;
+  transform:translateY(0);
+}
+
+.toast.success {
+  background:#0f2f1c;
+  border:1px solid #22c55e;
+  color:#dcfce7;
+}
+
+.toast.error {
+  background:#3b0d0d;
+  border:1px solid #ef4444;
+  color:#fee2e2;
+}
+
+/* DELETE MODAL */
+.modal {
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,0.72);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:0.25s ease;
+  z-index:9999;
+  padding:16px;
+}
+
+.modal.show {
+  opacity:1;
+  pointer-events:auto;
+}
+
+.modal-box {
+  width:100%;
+  max-width:430px;
+  background:#111827;
+  border:1px solid #334155;
+  border-radius:14px;
+  padding:22px;
+  transform:translateY(20px) scale(0.96);
+  transition:0.25s ease;
+  box-shadow:0 20px 50px rgba(0,0,0,0.45);
+}
+
+.modal.show .modal-box {
+  transform:translateY(0) scale(1);
+}
+
+.modal-title {
+  margin:0 0 10px 0;
+  font-size:22px;
+  color:white;
+}
+
+.modal-text {
+  margin:0;
+  color:#cbd5e1;
+  line-height:1.6;
+  font-size:14px;
+}
+
+.modal-actions {
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.modal-actions button {
+  margin:0;
+}
+
+.modal-icon {
+  width:52px;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  margin-bottom:14px;
+  font-size:22px;
+  background:rgba(239,68,68,0.12);
+  border:1px solid rgba(239,68,68,0.25);
+}
+
 @media(max-width:1100px){
   .slider-grid {
     grid-template-columns: 1fr;
@@ -300,13 +398,19 @@ small {
   }
 
   .field-wrap,
-  .button-wrap,
-  .status-wrap {
+  .button-wrap {
     max-width:100%;
   }
 
   .slider-toolbar-right {
     width:100%;
+  }
+
+  .toast {
+    right:16px;
+    left:16px;
+    max-width:none;
+    min-width:auto;
   }
 }
 </style>
@@ -345,7 +449,6 @@ if (localStorage.getItem("admin_login") !== "true") {
   <div class="content">
     <div class="main-wrap">
 
-      <!-- RUNNING INFO -->
       <div class="card">
         <div class="card-header">
           <h2>EDIT RUNNING INFO</h2>
@@ -360,13 +463,8 @@ if (localStorage.getItem("admin_login") !== "true") {
         <div class="button-wrap">
           <button onclick="updateInfo()">UPDATE INFO</button>
         </div>
-
-        <div class="status-wrap">
-          <small id="infoMsg"></small>
-        </div>
       </div>
 
-      <!-- SLIDER MANAGER -->
       <div class="card">
         <div class="card-header">
           <h2>SLIDER MANAGER</h2>
@@ -383,10 +481,6 @@ if (localStorage.getItem("admin_login") !== "true") {
         </div>
 
         <div id="sliderList" class="slider-grid"></div>
-
-        <div class="status-wrap" style="max-width:none;">
-          <small id="sliderMsg"></small>
-        </div>
       </div>
 
     </div>
@@ -394,13 +488,42 @@ if (localStorage.getItem("admin_login") !== "true") {
 
 </div>
 
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- DELETE MODAL -->
+<div class="modal" id="deleteModal">
+  <div class="modal-box">
+    <div class="modal-icon">🗑️</div>
+    <h3 class="modal-title">Hapus Slider?</h3>
+    <p class="modal-text" id="deleteModalText">Apakah kamu yakin ingin menghapus slider ini?</p>
+    <div class="modal-actions">
+      <button class="secondary" onclick="closeDeleteModal()">Batal</button>
+      <button class="danger" id="confirmDeleteBtn">Ya, Hapus</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const INFO_URL = "https://script.google.com/macros/s/AKfycbyYY0pt19KzeSFfMf3udOpSBJxvQ1cR6MUtT3bmKUVQugW5KyO18MNem5INQRdsUZVVSw/exec";
 const SLIDER_URL = "https://script.google.com/macros/s/AKfycbzD8L_MBr3Ph_wHEBU5TxNKGLTPdne_Wf0h4hhCCbd9Hy0_1_gNJoB_46B0R-KMvT-tDA/exec";
 
-const infoMsg = document.getElementById("infoMsg");
-const sliderMsg = document.getElementById("sliderMsg");
 const sliderList = document.getElementById("sliderList");
+const toast = document.getElementById("toast");
+
+let deleteKey = null;
+
+/* ================= TOAST ================= */
+function showToast(message, type = "success"){
+  toast.className = "toast " + type;
+  toast.textContent = (type === "success" ? "✅ " : "❌ ") + message;
+  requestAnimationFrame(() => toast.classList.add("show"));
+
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+}
 
 /* ================= INFO ================= */
 async function loadInfo() {
@@ -410,8 +533,7 @@ async function loadInfo() {
     document.getElementById("infoInput").value = data.info || "";
   } catch (e) {
     console.log("LOAD INFO ERROR:", e);
-    infoMsg.style.color = "#ef4444";
-    infoMsg.innerText = "❌ gagal load info";
+    showToast("gagal load info", "error");
   }
 }
 
@@ -419,8 +541,7 @@ async function updateInfo() {
   const val = document.getElementById("infoInput").value.trim();
 
   if (!val) {
-    infoMsg.style.color = "#ef4444";
-    infoMsg.innerText = "❌ tidak boleh kosong";
+    showToast("info tidak boleh kosong", "error");
     return;
   }
 
@@ -432,26 +553,15 @@ async function updateInfo() {
 
     const data = await res.json();
     console.log("POST INFO RESULT:", data);
-
-    infoMsg.style.color = "#22c55e";
-    infoMsg.innerText = "✅ berhasil update info";
+    showToast("berhasil update info", "success");
     loadInfo();
   } catch (e) {
     console.log(e);
-    infoMsg.style.color = "#ef4444";
-    infoMsg.innerText = "❌ gagal koneksi";
+    showToast("gagal koneksi info", "error");
   }
-
-  setTimeout(() => infoMsg.innerText = "", 4000);
 }
 
 /* ================= SLIDER ================= */
-function showSliderMsg(text, ok = true){
-  sliderMsg.style.color = ok ? "#22c55e" : "#ef4444";
-  sliderMsg.innerText = (ok ? "✅ " : "❌ ") + text;
-  setTimeout(() => { sliderMsg.innerText = ""; }, 4000);
-}
-
 function escapeHtml(str){
   return String(str || "")
     .replaceAll("&", "&amp;")
@@ -488,7 +598,7 @@ function createSliderCard(slider, index, total){
 
       <div class="slider-actions">
         <button onclick="updateSingleSlider('${escapeHtml(key)}')">UPDATE</button>
-        <button class="danger" onclick="deleteSlider('${escapeHtml(key)}')">HAPUS</button>
+        <button class="danger" onclick="askDeleteSlider('${escapeHtml(key)}')">DEL</button>
         <button class="secondary" onclick="moveUp('${escapeHtml(key)}')" ${index === 0 ? "disabled" : ""}>NAIK</button>
         <button class="secondary" onclick="moveDown('${escapeHtml(key)}')" ${index === total - 1 ? "disabled" : ""}>TURUN</button>
       </div>
@@ -514,7 +624,6 @@ async function loadSliders() {
     }
 
     sliderList.innerHTML = sliders.map((slider, index) => createSliderCard(slider, index, sliders.length)).join("");
-
     bindPreviewInputs();
   } catch (e) {
     console.log("LOAD SLIDER ERROR:", e);
@@ -529,7 +638,6 @@ function bindPreviewInputs(){
 
     imageInput.addEventListener("input", () => {
       const val = imageInput.value.trim();
-
       if (val) {
         preview.innerHTML = `<img src="${escapeHtml(val)}" style="display:block;" alt="Preview Slider">`;
       } else {
@@ -565,14 +673,14 @@ async function updateSingleSlider(key) {
     const result = await res.json();
 
     if (result.status === "success") {
-      showSliderMsg("slider berhasil diupdate", true);
+      showToast("slider berhasil diupdate", "success");
       await loadSliders();
     } else {
-      showSliderMsg(result.message || "gagal update slider", false);
+      showToast(result.message || "gagal update slider", "error");
     }
   } catch (e) {
     console.log("UPDATE SLIDER ERROR:", e);
-    showSliderMsg("gagal koneksi slider", false);
+    showToast("gagal koneksi slider", "error");
   }
 }
 
@@ -589,19 +697,36 @@ async function addSlider() {
     const result = await res.json();
 
     if (result.status === "success") {
-      showSliderMsg("slider baru berhasil ditambahkan", true);
+      showToast("slider baru berhasil ditambahkan", "success");
       await loadSliders();
     } else {
-      showSliderMsg(result.message || "gagal tambah slider", false);
+      showToast(result.message || "gagal tambah slider", "error");
     }
   } catch (e) {
     console.log("ADD SLIDER ERROR:", e);
-    showSliderMsg("gagal koneksi slider", false);
+    showToast("gagal koneksi slider", "error");
   }
 }
 
-async function deleteSlider(key) {
-  if (!confirm("Yakin ingin menghapus slider ini?")) return;
+function askDeleteSlider(key) {
+  deleteKey = key;
+  document.getElementById("deleteModalText").innerText =
+    `Apakah kamu yakin ingin menghapus ${key}? Data yang sudah dihapus tidak bisa dikembalikan.`;
+  document.getElementById("deleteModal").classList.add("show");
+}
+
+function closeDeleteModal() {
+  deleteKey = null;
+  document.getElementById("deleteModal").classList.remove("show");
+}
+
+document.getElementById("confirmDeleteBtn").onclick = async function() {
+  if (!deleteKey) return;
+
+  const btn = this;
+  const original = btn.innerText;
+  btn.disabled = true;
+  btn.innerText = "Menghapus...";
 
   try {
     const res = await fetch(SLIDER_URL, {
@@ -609,23 +734,27 @@ async function deleteSlider(key) {
       headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({
         action: "delete_slider",
-        key
+        key: deleteKey
       })
     });
 
     const result = await res.json();
 
     if (result.status === "success") {
-      showSliderMsg("slider berhasil dihapus", true);
+      closeDeleteModal();
+      showToast("slider berhasil dihapus", "success");
       await loadSliders();
     } else {
-      showSliderMsg(result.message || "gagal hapus slider", false);
+      showToast(result.message || "gagal hapus slider", "error");
     }
   } catch (e) {
     console.log("DELETE SLIDER ERROR:", e);
-    showSliderMsg("gagal koneksi slider", false);
+    showToast("gagal koneksi slider", "error");
   }
-}
+
+  btn.disabled = false;
+  btn.innerText = original;
+};
 
 async function moveUp(key) {
   try {
@@ -643,11 +772,11 @@ async function moveUp(key) {
     if (result.status === "success") {
       await loadSliders();
     } else {
-      showSliderMsg(result.message || "gagal pindah urutan", false);
+      showToast(result.message || "gagal pindah urutan", "error");
     }
   } catch (e) {
     console.log("MOVE UP ERROR:", e);
-    showSliderMsg("gagal koneksi slider", false);
+    showToast("gagal koneksi slider", "error");
   }
 }
 
@@ -667,11 +796,11 @@ async function moveDown(key) {
     if (result.status === "success") {
       await loadSliders();
     } else {
-      showSliderMsg(result.message || "gagal pindah urutan", false);
+      showToast(result.message || "gagal pindah urutan", "error");
     }
   } catch (e) {
     console.log("MOVE DOWN ERROR:", e);
-    showSliderMsg("gagal koneksi slider", false);
+    showToast("gagal koneksi slider", "error");
   }
 }
 
@@ -681,6 +810,10 @@ document.getElementById("logoutBtn").onclick = (e) => {
   localStorage.removeItem("admin_login");
   window.location.href = "https://forgeplayid.github.io/panel/login.html";
 };
+
+document.getElementById("deleteModal").addEventListener("click", function(e){
+  if (e.target === this) closeDeleteModal();
+});
 
 window.onload = async () => {
   await loadInfo();
