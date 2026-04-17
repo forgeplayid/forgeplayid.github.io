@@ -66,6 +66,7 @@ body {
 
 .slide {
   flex: 0 0 100%;
+  display:block;
 }
 
 .slide img {
@@ -618,54 +619,134 @@ body {
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
 const INFO_URL = "https://script.google.com/macros/s/AKfycbyYY0pt19KzeSFfMf3udOpSBJxvQ1cR6MUtT3bmKUVQugW5KyO18MNem5INQRdsUZVVSw/exec";
+const SLIDER_URL = "https://script.google.com/macros/s/AKfycbyW6Jesz7o_sGXdlssBuTJcAnNX-KnC962WF0sgBvGR5nIfP68v3NeuWvDFMq-xXhBREA/exec";
 
 /* SLIDER */
-const slides = [
-  { img:"https://forgeplayid.github.io/assets/gt-slider1.png", link:"https://forgeplayid.github.io/" },
-  { img:"https://digivospaces.b-cdn.net/UniPlay/Sliders/ffca0068cadc5ad7867236cc8332ca0d.webp", link:"https://forgeplayid.github.io/" },
-  { img:"https://digivospaces.b-cdn.net/UniPlay/Sliders/3660f44efa3591427e275041c287a272.png", link:"https://forgeplayid.github.io/" }
-];
-
+let slides = [];
 let current = 0;
+let sliderTimer = null;
 
 const track = document.getElementById("sliderTrack");
 const dots = document.getElementById("dots");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+function escapeHtml(str){
+  return String(str || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+async function loadSliders(){
+  try {
+    const res = await fetch(SLIDER_URL + "?action=list_sliders&t=" + Date.now());
+    const result = await res.json();
+
+    if (result && result.status === "success" && Array.isArray(result.data)) {
+      const filtered = result.data
+        .filter(item => item.image && item.image.trim() !== "")
+        .map(item => ({
+          img: item.image.trim(),
+          link: item.link && item.link.trim() !== "" ? item.link.trim() : "#"
+        }));
+
+      slides = filtered;
+    } else {
+      slides = [];
+    }
+  } catch (e) {
+    console.log("LOAD SLIDER ERROR:", e);
+    slides = [];
+  }
+
+  if (!slides.length) {
+    slides = [
+      { img:"https://forgeplayid.github.io/assets/gt-slider1.png", link:"https://forgeplayid.github.io/" }
+    ];
+  }
+
+  current = 0;
+  initSlider();
+}
 
 function initSlider(){
   track.innerHTML = "";
   dots.innerHTML = "";
 
-  slides.forEach((s,i)=>{
+  slides.forEach((s, i) => {
     const a = document.createElement("a");
     a.className = "slide";
-    a.href = s.link;
-    a.innerHTML = `<img src="${s.img}" alt="Banner ${i+1}">`;
+    a.href = s.link || "#";
+    if (s.link && s.link !== "#") {
+      a.target = "_self";
+    }
+
+    a.innerHTML = `<img src="${escapeHtml(s.img)}" alt="Banner ${i + 1}">`;
     track.appendChild(a);
 
     const dot = document.createElement("div");
     dot.className = "dot" + (i === current ? " active" : "");
-    dot.onclick = () => goTo(i);
+    dot.onclick = () => {
+      goTo(i);
+      restartAutoSlide();
+    };
     dots.appendChild(dot);
   });
 
+  prevBtn.style.display = slides.length > 1 ? "block" : "none";
+  nextBtn.style.display = slides.length > 1 ? "block" : "none";
+  dots.style.display = slides.length > 1 ? "flex" : "none";
+
   update();
+  startAutoSlide();
 }
 
 function update(){
-  track.style.transform = `translateX(-${current*100}%)`;
-  document.querySelectorAll(".dot").forEach((d,i)=>{
+  track.style.transform = `translateX(-${current * 100}%)`;
+  document.querySelectorAll(".dot").forEach((d, i) => {
     d.classList.toggle("active", i === current);
   });
 }
 
-function next(){ current = (current + 1) % slides.length; update(); }
-function prev(){ current = (current - 1 + slides.length) % slides.length; update(); }
-function goTo(i){ current = i; update(); }
+function next(){
+  if (!slides.length) return;
+  current = (current + 1) % slides.length;
+  update();
+}
 
-document.getElementById("nextBtn").onclick = next;
-document.getElementById("prevBtn").onclick = prev;
+function prev(){
+  if (!slides.length) return;
+  current = (current - 1 + slides.length) % slides.length;
+  update();
+}
 
-setInterval(next, 4000);
+function goTo(i){
+  current = i;
+  update();
+}
+
+function startAutoSlide(){
+  clearInterval(sliderTimer);
+  if (slides.length <= 1) return;
+  sliderTimer = setInterval(next, 5500);
+}
+
+function restartAutoSlide(){
+  startAutoSlide();
+}
+
+nextBtn.onclick = () => {
+  next();
+  restartAutoSlide();
+};
+
+prevBtn.onclick = () => {
+  prev();
+  restartAutoSlide();
+};
 
 /* HARGA */
 function formatRupiah(a){
@@ -705,10 +786,10 @@ async function loadInfo(){
   }
 }
 
-window.onload = ()=>{
-  initSlider();
-  loadHarga();
-  loadInfo();
+window.onload = async () => {
+  await loadSliders();
+  await loadHarga();
+  await loadInfo();
 };
 
 setInterval(loadHarga, 60000);
