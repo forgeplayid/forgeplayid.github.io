@@ -4,65 +4,882 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="https://uniplay.id/cdn/fb64-pic2d7fab3824dd00bb3c05f0002b466e6c1762906411.png">
-  <title>Agent Reseller Growtopia Terpercaya</title>
+<title>Agent Reseller Growtopia Terpercaya</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
 body {
-  margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #111, #1b1b1b);
-  color: #fff;
-  font-family: 'Roboto', sans-serif;
+  margin:0;
+  font-family: Arial, sans-serif;
+  background-color: #020617;
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+  background-color:#0f172a;
+  border-bottom:1px solid #1e293b;
+  gap: 14px;
+}
+
+.logo {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.logo img {
+  height: 40px;
+  display: block;
+}
+
+.header-right {
+  flex: 0 0 auto;
+}
+
+.header-right a.button {
+  display: inline-block;
+  padding:8px 18px;
+  background-color:#38bdf8;
+  color:#020617;
+  font-weight:bold;
+  border-radius:6px;
+  text-decoration:none;
+  transition:0.2s;
+  white-space: nowrap;
+}
+.header-right a.button:hover { background-color:#0ea5e9; }
+
+.container {
+  max-width:1100px;
+  margin:30px auto;
+  padding:0 15px;
+}
+
+/* ================= SLIDER ================= */
+.slider-container {
+  max-width: 860px;
+  margin: auto;
+  position: relative;
+}
+
+.slider-wrapper {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.slider-track {
   display: flex;
-  flex-direction: column;
+  transition: transform 0.6s ease;
+  will-change: transform;
+}
+
+.slide {
+  flex: 0 0 100%;
+  display:block;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 12px;
+  cursor: pointer;
+  display: block;
+}
+
+/* ARROW */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-size: 30px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+}
+.arrow:hover { background: rgba(255,255,255,0.25); }
+
+.left { left: 10px; }
+.right { right: 10px; }
+
+/* DOTS */
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.dot {
+  height: 4px;
+  width: 25px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 5px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.dot.active { background: white; }
+
+/* ================= INFO BAR ================= */
+.info-bar {
+  max-width: 860px;
+  margin: 15px auto 0 auto;
+  background: linear-gradient(90deg, #0f172a, #1e3a8a);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(56,189,248,0.3);
+  box-shadow: 0 0 15px rgba(56,189,248,0.2);
+}
+
+.info-content {
+  white-space: nowrap;
+  display: inline-block;
+  padding: 12px 20px;
+  animation: scrollText 18s linear infinite;
+  font-weight: 600;
+  color: #e0f2fe;
+}
+
+@keyframes scrollText {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ================= MENU 2 KOTAK ================= */
+.menu-frame {
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  width:100%;
+  max-width:860px;
+  margin:25px auto 10px auto;
+  padding:0;
+}
+
+.menu-card {
+  flex:1;
+  min-width:0;
+  background-color:#1e293b;
+  border-radius:10px;
+  padding:15px 10px;
+  text-align:center;
+  color:white;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  transition:transform 0.2s;
+  text-decoration:none;
+  cursor:pointer;
+  border: 1px solid rgba(56,189,248,0.08);
+}
+
+.menu-card:hover { transform:translateY(-5px); }
+
+.menu-card img.menu-img {
+  width:50px;
+  height:auto;
+  margin-bottom:10px;
+}
+
+.menu-card p {
+  margin:5px 0;
+  font-size:16px;
+  line-height:1.4;
+}
+
+/* ================= 1 KOTAK PANJANG ================= */
+.buy-frame {
+  width:100%;
+  max-width:860px;
+  margin:10px auto 0 auto;
+}
+
+.buy-card {
+  display:block;
+  width:100%;
+  background-color:#1e293b;
+  border-radius:10px;
+  padding:18px;
+  text-align:center;
+  color:white;
+  text-decoration:none;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  transition:transform 0.2s;
+  font-weight:600;
+  border: 1px solid rgba(56,189,248,0.08);
+}
+
+.buy-card:hover {
+  transform:translateY(-5px);
+  background-color:#0f172a;
+}
+
+/* ================= CONTENT KOSONG ================= */
+.content {
+  margin-top:25px;
+  height:350px;
+  background-color:#020617;
+  border-radius:12px;
+  border:1px dashed #1e293b;
+}
+
+/* ================= FOOTER ================= */
+.site-footer {
+  margin-top: 40px;
+  background:
+    radial-gradient(circle at top center, rgba(56,189,248,0.08), transparent 35%),
+    linear-gradient(180deg, #071120 0%, #0b1324 55%, #0a1220 100%);
+  border-top: 1px solid rgba(56,189,248,0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  overflow: hidden;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 26px 15px 22px 15px;
+  text-align: center;
+}
+
+.footer-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 18px;
+  letter-spacing: 0.4px;
+}
+
+.payment-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.payment-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: paymentScroll 26s linear infinite;
+  will-change: transform;
+}
+
+.payment-item {
+  flex: 0 0 auto;
+  min-width: 132px;
+  height: 58px;
+  margin: 0 8px;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 40px 20px;
-  gap: 18px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+  border: 1px solid rgba(15,23,42,0.06);
 }
 
-h2 {
-  font-size: 1.6rem;
+.payment-logo {
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  line-height: 1;
 }
 
-p {
-  opacity: 0.75;
-  font-size: 15px;
+.payment-logo.small {
+  font-size: 14px;
+  font-weight: 700;
 }
 
-/* BUTTON STYLE SAMA SEPERTI DESKTOP */
-button {
-  margin-top: 12px;
-  padding: 14px 32px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  background: linear-gradient(45deg, #ff6a00, #ee0979);
-  border: none;
-  border-radius: 14px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  transition: all 0.3s ease;
+.logo-alfamart {
+  font-style: italic;
+  color: #2563eb;
+}
+.logo-alfamart .red { color:#ef4444; }
+.logo-alfamart .yellow {
+  display:block;
+  height:4px;
+  width:88px;
+  margin:4px auto 0 auto;
+  border-radius:999px;
+  background: linear-gradient(90deg, #f59e0b, #facc15);
 }
 
-button:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 8px 20px rgba(255,106,0,0.45);
+.logo-danamon {
+  color:#16a34a;
+  position:relative;
+  padding-top:8px;
+}
+.logo-danamon::before,
+.logo-danamon::after{
+  content:"";
+  position:absolute;
+  top:0;
+  height:5px;
+  border-radius:999px;
+}
+.logo-danamon::before{
+  left:0;
+  width:46px;
+  background:#f97316;
+}
+.logo-danamon::after{
+  right:0;
+  width:52px;
+  background:#f59e0b;
+}
+
+.logo-mandiri {
+  color:#1d4ed8;
+  position:relative;
+  padding-top:8px;
+}
+.logo-mandiri::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:54px;
+  height:6px;
+  border-radius:999px;
+  background: linear-gradient(90deg, #f59e0b, #facc15, #f59e0b);
+}
+
+.logo-bca { color:#2563eb; font-weight:900; }
+.logo-atm-bca { color:#2563eb; font-weight:900; font-size:16px; }
+.logo-permata { color:#6b7280; font-weight:700; }
+.logo-sinarmas { color:#9f1239; font-weight:700; }
+.logo-bri { color:#1d4ed8; font-weight:900; }
+.logo-bni { color:#ea580c; font-weight:900; }
+.logo-dana { color:#0284c7; font-weight:900; }
+.logo-ovo { color:#7c3aed; font-weight:900; }
+.logo-gopay { color:#0891b2; font-weight:900; }
+
+.social-links {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+  margin-top:28px;
+}
+
+.social-links a {
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  background: linear-gradient(180deg, #13233d, #0f1b31);
+  border: 1px solid rgba(56,189,248,0.14);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.social-links a:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56,189,248,0.4);
+  box-shadow: 0 0 18px rgba(56,189,248,0.18);
+}
+
+.social-links svg {
+  width: 22px;
+  height: 22px;
+  fill: #ffffff;
+  display:block;
+}
+
+.footer-copy {
+  margin-top: 18px;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+@keyframes paymentScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .header {
+    padding:14px 18px;
+    gap: 12px;
+  }
+
+  .logo img {
+    height: 34px;
+  }
+
+  .header-right a.button {
+    padding:8px 14px;
+    font-size:14px;
+  }
+
+  .menu-frame {
+    gap:12px;
+  }
+
+  .menu-card {
+    padding:12px 8px;
+  }
+
+  .menu-card img.menu-img {
+    width:42px;
+  }
+
+  .menu-card p {
+    font-size:14px;
+  }
+
+  .buy-card {
+    padding:16px 12px;
+    font-size:15px;
+  }
+
+  .payment-item {
+    min-width:118px;
+    height:54px;
+    margin:0 6px;
+    padding:0 10px;
+  }
+
+  .payment-logo {
+    font-size:16px;
+  }
+
+  .payment-logo.small {
+    font-size:12px;
+  }
+
+  .arrow {
+    width: 42px;
+    height: 42px;
+    font-size: 28px;
+  }
+}
+
+@media(max-width:500px){
+  .header{
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 12px 10px;
+    gap: 8px;
+  }
+
+  .logo {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .logo img {
+    height: 24px;
+    max-width: 100%;
+    width: auto;
+  }
+
+  .header-right {
+    flex: 0 0 auto;
+    margin-top: 0;
+  }
+
+  .header-right a.button {
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .container {
+    padding:0 8px;
+    margin:20px auto;
+  }
+
+  .slider-container {
+    margin-top: 6px;
+  }
+
+  .slider-wrapper {
+    border-radius: 12px;
+  }
+
+  .slide img {
+    border-radius: 12px;
+  }
+
+  .arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 24px;
+  }
+
+  .left { left: 8px; }
+  .right { right: 8px; }
+
+  .info-bar {
+    margin-top: 14px;
+    border-radius: 12px;
+  }
+
+  .info-content {
+    padding: 11px 16px;
+    font-size: 13px;
+  }
+
+  .menu-frame {
+    gap:10px;
+  }
+
+  .menu-card {
+    padding:10px 6px;
+    border-radius:8px;
+  }
+
+  .menu-card img.menu-img {
+    width:36px;
+    margin-bottom:8px;
+  }
+
+  .menu-card p {
+    font-size:13px;
+    margin:4px 0;
+  }
+
+  .buy-card {
+    font-size:14px;
+    padding:14px 10px;
+    border-radius:8px;
+  }
+
+  .content {
+    height:260px;
+  }
+
+  .footer-title {
+    font-size:16px;
+  }
+
+  .social-links {
+    gap:14px;
+  }
+
+  .social-links a {
+    width:42px;
+    height:42px;
+  }
+
+  .social-links svg {
+    width:20px;
+    height:20px;
+  }
+
+  .footer-copy {
+    font-size:13px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-  <h2>Versi Mobile sedang disiapkan 🚧</h2>
-  <p>Silakan gunakan versi desktop sementara.</p>
+<div class="header">
+  <div class="logo">
+    <a href="https://forgeplayid.github.io/">
+      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png" alt="ForgePlayID">
+    </a>
+  </div>
 
-  <button onclick="window.location.href='https://forgeplayid.github.io/desktop/'">
-    Gunakan versi desktop
-  </button>
+  <div class="header-right">
+    <a href="https://forgeplayid.github.io/desktop/world" class="button">Cari World Disini</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="slider-container">
+    <div class="slider-wrapper">
+      <div class="slider-track" id="sliderTrack"></div>
+      <button class="arrow left" id="prevBtn">‹</button>
+      <button class="arrow right" id="nextBtn">›</button>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <div class="info-bar">
+    <div class="info-content" id="infoText">Loading...</div>
+  </div>
+
+  <div class="menu-frame">
+    <a class="menu-card" href="https://forgeplayid.github.io/desktop/diamond-lock/">
+      <img src="https://forgeplayid.github.io/assets/diamond-lock.png" class="menu-img" alt="Diamond Lock">
+      <p id="sell-dl">Sell Rp. -</p>
+      <p id="buy-dl">Buy Rp. -</p>
+    </a>
+
+    <a class="menu-card" href="https://forgeplayid.github.io/desktop/blue-gem-lock/">
+      <img src="https://forgeplayid.github.io/assets/blue-gem-lock.png" class="menu-img" alt="Blue Gem Lock">
+      <p id="sell-bgl">Sell Rp. -</p>
+    </a>
+  </div>
+
+  <div class="buy-frame">
+    <a class="buy-card" href="https://forgeplayid.github.io/desktop/buy/">
+      Mau jual DL & BGL? Langsung Ke Sini
+    </a>
+  </div>
+
+  <div class="content"></div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-title">METODE PEMBAYARAN</div>
+
+    <div class="payment-slider">
+      <div class="payment-track">
+        <div class="payment-item"><div class="payment-logo logo-alfamart">Alfa<span class="red">mart</span><span class="yellow"></span></div></div>
+        <div class="payment-item"><div class="payment-logo small logo-danamon">Danamon</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-mandiri">mandiri<br>virtual account</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-atm-bca">ATM BCA</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bca">BCA</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-permata">PermataBank</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-sinarmas">Sinarmas</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bri">BRI</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bni">BNI</div></div>
+        <div class="payment-item"><div class="payment-logo logo-dana">DANA</div></div>
+        <div class="payment-item"><div class="payment-logo logo-ovo">OVO</div></div>
+        <div class="payment-item"><div class="payment-logo logo-gopay">GoPay</div></div>
+
+        <div class="payment-item"><div class="payment-logo logo-alfamart">Alfa<span class="red">mart</span><span class="yellow"></span></div></div>
+        <div class="payment-item"><div class="payment-logo small logo-danamon">Danamon</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-mandiri">mandiri<br>virtual account</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-atm-bca">ATM BCA</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bca">BCA</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-permata">PermataBank</div></div>
+        <div class="payment-item"><div class="payment-logo small logo-sinarmas">Sinarmas</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bri">BRI</div></div>
+        <div class="payment-item"><div class="payment-logo logo-bni">BNI</div></div>
+        <div class="payment-item"><div class="payment-logo logo-dana">DANA</div></div>
+        <div class="payment-item"><div class="payment-logo logo-ovo">OVO</div></div>
+        <div class="payment-item"><div class="payment-logo logo-gopay">GoPay</div></div>
+      </div>
+    </div>
+
+    <div class="social-links">
+      <a href="https://instagram.com/" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2A3 3 0 0 0 4 7v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zm5.25-3.75a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/></svg>
+      </a>
+
+      <a href="https://tiktok.com/" target="_blank" aria-label="TikTok">
+        <svg viewBox="0 0 24 24"><path d="M14 3c.4 1.9 1.7 3.5 3.6 4.2.8.3 1.6.5 2.4.5v3a8.6 8.6 0 0 1-3-.6v5.7a6.1 6.1 0 1 1-6.1-6.1c.3 0 .7 0 1 .1v3.1a3.1 3.1 0 1 0 2 2.9V3h3.1z"/></svg>
+      </a>
+
+      <a href="https://wa.me/" target="_blank" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 0 0 3.7 17.1L2 22l5-1.6A11 11 0 1 0 20.5 3.5zM12 20a8.8 8.8 0 0 1-4.5-1.2l-.3-.2-3 .9 1-2.9-.2-.3A8.9 8.9 0 1 1 12 20zm4.9-6.6c-.3-.2-1.7-.8-2-.9s-.5-.2-.7.2-.8.9-1 1.1-.4.2-.7 0a7.4 7.4 0 0 1-2.2-1.4 8.3 8.3 0 0 1-1.5-1.9c-.2-.3 0-.5.1-.7l.5-.6a.7.7 0 0 0 .1-.7c-.1-.2-.7-1.8-.9-2.4s-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.1 3.1 0 0 0-1 2.3 5.4 5.4 0 0 0 1.2 2.9 12.5 12.5 0 0 0 4.8 4.2 10.7 10.7 0 0 0 1.6.6 3.8 3.8 0 0 0 1.8.1 2.9 2.9 0 0 0 1.9-1.4 2.3 2.3 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.4z"/></svg>
+      </a>
+    </div>
+
+    <div class="footer-copy">© 2026 ForgePlayID Top Up</div>
+  </div>
+</footer>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRNnaBVmFNTLPup329yclGXvoWmQMgWY7a2ofeuTnvxnFcSemZUg/exec";
+const INFO_URL = "https://script.google.com/macros/s/AKfycbxYxV7kT33anTWZXbrTpOifn_mYBzr9RCAqG4gs4CVUMRk_Y-wrovB-zfT1ehLEGEe-/exec";
+const SLIDER_URL = "https://script.google.com/macros/s/AKfycbxulVbiclCTigVLpe0HYeWFzolxLECxMPeQ35isAQUriVdLuGWYJUf8qL2qeSnIBA0r/exec";
+
+/* SLIDER */
+let slides = [];
+let current = 0;
+let sliderTimer = null;
+
+const track = document.getElementById("sliderTrack");
+const dots = document.getElementById("dots");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+function escapeHtml(str){
+  return String(str || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+async function loadSliders(){
+  try {
+    const res = await fetch(SLIDER_URL + "?action=list_sliders&t=" + Date.now());
+    const result = await res.json();
+
+    if (result && result.status === "success" && Array.isArray(result.data)) {
+      const filtered = result.data
+        .filter(item => item.image && item.image.trim() !== "")
+        .map(item => ({
+          img: item.image.trim(),
+          link: item.link && item.link.trim() !== "" ? item.link.trim() : "#"
+        }));
+
+      slides = filtered;
+    } else {
+      slides = [];
+    }
+  } catch (e) {
+    console.log("LOAD SLIDER ERROR:", e);
+    slides = [];
+  }
+
+  if (!slides.length) {
+    slides = [
+      { img:"https://forgeplayid.github.io/assets/gt-slider1.png", link:"https://forgeplayid.github.io/" }
+    ];
+  }
+
+  current = 0;
+  initSlider();
+}
+
+function initSlider(){
+  track.innerHTML = "";
+  dots.innerHTML = "";
+
+  slides.forEach((s, i) => {
+    const a = document.createElement("a");
+    a.className = "slide";
+    a.href = s.link || "#";
+    if (s.link && s.link !== "#") {
+      a.target = "_self";
+    }
+
+    a.innerHTML = `<img src="${escapeHtml(s.img)}" alt="Banner ${i + 1}">`;
+    track.appendChild(a);
+
+    const dot = document.createElement("div");
+    dot.className = "dot" + (i === current ? " active" : "");
+    dot.onclick = () => {
+      goTo(i);
+      restartAutoSlide();
+    };
+    dots.appendChild(dot);
+  });
+
+  prevBtn.style.display = slides.length > 1 ? "block" : "none";
+  nextBtn.style.display = slides.length > 1 ? "block" : "none";
+  dots.style.display = slides.length > 1 ? "flex" : "none";
+
+  update();
+  startAutoSlide();
+}
+
+function update(){
+  track.style.transform = `translateX(-${current * 100}%)`;
+  document.querySelectorAll(".dot").forEach((d, i) => {
+    d.classList.toggle("active", i === current);
+  });
+}
+
+function next(){
+  if (!slides.length) return;
+  current = (current + 1) % slides.length;
+  update();
+}
+
+function prev(){
+  if (!slides.length) return;
+  current = (current - 1 + slides.length) % slides.length;
+  update();
+}
+
+function goTo(i){
+  current = i;
+  update();
+}
+
+function startAutoSlide(){
+  clearInterval(sliderTimer);
+  if (slides.length <= 1) return;
+  sliderTimer = setInterval(next, 5500);
+}
+
+function restartAutoSlide(){
+  startAutoSlide();
+}
+
+nextBtn.onclick = () => {
+  next();
+  restartAutoSlide();
+};
+
+prevBtn.onclick = () => {
+  prev();
+  restartAutoSlide();
+};
+
+/* HARGA */
+function formatRupiah(a){
+  if(!a) return "Rp. -";
+  return "Rp. " + Number(a).toLocaleString("id-ID");
+}
+
+async function loadHarga(){
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+
+    document.getElementById("sell-dl").innerText = "Sell " + formatRupiah(data.sell_dl);
+    document.getElementById("buy-dl").innerText = "Buy " + formatRupiah(data.buy_dl);
+    document.getElementById("sell-bgl").innerText = "Sell " + formatRupiah(data.sell_bgl);
+  } catch (e) {
+    console.log("LOAD HARGA ERROR:", e);
+  }
+}
+
+/* INFO */
+async function loadInfo(){
+  try {
+    const res = await fetch(INFO_URL + "?t=" + Date.now());
+    const text = await res.text();
+    const data = JSON.parse(text);
+    const el = document.getElementById("infoText");
+
+    if(data && data.info){
+      el.innerText = data.info;
+    } else {
+      el.innerText = "⚡ Info belum tersedia";
+    }
+  } catch(e){
+    console.log("LOAD INFO ERROR:", e);
+    document.getElementById("infoText").innerText = "❌ Gagal load info";
+  }
+}
+
+window.onload = async () => {
+  await loadSliders();
+  await loadHarga();
+  await loadInfo();
+};
+
+setInterval(loadHarga, 60000);
+</script>
 
 </body>
 </html>
