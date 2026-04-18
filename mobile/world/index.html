@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="https://uniplay.id/cdn/fb64-pic2d7fab3824dd00bb3c05f0002b466e6c1762906411.png">
+<title>Daftar World Responsif Grid</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<style>
+body {
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  background:#020617;
+  color:white;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 16px;
+  background:#0f172a;
+  border-bottom:1px solid #1e293b;
+  gap:10px;
+}
+
+.logo{
+  flex:1;
+  min-width:0;
+}
+
+.logo img{
+  height:26px;
+  max-width:100%;
+  display:block;
+}
+
+.header-right a{
+  padding:8px 12px;
+  background:#38bdf8;
+  color:#020617;
+  font-weight:600;
+  border-radius:6px;
+  text-decoration:none;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+/* TITLE */
+.title-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  max-width:1100px;
+  margin:20px auto 10px auto;
+  padding:0 16px;
+  gap:12px;
+}
+
+.title-bar h1{
+  margin:0;
+  color:#38bdf8;
+  font-size:22px;
+}
+
+/* SORT BOX */
+.sort-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:6px 10px;
+  border:1px solid #38bdf8;
+  border-radius:8px;
+  background:#0f172a;
+  font-size:13px;
+  font-weight:600;
+  color:#38bdf8;
+}
+
+/* TOGGLE */
+.switch {
+  position: relative;
+  width:46px;
+  height:24px;
+}
+
+.switch input { display:none; }
+
+.slider-toggle {
+  position:absolute;
+  inset:0;
+  background:#1e293b;
+  border-radius:999px;
+  cursor:pointer;
+  transition:.3s;
+  border:1px solid #334155;
+}
+
+.slider-toggle:before {
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  left:3px;
+  top:2px;
+  background:white;
+  border-radius:50%;
+  transition:.3s;
+}
+
+.switch input:checked + .slider-toggle {
+  background:#22c55e;
+}
+
+.switch input:checked + .slider-toggle:before {
+  transform:translateX(22px);
+}
+
+/* SELL WORLD BOX */
+.sell-world-wrapper{
+  max-width:1100px;
+  margin:15px auto;
+  padding:0 16px;
+}
+
+.sell-world-box{
+  width:100%;
+  padding:18px;
+  background:#0f172a;
+  border:1px solid #38bdf8;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:14px;
+}
+
+.sell-text{
+  font-size:14px;
+  color:#cbd5f5;
+}
+
+.sell-text b{
+  color:#38bdf8;
+}
+
+.sell-btn{
+  padding:10px 18px;
+  background:#22c55e;
+  color:#020617;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.sell-btn:hover{
+  background:#16a34a;
+  transform:translateY(-2px);
+}
+
+/* GRID */
+.container{
+  max-width:1100px;
+  margin:10px auto 50px;
+  padding:0 16px;
+}
+
+.world-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+  align-items:stretch;
+}
+
+/* CARD */
+.world-card{
+  background:#1e293b;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 6px 15px rgba(0,0,0,0.3);
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+
+/* IMAGE */
+.world-image{
+  position:relative;
+  padding-top:calc(798/1280*100%);
+  background:#0f172a;
+}
+
+.world-image img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  cursor:zoom-in;
+}
+
+/* DESC */
+.world-desc{
+  padding:12px;
+  font-size:13px;
+  color:#cbd5f5;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.world-title{
+  display:block;
+  margin-bottom:6px;
+}
+
+.world-desc p{
+  margin:0 0 8px 0;
+}
+
+.price-line{
+  margin-top:auto;
+  padding-top:8px;
+  font-weight:700;
+}
+
+.price-highlight{
+  color:#38bdf8;
+}
+
+/* BUTTON */
+.buy-button{
+  display:block;
+  margin:12px auto 16px;
+  padding:10px 12px;
+  width:80%;
+  text-align:center;
+  border-radius:8px;
+  font-weight:600;
+  text-decoration:none;
+  margin-top:0;
+}
+
+/* STATUS */
+.status-ready{ color:#22c55e; font-weight:700; }
+.status-sold{ color:#ef4444; font-weight:700; }
+
+/* ZOOM */
+.zoom-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.zoom-overlay.active{ display:flex; }
+
+.zoom-overlay img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:12px;
+}
+
+/* DESKTOP */
+@media(min-width:900px){
+  .header{
+    padding:15px 40px;
+  }
+
+  .logo img{
+    height:35px;
+  }
+
+  .header-right a{
+    padding:8px 18px;
+    font-size:16px;
+  }
+
+  .title-bar{
+    max-width:1100px;
+    margin:30px auto 10px auto;
+    padding:0 25px;
+  }
+
+  .title-bar h1{
+    font-size:40px;
+  }
+
+  .sell-world-wrapper{
+    padding:0 25px;
+  }
+
+  .sell-world-box{
+    flex-direction:row;
+    justify-content:center;
+    text-align:center;
+    gap:28px;
+    padding:16px 24px;
+  }
+
+  .container{
+    padding:0 25px;
+  }
+
+  .world-grid{
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+  }
+
+  .world-desc{
+    padding:15px;
+    font-size:14px;
+  }
+
+  .buy-button{
+    width:70%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="logo">
+    <a href="https://forgeplayid.github.io/">
+      <img src="https://uniplay.id/cdn/fb64-pic7e8f1bd435ca11fd8066efbd8fe70a0c1762907822.png">
+    </a>
+  </div>
+
+  <div class="header-right">
+    <a href="https://forgeplayid.github.io/desktop/">← BACK</a>
+  </div>
+</div>
+
+<div class="title-bar">
+  <h1>Daftar World</h1>
+
+  <div class="sort-box">
+    SORT
+    <label class="switch">
+      <input type="checkbox" id="sortToggle">
+      <span class="slider-toggle"></span>
+    </label>
+  </div>
+</div>
+
+<div class="sell-world-wrapper">
+  <div class="sell-world-box">
+    <div class="sell-text">
+      💬 <b>Jual World?</b><br>
+      Contact Admin aja, Dijamin Harga Pasti COCOK!
+    </div>
+
+    <a href="https://wa.me/6285175215549?text=Halo%20Admin,%20Saya%20ingin%20menjual%20World%20Saya!"
+       target="_blank"
+       class="sell-btn">
+      Hubungi Sekarang
+    </a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="world-grid" id="grid"></div>
+</div>
+
+<div class="zoom-overlay" id="zoomOverlay">
+  <img id="zoomedImage">
+</div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbz2723jBTnI7pgcaIH946LoS_LzKwRLgfjUxipHvUAeu34Y0jXWGD2lMB59wHxhzWlPEQ/exec";
+
+const grid = document.getElementById("grid");
+const toggle = document.getElementById("sortToggle");
+
+let rawData = [];
+
+toggle.addEventListener("change", render);
+
+function normalizePrice(value){
+  return parseInt(String(value || "").replace(/[^\d]/g, ""), 10) || 0;
+}
+
+function normalizeCurrency(value){
+  const v = String(value || "").trim().toUpperCase();
+  if (v === "WL" || v === "DL" || v === "BGL") return v;
+  return "DL";
+}
+
+async function loadWorlds(){
+  try {
+    const res = await fetch(API + "?action=list_world");
+    const result = await res.json();
+
+    if (!result || result.status !== "success" || !Array.isArray(result.data)) {
+      console.error("Response API tidak valid:", result);
+      rawData = [];
+      render();
+      return;
+    }
+
+    rawData = result.data;
+    render();
+  } catch (err) {
+    console.error("Gagal load world:", err);
+    rawData = [];
+    render();
+  }
+}
+
+function render(){
+  let data = [...rawData];
+
+  if(toggle.checked){
+    data.sort((a,b)=>{
+      const A = (a.status||"").toUpperCase()==="READY" ? 0 : 1;
+      const B = (b.status||"").toUpperCase()==="READY" ? 0 : 1;
+      return A - B;
+    });
+  }
+
+  grid.innerHTML = "";
+
+  if (data.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;background:#1e293b;padding:20px;border-radius:12px;text-align:center;color:#cbd5f5;">
+        Belum ada world yang tersedia.
+      </div>
+    `;
+    return;
+  }
+
+  data.forEach(item=>{
+    if(!item.name) return;
+
+    const isSold = (item.status||"").toUpperCase()==="SOLD";
+    const price = normalizePrice(item.price);
+    const currency = normalizeCurrency(item.currency);
+
+    const el = document.createElement("div");
+    el.className = "world-card";
+
+    el.innerHTML = `
+      <div class="world-image">
+        <img src="${item.image}" class="zoom-img" alt="${item.name}">
+      </div>
+
+      <div class="world-desc">
+        <strong class="world-title">WORLD: ${item.name}</strong>
+        <p class="${isSold?'status-sold':'status-ready'}">${item.status||"READY"}</p>
+        <p>${item.desc ? item.desc.replace(/\n/g,"<br>") : ""}</p>
+        <p class="price-line">HARGA <span class="price-highlight">${price} ${currency}</span></p>
+      </div>
+
+      ${
+        isSold
+        ? `<div class="buy-button" style="background:#ef4444;color:#020617;">SOLD</div>`
+        : `<a class="buy-button" style="background:#22c55e;color:#020617"
+             href="https://wa.me/6285175215549?text=${encodeURIComponent("Saya ingin membeli world " + item.name + " dengan harga " + price + " " + currency)}">
+             BUY WORLD
+           </a>`
+      }
+    `;
+
+    grid.appendChild(el);
+  });
+
+  document.querySelectorAll(".zoom-img").forEach(img=>{
+    img.onclick = ()=>{
+      document.getElementById("zoomOverlay").classList.add("active");
+      document.getElementById("zoomedImage").src = img.src;
+    };
+  });
+}
+
+document.getElementById("zoomOverlay").onclick = ()=>{
+  document.getElementById("zoomOverlay").classList.remove("active");
+};
+
+loadWorlds();
+</script>
+
+</body>
+</html>
