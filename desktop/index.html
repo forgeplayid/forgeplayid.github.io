@@ -46,7 +46,6 @@ body {
   padding:0 15px;
 }
 
-/* ================= SLIDER ================= */
 .slider-container {
   max-width: 860px;
   margin: auto;
@@ -79,7 +78,6 @@ body {
   display: block;
 }
 
-/* ARROW */
 .arrow {
   position: absolute;
   top: 50%;
@@ -100,7 +98,6 @@ body {
 .left { left: 10px; }
 .right { right: 10px; }
 
-/* DOTS */
 .dots {
   display: flex;
   justify-content: center;
@@ -119,7 +116,6 @@ body {
 
 .dot.active { background: white; }
 
-/* ================= INFO BAR ================= */
 .info-bar {
   max-width: 860px;
   margin: 15px auto 0 auto;
@@ -144,7 +140,6 @@ body {
   100% { transform: translateX(-100%); }
 }
 
-/* ================= MENU 2 KOTAK ================= */
 .menu-frame {
   display:flex;
   justify-content:space-between;
@@ -184,7 +179,6 @@ body {
   line-height:1.4;
 }
 
-/* ================= 1 KOTAK PANJANG ================= */
 .buy-frame {
   width:100%;
   max-width:860px;
@@ -211,7 +205,6 @@ body {
   background-color:#0f172a;
 }
 
-/* ================= CONTENT KOSONG ================= */
 .content {
   margin-top:25px;
   height:350px;
@@ -220,7 +213,40 @@ body {
   border:1px dashed #1e293b;
 }
 
-/* ================= FOOTER ================= */
+.topup-game-card {
+  width: 125px;
+  height: 120px;
+  margin: 12px 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #0f172a;
+  border: 2px solid #ef4444;
+  border-radius: 4px;
+  text-decoration: none;
+  color: white;
+  transition: 0.2s;
+}
+
+.topup-game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 15px rgba(239,68,68,0.35);
+}
+
+.topup-game-card img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.topup-game-card span {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
 .site-footer {
   margin-top: 40px;
   background:
@@ -402,7 +428,6 @@ body {
   100% { transform: translateX(-50%); }
 }
 
-/* RESPONSIVE */
 @media(max-width:768px){
   .header {
     padding:15px 20px;
@@ -488,6 +513,21 @@ body {
     height:260px;
   }
 
+  .topup-game-card {
+    width: 105px;
+    height: 105px;
+    margin: 10px 0 0 12px;
+  }
+
+  .topup-game-card img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .topup-game-card span {
+    font-size: 12px;
+  }
+
   .footer-title {
     font-size:16px;
   }
@@ -561,7 +601,12 @@ body {
     </a>
   </div>
 
-  <div class="content"></div>
+  <div class="content">
+    <a class="topup-game-card" href="https://forgeplayid.github.io/topup/ml">
+      <img src="https://forgeplayid.github.io/assets/mobile-legends.png" alt="Mobile Legends">
+      <span>Mobile Legends</span>
+    </a>
+  </div>
 </div>
 
 <footer class="site-footer">
@@ -621,7 +666,6 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_6B0ZkW-ryB9pN6YRN
 const INFO_URL = "https://script.google.com/macros/s/AKfycbxYxV7kT33anTWZXbrTpOifn_mYBzr9RCAqG4gs4CVUMRk_Y-wrovB-zfT1ehLEGEe-/exec";
 const SLIDER_URL = "https://script.google.com/macros/s/AKfycbxulVbiclCTigVLpe0HYeWFzolxLECxMPeQ35isAQUriVdLuGWYJUf8qL2qeSnIBA0r/exec";
 
-/* SLIDER */
 let slides = [];
 let current = 0;
 let sliderTimer = null;
@@ -748,7 +792,6 @@ prevBtn.onclick = () => {
   restartAutoSlide();
 };
 
-/* HARGA */
 function formatRupiah(a){
   if(!a) return "Rp. -";
   return "Rp. " + Number(a).toLocaleString("id-ID");
@@ -767,7 +810,6 @@ async function loadHarga(){
   }
 }
 
-/* INFO */
 async function loadInfo(){
   try {
     const res = await fetch(INFO_URL + "?t=" + Date.now());
