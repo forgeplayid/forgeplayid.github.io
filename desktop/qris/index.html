@@ -308,21 +308,25 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
         <div class="qris-sub">QR Code Standar<br>Pembayaran Nasional</div>
       </div>
       <div class="corner-frame">
-        <h1>Pembayaran Digital</h1>
-        <p class="subtitle">Masukkan nominal untuk membuat QRIS</p>
+        <h1>Dukungan ForgePlay</h1>
+        <p class="subtitle">Masukkan nominal donasi untuk membuat QRIS</p>
         <div class="amount-box">
-          <div class="amount-label">NOMINAL BAYAR</div>
+          <div class="amount-label">NOMINAL DONASI</div>
           <div class="amount-line">
             <span class="currency">Rp</span>
-            <input id="amount" type="text" inputmode="numeric" autocomplete="off" value="1.000" aria-label="Nominal pembayaran">
+            <input id="amount" type="text" inputmode="numeric" autocomplete="off" value="10.000" aria-label="Nominal pembayaran">
           </div>
         </div>
         <div class="quick">
           <button type="button" data-value="10000">10K</button>
-          <button type="button" data-value="50000">50K</button>
+          <button type="button" data-value="25000">25K</button>
           <button type="button" data-value="100000">100K</button>
         </div>
-        <button class="primary" id="generate"><span>▦</span> Lanjutkan</button>
+        <div id="turnstileBox" style="display:flex;justify-content:center;margin:12px 0">
+          <div class="cf-turnstile" data-sitekey="GANTI_DENGAN_TURNSTILE_SITE_KEY"></div>
+        </div>
+        <button class="primary" id="generate"><span>▦</span> Buat QRIS Donasi</button>
+        <p id="formMessage" class="small-copy" role="status" style="margin-top:10px"></p>
       </div>
       <div class="small-title">SATU QRIS UNTUK SEMUA</div>
       <p class="small-copy">Cek aplikasi penyelenggara<br>di: www.saweria.co</p>
@@ -339,14 +343,8 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
       </div>
       <div class="qr-wrap">
         
-        <svg class="qr-pattern" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg" aria-label="QR placeholder">
-          <rect width="210" height="210" fill="white"/>
-          <defs><pattern id="p" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="#050505"/><rect x="7" y="7" width="7" height="7" fill="#050505"/></pattern></defs>
-          <rect x="8" y="8" width="194" height="194" fill="url(#p)"/>
-          <rect x="8" y="8" width="56" height="56" fill="white"/><rect x="14" y="14" width="44" height="44" fill="black"/><rect x="21" y="21" width="30" height="30" fill="white"/><rect x="28" y="28" width="16" height="16" fill="black"/>
-          <rect x="146" y="8" width="56" height="56" fill="white"/><rect x="152" y="14" width="44" height="44" fill="black"/><rect x="159" y="21" width="30" height="30" fill="white"/><rect x="166" y="28" width="16" height="16" fill="black"/>
-          <rect x="8" y="146" width="56" height="56" fill="white"/><rect x="14" y="152" width="44" height="44" fill="black"/><rect x="21" y="159" width="30" height="30" fill="white"/><rect x="28" y="166" width="16" height="16" fill="black"/>
-        </svg>
+        <div id="qrCode" class="qr-pattern" role="img" aria-label="QRIS pembayaran"></div>
+
       </div>
       <div class="small-title">SATU QRIS UNTUK SEMUA</div>
       <p class="small-copy">Scan menggunakan aplikasi pembayaran<br>yang mendukung QRIS</p>
@@ -359,11 +357,11 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
     <div class="total" id="resultAmount">Rp 1.000</div>
     <div class="details">
       <div class="detail-row"><span>Merchant</span><strong>forgeplay.id</strong></div>
-      <div class="detail-row"><span>NMID</span><strong>ID0123456789012</strong></div>
+      <div class="detail-row"><span>ID Transaksi</span><strong id="transactionId">-</strong></div>
       <div class="detail-row"><span>Status</span><strong>Belum Dibayar</strong></div>
     </div>
     <div class="countdown" id="countdown">Batas pembayaran: 15:00</div>
-    <button class="primary" id="paid">✓ &nbsp; Saya Sudah Bayar</button>
+    <p class="small-copy">Status pembayaran akan dikonfirmasi melalui sistem pembayaran. Jangan menganggap pembayaran berhasil hanya dengan menekan tombol.</p>
     <button class="secondary" id="back">↶ &nbsp; Ganti Nominal</button>
   </div>
 
@@ -391,7 +389,10 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
 
   <footer class="footer">© 2026 <strong>forgeplay.id</strong> · Secured Payment</footer>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
+const WORKER_API = 'https://saweria-lab-forgeplayid.forgeplayid.workers.dev';
 const amountInput=document.getElementById('amount');
 const quickButtons=[...document.querySelectorAll('.quick button')];
 const formatID=n=>Number(n||0).toLocaleString('id-ID');
@@ -409,33 +410,79 @@ quickButtons.forEach(button=>{
   });
 });
 let timer=null;
-document.getElementById('generate').addEventListener('click',()=>{
+document.getElementById('generate').addEventListener('click', async ()=>{
   const amount=Number(rawAmount());
-  if(!Number.isSafeInteger(amount)||amount<1000){
-    alert('Masukkan nominal minimal Rp1.000.');
-    amountInput.focus();return;
+  const message=document.getElementById('formMessage');
+  const button=document.getElementById('generate');
+
+  if(!Number.isSafeInteger(amount)||amount<10000){
+    message.textContent='Minimal donasi Rp10.000.';
+    amountInput.focus();
+    return;
   }
-  document.getElementById('resultAmount').textContent='Rp '+formatID(amount);
-  document.getElementById('entryStage').classList.add('hidden');
-  document.getElementById('resultStage').classList.remove('hidden');
-  document.getElementById('resultContent').classList.remove('hidden');
-  document.getElementById('confirmStage').classList.add('hidden');
-  document.getElementById('confirmActions').classList.add('hidden');
-  let remaining=900;
-  clearInterval(timer);
-  const render=()=>{
-    const m=String(Math.floor(remaining/60)).padStart(2,'0');
-    const s=String(remaining%60).padStart(2,'0');
-    document.getElementById('countdown').textContent='Batas pembayaran: '+m+':'+s;
-    if(remaining<=0){
-      clearInterval(timer);
-      document.getElementById('countdown').textContent='Waktu pembayaran telah habis.';
-      return;
+
+  if(typeof turnstile==='undefined'){
+    message.textContent='Verifikasi keamanan belum siap. Muat ulang halaman.';
+    return;
+  }
+
+  const turnstileToken=turnstile.getResponse();
+  if(!turnstileToken){
+    message.textContent='Selesaikan verifikasi keamanan terlebih dahulu.';
+    return;
+  }
+
+  button.disabled=true;
+  button.textContent='Membuat QRIS...';
+  message.textContent='Menghubungi layanan pembayaran. Mohon tunggu.';
+
+  try {
+    const response=await fetch(WORKER_API+'/create', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        amount,
+        turnstileToken
+      })
+    });
+
+    const result=await response.json();
+    if(!response.ok || !result.success || !result.qrString){
+      throw new Error(result.error || 'QRIS gagal dibuat.');
     }
-    remaining--;
-  };
-  render();timer=setInterval(render,1000);
-  window.scrollTo({top:0,behavior:'smooth'});
+
+    document.getElementById('resultAmount').textContent='Rp '+formatID(amount);
+    document.getElementById('entryStage').classList.add('hidden');
+    document.getElementById('resultStage').classList.remove('hidden');
+    document.getElementById('resultContent').classList.remove('hidden');
+    document.getElementById('confirmStage').classList.add('hidden');
+    document.getElementById('confirmActions').classList.add('hidden');
+
+    const qrTarget=document.getElementById('qrCode');
+    qrTarget.innerHTML='';
+    if(typeof QRCode==='undefined') throw new Error('Library QR belum termuat. Muat ulang halaman.');
+    new QRCode(qrTarget,{
+      text:result.qrString,
+      width:260,
+      height:260,
+      colorDark:'#000000',
+      colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.M
+    });
+
+    document.querySelector('.waiting').innerHTML='<span class="dot"></span>MENUNGGU PEMBAYARAN';
+    document.getElementById('transactionId').textContent=result.transactionId;
+    document.querySelector('#resultContent .details .detail-row:nth-child(3) strong').textContent='Menunggu konfirmasi Saweria';
+    document.getElementById('countdown').textContent='Selesaikan pembayaran melalui aplikasi yang mendukung QRIS.';
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(typeof turnstile!=='undefined') turnstile.reset();
+  } catch(error) {
+    message.textContent=error.message || 'Terjadi kesalahan saat membuat QRIS.';
+    if(typeof turnstile!=='undefined') turnstile.reset();
+  } finally {
+    button.disabled=false;
+    button.innerHTML='<span>▦</span> Buat QRIS Donasi';
+  }
 });
 document.getElementById('back').addEventListener('click',()=>{
   clearInterval(timer);
@@ -492,7 +539,8 @@ function cleanCharacterBackground(img){
 document.querySelectorAll('.character img').forEach(cleanCharacterBackground);
 
 const ADMIN_WHATSAPP = ''; // Isi nomor admin, format internasional tanpa tanda +, contoh 62812xxxxxxx.
-document.getElementById('paid').addEventListener('click',()=>{
+const paidButton=document.getElementById('paid');
+if(paidButton) paidButton.addEventListener('click',()=>{
   clearInterval(timer);
   document.getElementById('resultStage').classList.add('hidden');
   document.getElementById('resultContent').classList.add('hidden');
@@ -507,7 +555,7 @@ document.getElementById('sendProof').addEventListener('click',()=>{
   }
   const amount=document.getElementById('resultAmount').textContent;
   const msg=encodeURIComponent('Halo Admin, saya ingin mengirim bukti pembayaran QRIS. Nominal: '+amount);
-  window.open('https://wa.me/'+6285175215549+'?text='+msg,'_blank');
+  window.open('https://wa.me/'+ADMIN_WHATSAPP+'?text='+msg,'_blank');
 });
 document.getElementById('returnHome').addEventListener('click',()=>{
   document.getElementById('confirmStage').classList.add('hidden');
