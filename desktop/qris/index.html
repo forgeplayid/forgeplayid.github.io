@@ -490,31 +490,52 @@ document.getElementById('receiptBack').addEventListener('click',()=>{
     document.getElementById('formMessage').textContent='Tidak dapat memverifikasi bukti. Coba lagi.';
   }
 })();
-\n</script>
+
+</script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
 const WORKER_API = 'https://saweria-lab-forgeplayid.forgeplayid.workers.dev';
 const amountInput=document.getElementById('amount');
 const quickButtons=[...document.querySelectorAll('.quick button')];
 const formatID=n=>Number(n||0).toLocaleString('id-ID');
-const rawAmount=()=>amountInput.value.replace(/\D/g,'');
-function formatAmount(){
+const rawAmount=()=>amountInput.value.replace(/[^0-9]/g,'');
+function formatAmount(preserveCaret=true){
+  const before=amountInput.value;
+  const caret=amountInput.selectionStart ?? before.length;
+  const digitsBeforeCaret=before.slice(0,caret).replace(/[^0-9]/g,'').length;
   const raw=rawAmount();
-  amountInput.value=raw?Number(raw).toLocaleString('id-ID'):'';
-  quickButtons.forEach(b=>b.classList.toggle('active',Number(raw)===Number(b.dataset.value)));
+  const formatted=raw ? Number(raw).toLocaleString('id-ID') : '';
+  amountInput.value=formatted;
+
+  // Keep the cursor at the same digit position while adding thousand separators.
+  if(preserveCaret && document.activeElement===amountInput){
+    let nextCaret=0,seenDigits=0;
+    while(nextCaret<formatted.length && seenDigits<digitsBeforeCaret){
+      if(/[0-9]/.test(formatted[nextCaret])) seenDigits++;
+      nextCaret++;
+    }
+    amountInput.setSelectionRange(nextCaret,nextCaret);
+  }
+
+  quickButtons.forEach(b=>{
+    b.classList.toggle('active',Number(raw)===Number(b.dataset.value));
+  });
 }
-amountInput.addEventListener('input',formatAmount);
+amountInput.addEventListener('input',()=>formatAmount(true));
+amountInput.addEventListener('blur',()=>formatAmount(false));
 quickButtons.forEach(button=>{
   button.addEventListener('click',()=>{
     amountInput.value=button.dataset.value;
-    formatAmount();
+    formatAmount(false);
+    amountInput.focus();
   });
 });
 let timer=null;
 let statusPoller=null;
 let activeTransactionId=null;
 let qrDisplayDeadline=0;
-let transactionFinished=false;\nlet confirmedPayment=null;
+let transactionFinished=false;
+let confirmedPayment=null;
 
 function stopTransactionTimers(){
   if(timer) clearInterval(timer);
