@@ -345,10 +345,18 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
         <div class="qris-logo">QRIS</div>
         <div class="qris-sub">QR Code Standar<br>Pembayaran Nasional</div>
       </div>
-      <div class="qr-wrap">
-        
+      <div class="qr-wrap" id="qrWrap">
         <div id="qrCode" class="qr-pattern" role="img" aria-label="QRIS pembayaran"></div>
-
+      </div>
+      <div id="paymentSuccess" class="hidden" style="text-align:center;padding:24px 8px 28px">
+        <div aria-hidden="true" style="width:100px;height:100px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;background:#123d2b;border:3px solid #35d68a;color:#52e39d;font-size:66px;box-shadow:0 0 30px #35d68a33">✓</div>
+        <h1 style="font-size:25px;color:#52e39d;margin-bottom:9px">PEMBAYARAN BERHASIL</h1>
+        <p class="small-copy">Terima kasih sudah mendukung ForgePlay!</p>
+      </div>
+      <div id="paymentExpired" class="hidden" style="text-align:center;padding:24px 8px 28px">
+        <div aria-hidden="true" style="width:82px;height:82px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:#392a12;border:2px solid #e9ad45;color:#ffc45e;font-size:42px">⌛</div>
+        <h1 style="font-size:23px;color:#ffc45e;margin-bottom:9px">WAKTU QR HABIS</h1>
+        <p class="small-copy">QR disembunyikan dari halaman ini. Buat QRIS baru jika ingin melanjutkan.</p>
       </div>
       <div class="small-title">SATU QRIS UNTUK SEMUA</div>
       <p class="small-copy">Scan menggunakan aplikasi pembayaran<br>yang mendukung QRIS</p>
@@ -361,9 +369,9 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
     <div class="total" id="resultAmount">Rp 1.000</div>
     <div class="details">
       <div class="detail-row"><span>ID Transaksi</span><strong id="transactionId">-</strong></div>
-      <div class="detail-row"><span>Status</span><strong>Belum Dibayar</strong></div>
+      <div class="detail-row"><span>Status</span><strong id="paymentStatusText">Menunggu konfirmasi Saweria</strong></div>
     </div>
-    <div class="countdown" id="countdown">Batas pembayaran: 15:00</div>
+    <div class="countdown" id="countdown">Sisa waktu tampilan QR: 10:00</div>
     <p class="small-copy">Status pembayaran akan dikonfirmasi melalui sistem pembayaran. Jangan menganggap pembayaran berhasil hanya dengan menekan tombol.</p>
     <button class="secondary" id="back">↶ &nbsp; Ganti Nominal</button>
   </div>
@@ -413,6 +421,89 @@ quickButtons.forEach(button=>{
   });
 });
 let timer=null;
+let statusPoller=null;
+let activeTransactionId=null;
+let qrDisplayDeadline=0;
+let transactionFinished=false;
+
+function stopTransactionTimers(){
+  if(timer) clearInterval(timer);
+  if(statusPoller) clearInterval(statusPoller);
+  timer=null;
+  statusPoller=null;
+}
+
+function showPaymentSuccess(){
+  if(transactionFinished) return;
+  transactionFinished=true;
+  stopTransactionTimers();
+  document.getElementById('qrWrap').classList.add('hidden');
+  document.getElementById('paymentExpired').classList.add('hidden');
+  document.getElementById('paymentSuccess').classList.remove('hidden');
+  document.querySelector('.waiting').innerHTML='<span style="color:#52e39d;margin-right:8px">●</span>PEMBAYARAN BERHASIL';
+  document.getElementById('paymentStatusText').textContent='Sudah Dibayar';
+  document.getElementById('countdown').textContent='Pembayaran telah dikonfirmasi oleh Saweria.';
+  document.getElementById('back').textContent='↶  Kembali ke Awal';
+}
+
+function showPaymentExpired(){
+  if(transactionFinished) return;
+  transactionFinished=true;
+  stopTransactionTimers();
+  document.getElementById('qrWrap').classList.add('hidden');
+  document.getElementById('paymentSuccess').classList.add('hidden');
+  document.getElementById('paymentExpired').classList.remove('hidden');
+  document.querySelector('.waiting').innerHTML='<span style="color:#ffc45e;margin-right:8px">●</span>SESI TAMPILAN QR BERAKHIR';
+  document.getElementById('paymentStatusText').textContent='Waktu tampilan habis';
+  document.getElementById('countdown').textContent='QR disembunyikan dari website; ini tidak membatalkan QR di Saweria.';
+  document.getElementById('back').textContent='↶  Buat QRIS Baru';
+}
+
+async function checkPaymentStatus(){
+  if(!activeTransactionId || transactionFinished) return;
+  try{
+    const response=await fetch(
+      WORKER_API+'/status?id='+encodeURIComponent(activeTransactionId),
+      {method:'GET',cache:'no-store'}
+    );
+    if(!response.ok) return;
+    const statusResult=await response.json();
+    if(statusResult.success && statusResult.status==='PAID'){
+      showPaymentSuccess();
+    }
+  }catch(error){
+    console.warn('Pemeriksaan status pembayaran akan dicoba kembali.');
+  }
+}
+
+function startTransactionMonitoring(expiresAt){
+  stopTransactionTimers();
+  transactionFinished=false;
+  const serverExpiry=expiresAt ? Date.parse(expiresAt) : NaN;
+  qrDisplayDeadline=Number.isFinite(serverExpiry)
+    ? serverExpiry
+    : Date.now()+(10*60*1000);
+
+  function tick(){
+    if(transactionFinished) return;
+    const remaining=Math.max(0,qrDisplayDeadline-Date.now());
+    const minutes=Math.floor(remaining/60000);
+    const seconds=Math.floor((remaining%60000)/1000);
+    document.getElementById('countdown').textContent='Sisa waktu tampilan QR: '+
+      String(minutes).padStart(2,'0')+':'+String(seconds).padStart(2,'0');
+    if(remaining<=0){
+      checkPaymentStatus().finally(()=>{
+        if(!transactionFinished) showPaymentExpired();
+      });
+    }
+  }
+
+  tick();
+  timer=setInterval(tick,1000);
+  statusPoller=setInterval(checkPaymentStatus,3000);
+  checkPaymentStatus();
+}
+
 document.getElementById('generate').addEventListener('click', async ()=>{
   const amount=Number(rawAmount());
   const message=document.getElementById('formMessage');
@@ -454,6 +545,9 @@ document.getElementById('generate').addEventListener('click', async ()=>{
       throw new Error(result.error || 'QRIS gagal dibuat.');
     }
 
+    stopTransactionTimers();
+    activeTransactionId=result.transactionId;
+    transactionFinished=false;
     document.getElementById('resultAmount').textContent='Rp '+formatID(amount);
     document.getElementById('entryStage').classList.add('hidden');
     document.getElementById('resultStage').classList.remove('hidden');
@@ -475,8 +569,12 @@ document.getElementById('generate').addEventListener('click', async ()=>{
 
     document.querySelector('.waiting').innerHTML='<span class="dot"></span>MENUNGGU PEMBAYARAN';
     document.getElementById('transactionId').textContent=result.transactionId;
-    document.querySelector('#resultContent .details .detail-row:nth-child(3) strong').textContent='Menunggu konfirmasi Saweria';
-    document.getElementById('countdown').textContent='Selesaikan pembayaran melalui aplikasi yang mendukung QRIS.';
+    document.getElementById('paymentStatusText').textContent='Menunggu konfirmasi Saweria';
+    document.getElementById('qrWrap').classList.remove('hidden');
+    document.getElementById('paymentSuccess').classList.add('hidden');
+    document.getElementById('paymentExpired').classList.add('hidden');
+    document.getElementById('back').textContent='↶  Ganti Nominal';
+    startTransactionMonitoring(result.expiresAt);
     window.scrollTo({top:0,behavior:'smooth'});
     if(typeof turnstile!=='undefined') turnstile.reset();
   } catch(error) {
@@ -488,7 +586,8 @@ document.getElementById('generate').addEventListener('click', async ()=>{
   }
 });
 document.getElementById('back').addEventListener('click',()=>{
-  clearInterval(timer);
+  stopTransactionTimers();
+  activeTransactionId=null;
   document.getElementById('resultStage').classList.add('hidden');
   document.getElementById('resultContent').classList.add('hidden');
   document.getElementById('confirmStage').classList.add('hidden');
@@ -541,31 +640,7 @@ function cleanCharacterBackground(img){
 }
 document.querySelectorAll('.character img').forEach(cleanCharacterBackground);
 
-const ADMIN_WHATSAPP = ''; // Isi nomor admin, format internasional tanpa tanda +, contoh 62812xxxxxxx.
-const paidButton=document.getElementById('paid');
-if(paidButton) paidButton.addEventListener('click',()=>{
-  clearInterval(timer);
-  document.getElementById('resultStage').classList.add('hidden');
-  document.getElementById('resultContent').classList.add('hidden');
-  document.getElementById('confirmStage').classList.remove('hidden');
-  document.getElementById('confirmActions').classList.remove('hidden');
-  window.scrollTo({top:0,behavior:'smooth'});
-});
-document.getElementById('sendProof').addEventListener('click',()=>{
-  if(!ADMIN_WHATSAPP){
-    alert('Nomor WhatsApp admin belum diatur. Isi ADMIN_WHATSAPP di bagian JavaScript.');
-    return;
-  }
-  const amount=document.getElementById('resultAmount').textContent;
-  const msg=encodeURIComponent('Halo Admin, saya ingin mengirim bukti pembayaran QRIS. Nominal: '+amount);
-  window.open('https://wa.me/'+ADMIN_WHATSAPP+'?text='+msg,'_blank');
-});
-document.getElementById('returnHome').addEventListener('click',()=>{
-  document.getElementById('confirmStage').classList.add('hidden');
-  document.getElementById('confirmActions').classList.add('hidden');
-  document.getElementById('entryStage').classList.remove('hidden');
-  window.scrollTo({top:0,behavior:'smooth'});
-});
+
 
 </script>
 </body>
