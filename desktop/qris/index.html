@@ -432,66 +432,7 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
 
   <footer class="footer">© 2026 <strong>forgeplay.id</strong> · Secured Payment</footer>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer>
-// Receipt is shown only after the payment status endpoint returns PAID.
-document.getElementById('viewReceipt').addEventListener('click',()=>{
-  if(!confirmedPayment || confirmedPayment.status!=='PAID') return;
-  const url=new URL(window.location.href);
-  url.searchParams.set('receipt',confirmedPayment.transactionId);
-  history.replaceState(null,'',url.toString());
-  showReceiptView(confirmedPayment);
-});
-
-document.getElementById('shareReceipt').addEventListener('click',async()=>{
-  const url=new URL(window.location.href);
-  const receiptId=new URLSearchParams(window.location.search).get('receipt');
-  if(!receiptId && confirmedPayment) url.searchParams.set('receipt',confirmedPayment.transactionId);
-  const message=document.getElementById('receiptMessage');
-  try{
-    await navigator.clipboard.writeText(url.toString());
-    message.textContent='Link bukti berhasil disalin.';
-  }catch(error){
-    message.textContent='Salin URL dari address bar browser untuk membagikan bukti ini.';
-  }
-});
-
-document.getElementById('receiptBack').addEventListener('click',()=>{
-  const url=new URL(window.location.href);
-  url.searchParams.delete('receipt');
-  history.replaceState(null,'',url.toString());
-  document.getElementById('receiptStage').classList.add('hidden');
-  document.getElementById('entryStage').classList.remove('hidden');
-  window.scrollTo({top:0,behavior:'smooth'});
-});
-
-(async function loadSharedReceipt(){
-  const receiptId=new URLSearchParams(window.location.search).get('receipt');
-  if(!receiptId) return;
-  document.getElementById('entryStage').classList.add('hidden');
-  document.getElementById('receiptStage').classList.remove('hidden');
-  document.getElementById('receiptMessage').textContent='Memverifikasi bukti pembayaran...';
-  try{
-    const response=await fetch(WORKER_API+'/status?id='+encodeURIComponent(receiptId),{
-      method:'GET',cache:'no-store'
-    });
-    const data=await response.json();
-    if(!response.ok || !data.success || data.status!=='PAID'){
-      document.getElementById('receiptStage').classList.add('hidden');
-      document.getElementById('entryStage').classList.remove('hidden');
-      document.getElementById('formMessage').textContent='Bukti tidak ditemukan atau pembayaran belum terkonfirmasi.';
-      return;
-    }
-    confirmedPayment=data;
-    populateReceipt(data);
-    document.getElementById('receiptMessage').textContent='Bukti pembayaran berhasil diverifikasi.';
-  }catch(error){
-    document.getElementById('receiptStage').classList.add('hidden');
-    document.getElementById('entryStage').classList.remove('hidden');
-    document.getElementById('formMessage').textContent='Tidak dapat memverifikasi bukti. Coba lagi.';
-  }
-})();
-
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
 const WORKER_API = 'https://saweria-lab-forgeplayid.forgeplayid.workers.dev';
@@ -742,6 +683,71 @@ document.querySelectorAll('.character img').forEach(img=>{
   img.style.mixBlendMode='normal';
 });
 
+
+
+
+// Receipt is shown only after the payment status endpoint returns PAID.
+document.getElementById('viewReceipt').addEventListener('click',()=>{
+  if(!confirmedPayment || confirmedPayment.status!=='PAID'){
+    document.getElementById('receiptMessage').textContent='Pembayaran belum terverifikasi. Tunggu konfirmasi lalu coba lagi.';
+    return;
+  }
+  confirmedPayment.transactionId=confirmedPayment.transactionId || activeTransactionId;
+  confirmedPayment.amount=confirmedPayment.amount || Number(rawAmount());
+  const url=new URL(window.location.href);
+  url.searchParams.set('receipt',confirmedPayment.transactionId);
+  history.replaceState(null,'',url.toString());
+  showReceiptView(confirmedPayment);
+});
+
+document.getElementById('shareReceipt').addEventListener('click',async()=>{
+  const url=new URL(window.location.href);
+  const receiptId=new URLSearchParams(window.location.search).get('receipt');
+  if(!receiptId && confirmedPayment) url.searchParams.set('receipt',confirmedPayment.transactionId);
+  const message=document.getElementById('receiptMessage');
+  try{
+    await navigator.clipboard.writeText(url.toString());
+    message.textContent='Link bukti berhasil disalin.';
+  }catch(error){
+    message.textContent='Salin URL dari address bar browser untuk membagikan bukti ini.';
+  }
+});
+
+document.getElementById('receiptBack').addEventListener('click',()=>{
+  const url=new URL(window.location.href);
+  url.searchParams.delete('receipt');
+  history.replaceState(null,'',url.toString());
+  document.getElementById('receiptStage').classList.add('hidden');
+  document.getElementById('entryStage').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+(async function loadSharedReceipt(){
+  const receiptId=new URLSearchParams(window.location.search).get('receipt');
+  if(!receiptId) return;
+  document.getElementById('entryStage').classList.add('hidden');
+  document.getElementById('receiptStage').classList.remove('hidden');
+  document.getElementById('receiptMessage').textContent='Memverifikasi bukti pembayaran...';
+  try{
+    const response=await fetch(WORKER_API+'/status?id='+encodeURIComponent(receiptId),{
+      method:'GET',cache:'no-store'
+    });
+    const data=await response.json();
+    if(!response.ok || !data.success || data.status!=='PAID'){
+      document.getElementById('receiptStage').classList.add('hidden');
+      document.getElementById('entryStage').classList.remove('hidden');
+      document.getElementById('formMessage').textContent='Bukti tidak ditemukan atau pembayaran belum terkonfirmasi.';
+      return;
+    }
+    confirmedPayment=data;
+    populateReceipt(data);
+    document.getElementById('receiptMessage').textContent='Bukti pembayaran berhasil diverifikasi.';
+  }catch(error){
+    document.getElementById('receiptStage').classList.add('hidden');
+    document.getElementById('entryStage').classList.remove('hidden');
+    document.getElementById('formMessage').textContent='Tidak dapat memverifikasi bukti. Coba lagi.';
+  }
+})();
 
 
 </script>
