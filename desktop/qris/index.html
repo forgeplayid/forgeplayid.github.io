@@ -352,6 +352,7 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
         <div aria-hidden="true" style="width:100px;height:100px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;background:#123d2b;border:3px solid #35d68a;color:#52e39d;font-size:66px;box-shadow:0 0 30px #35d68a33">✓</div>
         <h1 style="font-size:25px;color:#52e39d;margin-bottom:9px">PEMBAYARAN BERHASIL</h1>
         <p class="small-copy">Terima kasih sudah mendukung ForgePlay!</p>
+        <button class="primary" id="viewReceipt" type="button" style="margin-top:20px">Lihat Bukti Donasi</button>
       </div>
       <div id="paymentExpired" class="hidden" style="text-align:center;padding:24px 8px 28px">
         <div aria-hidden="true" style="width:82px;height:82px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:#392a12;border:2px solid #e9ad45;color:#ffc45e;font-size:42px">⌛</div>
@@ -375,6 +376,37 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
     <p class="small-copy">Status pembayaran akan dikonfirmasi melalui sistem pembayaran. Jangan menganggap pembayaran berhasil hanya dengan menekan tombol.</p>
     <button class="secondary" id="back">↶ &nbsp; Ganti Nominal</button>
   </div>
+
+  <section id="receiptStage" class="hidden" style="max-width:560px;margin:22px auto 0;position:relative;z-index:5">
+    <div class="panel" style="width:100%;min-height:0;padding:30px 26px;border-radius:28px">
+      <div style="text-align:center">
+        <div style="font-size:27px;font-weight:950;font-style:italic;letter-spacing:-1px">forgeplay.id</div>
+        <div style="font-size:11px;letter-spacing:3px;color:#a9c3ee;margin-top:5px">BUKTI DONASI DIGITAL</div>
+        <div style="width:76px;height:76px;margin:24px auto 12px;border-radius:50%;display:grid;place-items:center;background:#123d2b;border:2px solid #35d68a;color:#52e39d;font-size:48px">✓</div>
+        <div style="font-size:22px;font-weight:950;color:#52e39d">PEMBAYARAN BERHASIL</div>
+        <p class="small-copy" style="margin-top:7px">Terima kasih telah mendukung ForgePlay.</p>
+      </div>
+      <div style="margin:25px 0 18px;padding:22px 14px;text-align:center;background:#09152e;border:1px solid #36517c;border-radius:18px">
+        <div style="font-size:11px;letter-spacing:2px;color:#a9c3ee;font-weight:850">TOTAL DONASI</div>
+        <div id="receiptAmount" style="font-size:36px;font-weight:950;margin-top:5px">Rp 0</div>
+      </div>
+      <div style="display:grid;gap:0;background:#0a1429;border:1px solid #2c4268;border-radius:16px;padding:16px">
+        <div class="detail-row"><span>Nomor bukti</span><strong id="receiptNumber">-</strong></div>
+        <div class="detail-row"><span>ID transaksi</span><strong id="receiptTransaction">-</strong></div>
+        <div class="detail-row"><span>Metode</span><strong>QRIS</strong></div>
+        <div class="detail-row"><span>Penerima</span><strong>ForgePlayID</strong></div>
+        <div class="detail-row"><span>Tanggal dibayar</span><strong id="receiptDate">-</strong></div>
+        <div class="detail-row"><span>Status</span><strong style="color:#52e39d">LUNAS</strong></div>
+      </div>
+      <div style="margin-top:18px;padding:13px;border:1px dashed #4269a3;border-radius:12px;text-align:center">
+        <div style="font-size:12px;font-weight:850">BUKTI DONASI ELEKTRONIK FORGEPLAY</div>
+        <div style="font-size:11px;color:#9fb2d2;line-height:1.6;margin-top:5px">Diterbitkan oleh website ForgePlay berdasarkan status pembayaran terkonfirmasi dari sistem pembayaran.</div>
+      </div>
+      <div id="receiptMessage" class="small-copy" role="status" style="margin-top:14px"></div>
+      <button class="primary" id="shareReceipt" type="button" style="margin-top:16px">Salin Link Bukti</button>
+      <button class="secondary" id="receiptBack" type="button">Kembali ke Halaman Donasi</button>
+    </div>
+  </section>
 
   <section class="stage result-stage hidden" id="confirmStage">
     <div class="character left"><img src="https://forgeplayid.github.io/assets/spongebob-good.png" alt="SpongeBob"></div>
@@ -400,7 +432,66 @@ body:before{background:radial-gradient(ellipse at 50% 38%,#14254a 0,transparent 
 
   <footer class="footer">© 2026 <strong>forgeplay.id</strong> · Secured Payment</footer>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer>
+
+// ForgePlay web receipt: only render after Worker confirms PAID.
+document.getElementById('viewReceipt').addEventListener('click',()=>{
+  if(!confirmedPayment || confirmedPayment.status!=='PAID') return;
+  const url=new URL(window.location.href);
+  url.searchParams.set('receipt',confirmedPayment.transactionId);
+  history.replaceState(null,'',url.toString());
+  showReceiptView(confirmedPayment);
+});
+
+document.getElementById('shareReceipt').addEventListener('click',async()=>{
+  const url=new URL(window.location.href);
+  const receiptId=new URLSearchParams(window.location.search).get('receipt');
+  if(!receiptId && confirmedPayment) url.searchParams.set('receipt',confirmedPayment.transactionId);
+  const message=document.getElementById('receiptMessage');
+  try{
+    await navigator.clipboard.writeText(url.toString());
+    message.textContent='Link bukti berhasil disalin.';
+  }catch(error){
+    message.textContent='Salin URL dari address bar browser untuk membagikan bukti ini.';
+  }
+});
+
+document.getElementById('receiptBack').addEventListener('click',()=>{
+  const url=new URL(window.location.href);
+  url.searchParams.delete('receipt');
+  history.replaceState(null,'',url.toString());
+  document.getElementById('receiptStage').classList.add('hidden');
+  document.getElementById('entryStage').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+(async function loadSharedReceipt(){
+  const receiptId=new URLSearchParams(window.location.search).get('receipt');
+  if(!receiptId) return;
+  document.getElementById('entryStage').classList.add('hidden');
+  document.getElementById('receiptStage').classList.remove('hidden');
+  document.getElementById('receiptMessage').textContent='Memverifikasi bukti pembayaran...';
+  try{
+    const response=await fetch(WORKER_API+'/status?id='+encodeURIComponent(receiptId),{
+      method:'GET',cache:'no-store'
+    });
+    const data=await response.json();
+    if(!response.ok || !data.success || data.status!=='PAID'){
+      document.getElementById('receiptStage').classList.add('hidden');
+      document.getElementById('entryStage').classList.remove('hidden');
+      document.getElementById('formMessage').textContent='Bukti tidak ditemukan atau pembayaran belum terkonfirmasi.';
+      return;
+    }
+    confirmedPayment=data;
+    populateReceipt(data);
+    document.getElementById('receiptMessage').textContent='Bukti pembayaran berhasil diverifikasi.';
+  }catch(error){
+    document.getElementById('receiptStage').classList.add('hidden');
+    document.getElementById('entryStage').classList.remove('hidden');
+    document.getElementById('formMessage').textContent='Tidak dapat memverifikasi bukti. Coba lagi.';
+  }
+})();
+\n</script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
 const WORKER_API = 'https://saweria-lab-forgeplayid.forgeplayid.workers.dev';
@@ -424,13 +515,41 @@ let timer=null;
 let statusPoller=null;
 let activeTransactionId=null;
 let qrDisplayDeadline=0;
-let transactionFinished=false;
+let transactionFinished=false;\nlet confirmedPayment=null;
 
 function stopTransactionTimers(){
   if(timer) clearInterval(timer);
   if(statusPoller) clearInterval(statusPoller);
   timer=null;
   statusPoller=null;
+}
+
+function formatReceiptDate(value){
+  if(!value) return '-';
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime())) return '-';
+  return date.toLocaleString('id-ID',{
+    day:'2-digit',month:'long',year:'numeric',
+    hour:'2-digit',minute:'2-digit',timeZone:'Asia/Jakarta'
+  })+' WIB';
+}
+function receiptCode(id){
+  return 'FP-'+String(id||'').replace(/-/g,'').toUpperCase().slice(-10);
+}
+function populateReceipt(data){
+  document.getElementById('receiptAmount').textContent='Rp '+formatID(data.amount);
+  document.getElementById('receiptNumber').textContent=receiptCode(data.transactionId);
+  document.getElementById('receiptTransaction').textContent=data.transactionId;
+  document.getElementById('receiptDate').textContent=formatReceiptDate(data.paidAt);
+}
+function showReceiptView(data){
+  populateReceipt(data);
+  stopTransactionTimers();
+  document.getElementById('entryStage').classList.add('hidden');
+  document.getElementById('resultStage').classList.add('hidden');
+  document.getElementById('resultContent').classList.add('hidden');
+  document.getElementById('receiptStage').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function showPaymentSuccess(){
@@ -469,6 +588,7 @@ async function checkPaymentStatus(){
     if(!response.ok) return;
     const statusResult=await response.json();
     if(statusResult.success && statusResult.status==='PAID'){
+      confirmedPayment=statusResult;
       showPaymentSuccess();
     }
   }catch(error){
@@ -548,6 +668,7 @@ document.getElementById('generate').addEventListener('click', async ()=>{
     stopTransactionTimers();
     activeTransactionId=result.transactionId;
     transactionFinished=false;
+    confirmedPayment=null;
     document.getElementById('resultAmount').textContent='Rp '+formatID(amount);
     document.getElementById('entryStage').classList.add('hidden');
     document.getElementById('resultStage').classList.remove('hidden');
